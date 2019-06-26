@@ -1,4 +1,4 @@
-function [ ] = availableMaterials(obj)
+function [ ] = availableMaterials()
     %% availableMaterials v1 date: 2016-10-11
     % 
     %   Author
@@ -31,7 +31,7 @@ function [ ] = availableMaterials(obj)
     T.Properties.VariableNames = {'currentMaterials'};
     
     % display the table
-    disp(T);
+    disp(sortrows(T));
     
 end
 

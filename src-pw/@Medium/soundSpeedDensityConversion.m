@@ -8,6 +8,7 @@ function [cMat] = soundSpeedDensityConversion(c, cs, rho)
     %   Description
     %       Converts compressional (c), shear (cs) and density (rho) into a
     %       stiffness mattrix.
+    %   soundSpeedDensityConversion(c, cs, rho)
     
     % calculates lame parameters and returns a stiffness matrix
     mu      = (cs)^2 * rho;

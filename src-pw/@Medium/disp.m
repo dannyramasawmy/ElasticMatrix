@@ -19,6 +19,7 @@ function obj = disp(obj)
         printMe(idx).Name        = obj(idx).name;
         printMe(idx).Thickness   = obj(idx).thickness;
         printMe(idx).Rho         = obj(idx).density;
+        printMe(idx).State       = obj(idx).state;
         % table 2
         printMe2(idx).Index      = idx;
         printMe2(idx).C11        = obj(idx).cMat(1,1)/1e9;
@@ -29,6 +30,7 @@ function obj = disp(obj)
     
     % display the table
     disp(struct2table(printMe));
+    disp('    - Stiffness coefficients given in GPa')
     disp(struct2table(printMe2));
     
 end

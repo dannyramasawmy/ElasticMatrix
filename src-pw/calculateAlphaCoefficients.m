@@ -98,7 +98,8 @@ function [ alphaCoefficients, cMaterial, polarisationVec, shCoeffs ] = ...
     % =====================================================================
     %   CALCULATE THE SHEAR-HORIZONTAL COEFFICIENTS AND POLARISATION VECTOR
     % =====================================================================
-    shCoeffs = -sqrt( (-cMaterial(6,6) + (rho * cp^2)) / cMaterial(5,5));
+%     shCoeffs = -sqrt( (-cMaterial(6,6) + (rho * cp^2)) / cMaterial(5,5));
+    shCoeffs = -sqrt( (-cMaterial(6,6) + (rho * cp^2)) / cMaterial(4,4));
     
     
     %{

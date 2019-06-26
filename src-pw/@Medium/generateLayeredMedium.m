@@ -20,5 +20,16 @@ function layeredMedium = generateLayeredMedium(varargin)
        layeredMedium((idx+1)/2).thickness = varargin{idx + 1};
    end
    
+   % auto set first layer thickness to Inf if not defined at the start
+   if layeredMedium(1).thickness ~= Inf
+       layeredMedium.setThickness(1, Inf);
+   end
+   % auto set last layer thickness to Inf if not defined at the start  
+   numberLayers = length(layeredMedium);
+   if layeredMedium(numberLayers).thickness ~= Inf
+       layeredMedium.setThickness(numberLayers, Inf);
+   end
+   
+   
    
 end

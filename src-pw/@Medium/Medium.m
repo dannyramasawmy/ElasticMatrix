@@ -16,6 +16,7 @@ classdef Medium < handle
         thickness
         density
         cMat 
+        slowness
     end
     
     
@@ -28,20 +29,22 @@ classdef Medium < handle
         end
         
         % display
-        obj = disp(obj);
-        
+        obj = disp(obj);       
         % set the name
         obj = setName(obj, layerIndex, layerName);
-        
         % set the thickness
-        obj = setThickness(obj, layerIndex, layerValue);
-       
+        obj = setThickness(obj, layerIndex, layerValue);      
         % set the Density
         obj = setDensity(obj, layerIndex, layerDensity);
-        
         % set the stiffness matrix
         obj = setCMatrix(obj, layerIndex, cMatrix);
-                
+        
+        % calculate slowness profiles
+        obj = calculateSlowness( obj ); 
+        
+        % plotting slowness
+        [ figureHandle, obj] = plotSlowness( obj );  
+        
     end
     
     
@@ -49,17 +52,13 @@ classdef Medium < handle
     methods (Static)
         
         % show the available materials
-        availableMaterials(obj)
-        
+        availableMaterials();     
         % returns a multidimensional medium object
-        mediumObject    = generateLayeredMedium(varargin);
-        
+        mediumObject    = generateLayeredMedium(varargin);       
         % get the acoustic properties
-        mediumObject    = getAcousticProperties(materialName);
-               
+        mediumObject    = getAcousticProperties(materialName);              
         % change lame coefficients to stiffness matrix
-        stiffnessMatrix = lameConversion(lambda, mu);
-        
+        stiffnessMatrix = lameConversion(lambda, mu);    
         % change sound speeds and density into a stiffness matrix
         stiffnessMatrix = soundSpeedDensityConversion(compressionalSpeed, shearSpeed, density);
         

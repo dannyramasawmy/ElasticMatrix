@@ -8,9 +8,16 @@ function obj = setCMatrix(obj, layerIndex, cMatrix)
     %   Description
     %       Sets the stiffness matrix (cMatrix) for the corresponding layer
     %       (layerIndex)
-        
-    % assign a single C_matrix at a time
+
+    if size(cMatrix) == [6 6]
+        % assign a single C_matrix at a time
         obj(layerIndex).cMat = cMatrix;
+    else
+        warning('Failed to assign c-matrix, incorrect dimensions. ')
+        obj(layerIndex).cMat = eye(6);
+    end
+    
     
     
 end
+

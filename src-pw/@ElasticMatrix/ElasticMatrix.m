@@ -1,12 +1,13 @@
 classdef ElasticMatrix < handle
-    %% ElasticMatrix v1 date: 2019-01-15
+    %% ElasticMatrix v1` date: 2019-01-15
     %
     %   Author
     %   Danny Ramasawmy
     %   rmapdrr@ucl.ac.uk
     %
     %   Descriptions:
-    %       This class evaluates a multilayered medium
+    %       This class evaluates a multilayered medium using the partial
+    %       wave method
     
     % open properties
     properties (SetAccess = public, GetAccess = public)
@@ -20,14 +21,17 @@ classdef ElasticMatrix < handle
     % closed properties
     properties (SetAccess = private, GetAccess = public)
         medium                          % Medium class oject
-        partialWaveAmplitudes         % partial wave amplitudes
+        partialWaveAmplitudes         % partial wav
+        amplitudes
         xDisplacement                  % x-displacement at interface
         zDisplacement                  % z-displacement at interface
         sigmaZZ                        % normal stress at interface
         sigmaXZ                        % shear stress at interface
         dispersionCurves               % coordinates of dispersion curve
         
-        % add a temporary field to check calcualtions
+        % a temporary field - if users wish to add features / check
+        % implementations this can be used to extract data while the model
+        % runs
         temp
     end
     
@@ -79,24 +83,23 @@ classdef ElasticMatrix < handle
         obj = setMedium(       obj, medium            );
         
         % run model
-        obj = calculate(obj);
-        
-        % fabry-perot directivity
-        [directivity,   obj]  = calculateDirectivity(  obj, mirrorLocation);
-        [figHandle,    obj]   = plotDirectivity(       obj, varargin);
-        
+        obj = calculate(obj); 
+                
         % calculate dispersion curves
-        obj = calculateDispersionCurves(obj);
-        obj = calculateDispersionCurvesR(obj);
-        obj = calculateDispersionNew(obj);
+        obj = calculateDispersionCurvesCoarse(obj);
+        % obj = calculateDispersionCurvesR(obj); % from |R|
+        obj = calculateDispersionCurves(obj); 
         
         % plot / calculate displacement field
-        [field, obj] = displacementField(obj, angleChoice, freqChoice, varargin);
+        [field, obj] = calculateField(obj, angleChoice, freqChoice, varargin);
         
         % plotting
-        obj = plotDispersionCurves(obj);       % NOT YET IMPLEMENTED
-        obj = plotInterfaceParameters(obj);    % NOT YET IMPLEMENTED
-        obj = plotRCoefficients(obj);
+        obj = plotDispersionCurves(obj);       
+        obj = plotInterfaceParameters(obj);    
+        obj = plotField(obj, fieldValues, varargin);    
+        obj = plotRCoefficients(obj);          
+        
+        % other
         obj = disp(obj);
         obj = save(obj, varargin);
         

@@ -1,6 +1,6 @@
 function [ mediumLayer ] = getAcousticProperties( material )
     %% functionTemplateFile v1 date:  2019-01-15
-    % 
+    %
     %   Author
     %   Danny Ramasawmy
     %   rmapdrr@ucl.ac.uk
@@ -19,10 +19,27 @@ function [ mediumLayer ] = getAcousticProperties( material )
     mediumLayer = Medium;
     % assign fields
     mediumLayer.name = material;
-    mediumLayer.state = 0;
+    
+    % assign state
+    try
+        % check the state is a correct keyword
+        switch allMaterialStruct.(material).state
+            case {'Unknown','Vacuum','Gas','Liquid','Isotropic','Anisotropic'}
+                mediumLayer.state = allMaterialStruct.(material).state;
+            otherwise
+                error('Layer state is not valid / defined');
+        end
+        
+    catch
+        warning(['Check material state : ',material])
+        mediumLayer.state = 'Unknown';
+    end
+    
+    % check state is valid
+    
     
     % assign nedsity
-    try 
+    try
         mediumLayer.density =  allMaterialStruct.(material).rho;
     catch
         warning('Density not assigned')
@@ -30,7 +47,7 @@ function [ mediumLayer ] = getAcousticProperties( material )
     end
     
     % assign the stiffness matrix
-    try 
+    try
         % if the stiffness matrix is defined
         mediumLayer.cMat = allMaterialStruct.(material).cMat;
     catch
