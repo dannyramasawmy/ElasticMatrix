@@ -32,7 +32,10 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
     % check for every interface
     for idx = 1:length(obj.medium) - 1
         
-        figure
+        % create a figure handle struct
+        figureString = ['interface',num2str(idx)];
+        figureHandle.(figureString) = figure;
+        
         % extract uz
         uzUp = obj.zDisplacement(idx).upper;
         uzDw = obj.zDisplacement(idx).lower;

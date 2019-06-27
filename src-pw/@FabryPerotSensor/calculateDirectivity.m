@@ -19,10 +19,10 @@ function [obj] = calculateDirectivity(obj)
         obj.zDisplacement(obj.mirrorLocations(1)).upper - ...
         obj.zDisplacement(obj.mirrorLocations(2)).upper;    
     
-    % ## Need to add optics model ##
-    warning('### ADD OPTICAL BIREFRINGENCE ###')
-    warning('## ADD SPOT SIZE')
-    warning('## ADD SPOT TYPE')
+    % FINEME : FUTURE ADDITIONS
+    % warning('### ADD OPTICAL BIREFRINGENCE ###')
+    % warning('## ADD SPOT SIZE')
+    % warning('## ADD SPOT TYPE')
       
     % assign to temporary variable for fast plotting
     obj.directivity = directivity;

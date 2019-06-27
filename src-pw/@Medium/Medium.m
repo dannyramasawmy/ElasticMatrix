@@ -26,6 +26,8 @@ classdef Medium < handle
               obj.thickness = 0;
               obj.density   = 0;
               obj.cMat      = zeros(6);
+              obj.state     = 'Unknown';
+              
         end
         
         % display

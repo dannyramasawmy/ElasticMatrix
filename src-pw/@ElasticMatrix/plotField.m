@@ -1,5 +1,5 @@
 function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
-    %% displacementField v1 date:  2019-01-15
+    %% plotField v1 date:  2019-01-15
     %
     %   Author
     %   Danny Ramasawmy
@@ -12,8 +12,8 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % inputs:
     %   (fieldValues )
     %   varargin{1} can be a structure of figure handles
-    %   figureHandle
-    %   varargin{2,3,...} can be plot types
+    %   or 
+    %   varargin{1,2,...,n} can be plot types
     %   '1DDisplacement'
     %   '2DDisplacement'
     %   '1DStress'
@@ -29,7 +29,7 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     %   If the field is updated, this figure handle can be reused to
     %   prevent multiple figure objects being created. This function will
     %   automatically detect which handles correspond to which figure, this
-    %   may be useful when producing a movie of the displacement.
+    %   may be useful when producing a movie of the stress or displacement.
     %   model.plotField(updatedField, figH1);
     
     % =====================================================================
@@ -137,6 +137,12 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
         flagDisplacement2D = 1;
     end
     
+    % just incase no variables matched
+    if ~exist('figureHandle')
+        warning('Incorrect plot type, use help(''plotField'') to find correct inputs')
+        figureHandle = 0;
+        return;
+    end
     % =====================================================================
     %   PLOTTING INFORMATION
     % =====================================================================

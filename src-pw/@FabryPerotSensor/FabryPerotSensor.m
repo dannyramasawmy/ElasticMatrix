@@ -58,7 +58,7 @@ classdef FabryPerotSensor < ElasticMatrix
         obj = setSpotType(          obj, spotType           );
         
         % calculate the directivity
-        obj = calculateDirectivity( obj );   % FINDME : NOT FULLY IMPLEMENTED
+        obj = calculateDirectivity( obj );   % FINDME : does not have optical birefringence yet
  
         % get directivity with different processinf
         [directivity,   obj] = getDirectivity(  obj, varargin   ); 
