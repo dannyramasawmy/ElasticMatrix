@@ -9,7 +9,7 @@ The ElasticMatrix software implements the partial-wave method [1] to model elast
 Some of the code functionalitiy:
 - plotting slowness profiles
 - plotting reflection and transmission coefficients
-- calculating the dispersion curves for simple plate structures
+- calculating the dispersion curves for simple plate structures (this has a few bugs currently)
 - plotting the, displacement and stress fields
 - calculating the directivity of Fabry-Perot Ultrasound sensors, see [3]
 
