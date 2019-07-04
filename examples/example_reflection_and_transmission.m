@@ -1,4 +1,4 @@
-%% example_comparison_with_GMM
+%% example_reflection_and_transmission
 %
 % Author    :   Danny Ramasawmy
 %               rmapdrr@ucl.ac.uk

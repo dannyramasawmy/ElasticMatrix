@@ -67,25 +67,59 @@ title('Manual slowness plot')
 % =========================================================================
 %   CALCULATE ERRORS
 % =========================================================================
-disp('Errors are within numerical precision : ')
+disp('Errors for glass are within numerical precision : ')
 
 % note the compressional speed of glass is 1/L curve
 cLGlass = 5570; % see materialList
-cLGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(2)).^2 + real(slownessDataMat_2.kz_qL1(2)).^2);
+cLGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(1)).^2 + real(slownessDataMat_2.kz_qL1(1)).^2);
 differenceErrorCL = abs((cLGlass - cLGlassSlowness)/5570);
 
 % note the shear (vertical) speed of glass is 1/SV curve
 cSGlass = 3430; % see materialList
-cSGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(2)).^2 + real(slownessDataMat_2.kz_qSV1(2)).^2);
+cSGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(1)).^2 + real(slownessDataMat_2.kz_qSV1(1)).^2);
 differenceErrorCSV = abs((cSGlass - cSGlassSlowness)/3430);
 
 % note the shear (horizontal) speed of glass is 1/SH = 1/SV curve
-cSGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(2)).^2 + real(slownessDataMat_2.kz_qSH(2)).^2);
+cSGlassSlowness = 1/ sqrt(real(slownessDataMat_2.kx(1)).^2 + real(slownessDataMat_2.kz_qSH(1)).^2);
 differenceErrorCSH = abs((cSGlass - cSGlassSlowness)/3430);
 
 disp(['Error in cL   :', num2str(differenceErrorCL) ])
 disp(['Error in cSV  :', num2str(differenceErrorCSV)])
 disp(['Error in cSH  :', num2str(differenceErrorCSH)])
+
+
+disp(['Errors for beryl are within numerical precision,'...
+    ' however, the profile is not calculate exactly when  kz=0:,'...
+    ' this has been indicated with an *.'])
+% get the stiffness matrix for beryl
+cMatBeryl = myMedium(3).cMat;
+densityBeryl = myMedium(3).density;
+
+% compare qL at kx = 0
+diffErrorqLkx0 = (sqrt(densityBeryl/ cMatBeryl(3,3)) -...
+    abs(myMedium(3).slowness.kz_qL1(1))) / sqrt(densityBeryl/ cMatBeryl(3,3));
+
+% compare qL at kz = 0
+[idx] = find(real(myMedium(3).slowness.kz_qL1) == 0);
+diffErrorqLkz0 = (myMedium(3).slowness.kx(idx(1)) - ...
+    sqrt(densityBeryl/ cMatBeryl(1,1))) / sqrt(densityBeryl/ cMatBeryl(1,1)) ;
+
+% compare qSV at kx = 0
+diffErrorqSVkx0 = (sqrt(densityBeryl/ cMatBeryl(5,5)) -...
+    abs(myMedium(3).slowness.kz_qSV1(1))) / sqrt(densityBeryl/ cMatBeryl(5,5));
+
+% compare qSV at kz = 0
+diffErrorqSVkz0 = (myMedium(3).slowness.kx(end) - ...
+    sqrt(densityBeryl/ cMatBeryl(5,5))) / sqrt(densityBeryl/ cMatBeryl(5,5)) ;
+
+
+disp(['Error in qL  at kx = 0   :', num2str(diffErrorqLkx0) ])
+disp(['Error in qL  at kz = 0 * :', num2str(diffErrorqLkz0)])
+disp(['Error in qSV at kx = 0   :', num2str(diffErrorqSVkx0)])
+disp(['Error in qSV at kz = 0 * :', num2str(diffErrorqSVkz0)])
+
+
+
 
 
 
