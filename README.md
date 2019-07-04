@@ -4,7 +4,7 @@ The ElasticMatrix software implements the partial-wave method [1] to model elast
 - The ./examples folder contains example scripts demonstrating some of the capabilities of the code. (currently being populated)
 - The ./documentation folder contains relevant papers for the mathematical background.
 - The ./src-pw folder contains the source code for the partial wave method, the -pw refers to the partial-wave method, in future the global matrix method [2] will also be implemented.
-- run ./examples/example_compatability_test to check the toolbox will work with your version of MATLAB. This has been tested for 2016 and above
+- run ./examples/example_compatability_test to check the toolbox will work with your version of MATLAB. This has been tested for MATLAB 2016 and above
 
 ### Capabilities
 Some of the code functionalitiy:
