@@ -3,7 +3,7 @@ The ElasticMatrix software implements the partial-wave method [1] to model elast
 
 - The ./examples folder contains example scripts demonstrating some of the capabilities of the code. (currently being populated)
 - The ./documentation folder contains relevant papers for the mathematical background.
-- The ./src-pw folder contains the source code for the partial wave method, the -pw refers to the partial-wave method, in future the global matrix method [2] may also be implemented.
+- The ./src-pw folder contains the source code for the partial wave method, the -pw refers to the partial-wave method, in future the global matrix method [2] will also be implemented.
 
 ### Capabilities
 Some of the code functionalitiy:
@@ -19,6 +19,11 @@ Some of the code functionalitiy:
 - [3] Ramasawmy, D. R., et al. "Analysis of the Directivity of Glass Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions on ultrasonics, ferroelectrics, and frequency control (2019).
 
 ### Update log:
+2019-07-04
+- Dispersion curve tracing still needs updating
+- Automatic sorting of calculation parameters (angles, frequencies, wavenumbers, phasespeed) needs updating
+- examples folder is still being populated
+
 2019-06-26: 
 - All methods are implemented 
 - dispersion curve tracing needs to be made more robust, use the coarse method for now
