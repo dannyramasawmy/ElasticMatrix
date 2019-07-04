@@ -1,5 +1,5 @@
 # ElasticMatrix
-The ElasticMatrix software implements the partial-wave method [1] to model elastic wave propagation in multilayered anisotropic media up to transverse-isotropic and orthotropic symmetry when the wave propagation is along an axis of symmetry.
+The ElasticMatrix software implements the partial-wave method [1] to model elastic wave propagation in multilayered anisotropic media up to transverse-isotropic and orthotropic symmetry when the wave propagation is along a plane of symmetry.
 
 - The ./examples folder contains example scripts demonstrating some of the capabilities of the code. (currently being populated)
 - The ./documentation folder contains relevant papers for the mathematical background.
