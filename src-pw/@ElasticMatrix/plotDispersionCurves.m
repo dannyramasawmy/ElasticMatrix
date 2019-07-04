@@ -47,7 +47,6 @@ function [figureHandle, obj] = plotDispersionCurves( obj )
         hold on
         plot(obj.dispersionCurves(modeDx).x /1e6, obj.dispersionCurves(modeDx).c /1e3, plotStyle)
         hold off
-        
     end
     
     % choose first figure

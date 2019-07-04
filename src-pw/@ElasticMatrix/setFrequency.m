@@ -6,7 +6,7 @@ function obj = setFrequency(obj, frequencyRange)
     %   rmapdrr@ucl.ac.uk
     %
     %   Description
-    %   Vector of frequencies to calculate the model.
+    %   Vector of frequencies in Hz to calculate the model.
     
     
     % to avoid zero errors

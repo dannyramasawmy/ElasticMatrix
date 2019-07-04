@@ -6,7 +6,7 @@ function obj = setAngle(obj, angleRange)
     %   rmapdrr@ucl.ac.uk
     %
     %   Description
-    %   Vector of angles to calculate the model.
+    %   Vector of angles in degrees to calculate the model.
     
     % to avoid zero errord
     angleRange(angleRange == 0) = 0.01;

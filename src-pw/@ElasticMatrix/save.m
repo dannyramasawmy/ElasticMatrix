@@ -13,7 +13,12 @@ function obj = save(obj, varargin)
     
     % assign input to filename
     try
-        obj.setFilename(varargin{1});
+        if nargin ~= 1
+            obj.setFilename(varargin{1});
+        else
+            % save the object
+            save(obj.filename, 'elasticMatrixObject');
+        end
     catch
         warning('Invalid filename, using: elasticMatrixObject')
         obj.setFilename('elasticMatrixObject');
