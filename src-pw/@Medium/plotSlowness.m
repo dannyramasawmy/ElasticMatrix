@@ -33,14 +33,14 @@ function [figureHandle, obj] = plotSlowness(obj)
             % plot each line - get rid of complex/imaginary parts
             hold on
             % qL - (quasi)-compressional
-            [kx, kz] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_1);
-            plot(kx, kz, 'k')
+            [kx, kz_qL] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_qL1);
+            plot(kx, kz_qL, 'k')
             % qSV - (quasi)-shear-vertical
-            [kx, kzt_2] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kzt_2);
-            plot(kx, kzt_2, 'k--')
+            [kx, kz_qSV] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_qSV1);
+            plot(kx, kz_qSV, 'k--')
             % qSH - (quasi)-shear-horizontal
-            [kx, ksht] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.ksht);
-            plot(kx, ksht, 'k-.')
+            [kx, kz_qSH] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_qSH);
+            plot(kx, kz_qSH, 'k-.')
             hold off
             
             % labels

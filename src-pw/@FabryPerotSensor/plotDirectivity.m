@@ -13,7 +13,7 @@ function figHandle = plotDirectivity(obj, varargin)
     
     % if there is no specific plot, then plot all of them
     if isempty(varargin)
-        varargin = {'normal', 'normalise', 'linear', 'decibel'};
+        varargin = {'normal', 'normalise', 'linear', 'decibel', 'phase'};
     end
     
     % otherwise plot the input arguments
@@ -53,6 +53,7 @@ function plotFigure(obj, currentHandle, plotType)
     axis xy square
     colormap hot
     colorbar
+    title(plotType)
     % colour axes
     switch plotType
         case 'decibel'
@@ -62,7 +63,7 @@ function plotFigure(obj, currentHandle, plotType)
         case 'normalise'
             caxis([0 1])
         case 'phase'
-            caxis([-3 3])
+            caxis([-6 6])
     end
     
     % don't use imagesc if it is a normal plot 
@@ -70,6 +71,7 @@ function plotFigure(obj, currentHandle, plotType)
         if plotType == 'normal'
             plot(obj.frequency/1e6, obj.getDirectivity(plotType));
             xlabel('Frequency [MHz]')
+            title('normal')
         end
     catch
     end

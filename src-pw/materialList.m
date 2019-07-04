@@ -228,9 +228,9 @@ allMaterialStruct.copper.state                  = 'Isotropic'   ;
 allMaterialStruct.CubicInAs0.rho            =   5670        ;
 allMaterialStruct.CubicInAs0.state          = 'Anisotropic' ;
 allMaterialStruct.CubicInAs0.cMat           =  1.0e+09 *[...
-    124         45.26       45.26       0           0           0;
-    45.26       124         45.26       0           0           0;
-    45.26       45.26       124         0           0           0;
+    83.29         45.26       45.26       0           0           0;
+    45.26       83.29         45.26       0           0           0;
+    45.26       45.26       83.29         0           0           0;
     0           0           0           39.59       0           0;
     0           0           0           0           39.59       0;
     0           0           0           0           0           39.59];

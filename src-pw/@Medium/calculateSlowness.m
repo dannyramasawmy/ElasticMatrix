@@ -58,9 +58,9 @@ function [slownessProfiles] = calculateSlownessLiquid( material )
     [slownessProfiles] = calculateSlownessAnisotropic( material, phase_vel );
     
     % other parameters are non-physical for liquids
-    slownessProfiles.ksht = NaN;
-    slownessProfiles.kzt_1 = NaN;
-    slownessProfiles.kzt_2 = NaN;
+    slownessProfiles.kz_qSH = NaN;
+    slownessProfiles.kz_qSV1 = NaN;
+    slownessProfiles.kz_qSV2 = NaN;
     
 end
 
@@ -109,6 +109,8 @@ function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
     
     N = 2000;
     angle_vec = linspace(0,90,N);
+    angle_vec(1) = 0.000001;
+    angle_vec(N) = 89.999999;
     
     % precalculated factors
     freq = 1e6;
@@ -154,23 +156,23 @@ function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
         kx(angle_idx) = k /omega;
         
         % vertical component - compressional wave
-        kz_1(angle_idx) = k * m_p(1).alpha(4) /omega;
-        kz_2(angle_idx) = k * m_p(1).alpha(3) /omega;
+        kz_qL1(angle_idx) = k * m_p(1).alpha(4) /omega;
+        kz_qL2(angle_idx) = k * m_p(1).alpha(3) /omega;
         
         % vertical component qSV waves
-        kzt_1(angle_idx) = k * m_p(1).alpha(2) /omega;
-        kzt_2(angle_idx) = k * m_p(1).alpha(1) /omega;
+        kz_qSV1(angle_idx) = k * m_p(1).alpha(2) /omega;
+        kz_qSV2(angle_idx) = k * m_p(1).alpha(1) /omega;
         
         % vertical component qSH waves
-        ksht(angle_idx) = k * m_p(1).sh_coeff /omega;
+        kz_qSH(angle_idx) = k * m_p(1).sh_coeff /omega;
         
         % assign output
         slownessProfiles.kx = kx;
-        slownessProfiles.kz_1 = kz_1;
-        slownessProfiles.kz_2 = kz_2;
-        slownessProfiles.kzt_1 = kzt_1;
-        slownessProfiles.kzt_2 = kzt_2;
-        slownessProfiles.ksht = ksht;
+        slownessProfiles.kz_qL1 = kz_qL1;
+        slownessProfiles.kz_qL2 = kz_qL2;
+        slownessProfiles.kz_qSV1 = kz_qSV1;
+        slownessProfiles.kz_qSV2 = kz_qSV2;
+        slownessProfiles.kz_qSH = kz_qSH;
     end
     
     
