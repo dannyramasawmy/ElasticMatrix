@@ -21,12 +21,11 @@ Medium.availableMaterials;
 % To add new materials, type <edit materialList.m > and follow the format
 % that is given there. 
 % Taking some of the materials from the printed list, the Medium class can
-% now be initialised with the static method .generateLayeredMedium. This
+% now be initialised with the class constructor. This
 % takes input arguments of the material, followed by its thickness in [m].
 
 % initalise a 4 - layered medium
-myMediumObject = Medium.generateLayeredMedium(...
-    'water',Inf, 'glass',0.001, 'aluminium',0.001, 'air', Inf);
+myMediumObject = Medium('water',Inf, 'glass',0.001, 'aluminium',0.001, 'air', Inf);
 % print the medium to the command window
 printLineBreaks
 disp('The Medium object has been initialised')
@@ -94,7 +93,7 @@ materialStiffnessMatrix = myMediumObject.lameConversion(lambda, mu);
 
 % The coeffients can then be used to update one of the material layers, for
 % example to update the stiffness coefficients of layer 2
-myMediumObject.setCMatrix(2, materialStiffnessMatrix);
+myMediumObject.setStiffnessMatrix(2, materialStiffnessMatrix);
 % dont forget to update the density too
 myMediumObject.setDensity(2, density);
 

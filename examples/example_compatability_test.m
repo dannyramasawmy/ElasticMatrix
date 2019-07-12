@@ -20,7 +20,7 @@ cls;
 totalCounter = 0;
 totalPass = 0;
 totalFail = 0;
-
+%% ========================================================================
 disp('Test: src')
 try
     addpath('../src-pw/')
@@ -31,7 +31,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: Medium.availableMaterials;')
 try
     Medium.availableMaterials
@@ -42,10 +42,10 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
-disp('Test: myM = Medium.generateLayeredMedium(...)')
+%% ========================================================================
+disp('Test: myM = Medium(...)')
 try
-    myMedium = Medium.generateLayeredMedium('water',0,'apatite',1e-3,'glass',1);
+    myMedium = Medium('water',0,'apatite',1e-3,'glass',1);
     disp('pass')
     totalPass = totalPass + 1;
 catch
@@ -53,7 +53,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: medium.disp;')
 try
     myMedium.disp;
@@ -64,7 +64,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: Medium.setName(layerIndex, newName)')
 try
     myMedium.setName(1,'newWater');
@@ -75,10 +75,10 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
-disp('Test: [cMat] = Medium.soundSpeedDensityConversion(c_l, c_s, rho)')
+%% ========================================================================
+disp('Test: [stiffnessMatrix] = Medium.soundSpeedDensityConversion(c_l, c_s, rho)')
 try
-    cMat = myMedium.soundSpeedDensityConversion(5600,3300,2400);
+    stiffnessMatrix = myMedium.soundSpeedDensityConversion(5600,3300,2400);
     disp('pass')
     totalPass = totalPass + 1;
 catch
@@ -86,10 +86,10 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
-disp('Test: Medium.setCMatrix(layerIndex, cMat)')
+%% ========================================================================
+disp('Test: Medium.setStiffnessMatrix(layerIndex, stiffnessMatrix)')
 try
-    myMedium.setCMatrix(3, cMat);
+    myMedium.setStiffnessMatrix(3, stiffnessMatrix);
     disp('pass')
     totalPass = totalPass + 1;
 catch
@@ -97,7 +97,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: Medium.setDensity(layerIndex, rho) ')
 try
     myMedium.setDensity(3, 2400);
@@ -108,7 +108,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: Medium.setThickness(layerIndex, thickness)')
 try
     myMedium.setThickness(2, 50e-6);
@@ -119,10 +119,10 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
-disp('Test: [cMat] = Medium.lameConversion(lambda, mu)')
+%% ========================================================================
+disp('Test: [stiffnessMatrix] = Medium.lameConversion(lambda, mu)')
 try
-    if cMat == Medium.lameConversion(cMat(1,2),cMat(5,5))
+    if stiffnessMatrix == Medium.lameConversion(stiffnessMatrix(1,2),stiffnessMatrix(5,5))
         disp('pass')
         
         totalPass = totalPass + 1;
@@ -135,7 +135,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: Medium.calculateSlowness')
 try
     myMedium.calculateSlowness;
@@ -146,7 +146,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand] = Medium.plotSlowness')
 try
     figHandle = myMedium.plotSlowness;
@@ -174,8 +174,8 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
-myMedium =  Medium.generateLayeredMedium('water',0,'aluminium',1e-3,'water',Inf);
+%% ========================================================================
+myMedium =  Medium('water',0,'aluminium',1e-3,'water',Inf);
 disp('Test: ElasticMatrix.setMedium(mediumObject)')
 try
     model.setMedium(myMedium);
@@ -186,7 +186,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElasticMatrix.setFilename(filename)')
 try
     model.setFilename('testing_example');
@@ -197,7 +197,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 sampleDensity = 10;
 disp('Test: ElasticMatrix.setAngle(angleRange) ')
 try
@@ -209,7 +209,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElasticMatrix.setFrequency(freqRange) ')
 try
     model.setFrequency(linspace(0.1e6,50e5,sampleDensity));
@@ -220,6 +220,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
+%% ========================================================================
 disp('Test: ElasticMatrix.setPhasespeed(phasespeedRange) ')
 try
     model.setPhasespeed(linspace(100,500,sampleDensity));
@@ -230,6 +231,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
+%% ========================================================================
 disp('Test: ElasticMatrix.setWavenumber(wavenumberRange) ')
 try
     model.setWavenumber(linspace(100,500,sampleDensity));
@@ -240,7 +242,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElasticMatrix.disp')
 try
     model.disp;
@@ -251,7 +253,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElasticMatrix.calculate')
 try
     model.calculate;
@@ -262,7 +264,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand] = ElasticMAtrix.plotRCoefficients')
 try
     [figHand] = model.plotRCoefficients;
@@ -274,7 +276,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand] = ElasticMatrix.plotInterfaceParameters')
 try
     figHand = model.plotInterfaceParameters;
@@ -286,7 +288,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [fieldStructure] = ElasticMatrix.calculateField(angle, frequency, {Zvector, Xvector}) ')
 try
     plotVector = linspace(-1.5,0.5,128)*1e-3;
@@ -298,7 +300,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand = plotField(fieldStructure)] ')
 try
     figHand = model.plotField(field);
@@ -309,7 +311,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand = plotField(fieldStructure, figureHandleStructure)] ')
 try
     figHand = model.plotField(field, figHand);
@@ -320,7 +322,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand = plotField(fieldStructure, plotType)] ')
 try
     figHand = model.plotField(field, 'Mesh','Vector');
@@ -332,7 +334,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElastixMatix.calculateDispersonCurvesCoarse')
 try
     model.calculateDispersionCurvesCoarse;
@@ -343,7 +345,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElastixMatix.calculateDispersonCurves')
 try
     % model.calculateDispersionCurves;
@@ -354,7 +356,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand] = ElasticMatrix.plotDispersionCurves')
 try
     [figHand] = model.plotDispersionCurves;
@@ -366,7 +368,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: ElasticMatrix.save(filename)')
 try
     model.save('TestCompatibility');
@@ -389,7 +391,7 @@ totalCounter = totalCounter + 1;
 disp('Test: model = FabryPerotSensor(mediumObject)')
 try
     % make the example medium
-    sensorMedium      = Medium.generateLayeredMedium(...
+    sensorMedium      = Medium(...
         'water',Inf,'glass',200e-6,'water',Inf);
     sensor = FabryPerotSensor(sensorMedium);
     disp('pass')
@@ -399,7 +401,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: FabryperotSensor.setSpotType(spotType)')
 try
     sensor.setSpotType('collimated');
@@ -410,7 +412,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: FabryperotSensor.setSpotSize(spotDiameter) ')
 try
     sensor.setSpotSize(50e-6);
@@ -421,7 +423,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: FabryperotSensor.setMirrorLocations([interfaceIndex, interfaceIndex]) ')
 try
     sensor.setMirrorLocations([1 2]);
@@ -432,7 +434,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: FabryperotSensor.calculateDirectivity;')
 try
     sensor.setAngle(linspace(0, 50,50));
@@ -445,7 +447,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: [figHand] = FabryperotSensor.plotDirectivity;')
 try
     [figHand] = sensor.plotDirectivity;
@@ -456,7 +458,7 @@ catch
     totalFail = totalFail + 1;
 end
 totalCounter = totalCounter + 1;
-
+%% ========================================================================
 disp('Test: FabryperotSensor.getDirectivity')
 try
     myDirectivity = sensor.getDirectivity;

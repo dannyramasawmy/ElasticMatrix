@@ -12,10 +12,12 @@
 % =========================================================================
 %   PLOT SLOWNESS CURVES
 % =========================================================================
+cls;
 % firstly create a Medium object with each material needed to generate a
 % plot. Here the slowness profiles of water, glass and beryl will be
 % generated
-myMedium = Medium.generateLayeredMedium('water',Inf,'glass',0.001,'beryl2',Inf);
+myMedium = Medium('water',Inf,'glass',0.001,'beryl2',0.001,'CubicInAs0',Inf);
+
 
 % calculate the slowness profiles
 myMedium.calculateSlowness;
@@ -89,28 +91,29 @@ disp(['Error in cSH  :', num2str(differenceErrorCSH)])
 
 
 disp(['Errors for beryl are within numerical precision,'...
-    ' however, the profile is not calculate exactly when  kz=0:,'...
+    ' however, the profile is not calculated exactly when  kz=0:,'...
     ' this has been indicated with an *.'])
 % get the stiffness matrix for beryl
-cMatBeryl = myMedium(3).cMat;
+stiffnessMatrixBeryl = myMedium(3).stiffnessMatrix;
 densityBeryl = myMedium(3).density;
 
 % compare qL at kx = 0
-diffErrorqLkx0 = (sqrt(densityBeryl/ cMatBeryl(3,3)) -...
-    abs(myMedium(3).slowness.kz_qL1(1))) / sqrt(densityBeryl/ cMatBeryl(3,3));
+diffErrorqLkx0 = (sqrt(densityBeryl/ stiffnessMatrixBeryl(3,3)) -...
+    abs(myMedium(3).slowness.kz_qL1(1))) / sqrt(densityBeryl/ stiffnessMatrixBeryl(3,3));
 
 % compare qL at kz = 0
 [idx] = find(real(myMedium(3).slowness.kz_qL1) == 0);
 diffErrorqLkz0 = (myMedium(3).slowness.kx(idx(1)) - ...
-    sqrt(densityBeryl/ cMatBeryl(1,1))) / sqrt(densityBeryl/ cMatBeryl(1,1)) ;
+    sqrt(densityBeryl/ stiffnessMatrixBeryl(1,1))) / sqrt(densityBeryl/ stiffnessMatrixBeryl(1,1)) ;
 
 % compare qSV at kx = 0
-diffErrorqSVkx0 = (sqrt(densityBeryl/ cMatBeryl(5,5)) -...
-    abs(myMedium(3).slowness.kz_qSV1(1))) / sqrt(densityBeryl/ cMatBeryl(5,5));
+diffErrorqSVkx0 = (sqrt(densityBeryl/ stiffnessMatrixBeryl(5,5)) -...
+    abs(myMedium(3).slowness.kz_qSV1(1))) / sqrt(densityBeryl/ stiffnessMatrixBeryl(5,5));
 
 % compare qSV at kz = 0
-diffErrorqSVkz0 = (myMedium(3).slowness.kx(end) - ...
-    sqrt(densityBeryl/ cMatBeryl(5,5))) / sqrt(densityBeryl/ cMatBeryl(5,5)) ;
+[idx] = find(real(myMedium(3).slowness.kz_qSV1) == 0);
+diffErrorqSVkz0 = (myMedium(3).slowness.kx(idx(1)) - ...
+    sqrt(densityBeryl/ stiffnessMatrixBeryl(5,5))) / sqrt(densityBeryl/ stiffnessMatrixBeryl(5,5)) ;
 
 
 disp(['Error in qL  at kx = 0   :', num2str(diffErrorqLkx0) ])

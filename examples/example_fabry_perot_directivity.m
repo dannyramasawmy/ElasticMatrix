@@ -15,10 +15,9 @@
 % =========================================================================
 %   INITALISE MEDIUM AND FABRYPEROT SENSOR CLASS
 % =========================================================================
-
+cls;
 % Firstly the geometry of the Fabry-Perot sensor needs to be defined 
-mySensorGeometry = Medium.generateLayeredMedium(...
-    'water',Inf, 'glass',175.9e-6, 'air',Inf);
+mySensorGeometry = Medium('water',Inf, 'glass',175.9e-6, 'air',Inf);
 
 % the sensor geometry can be used to initalise the Fabry-perot class
 sensor = FabryPerotSensor( mySensorGeometry );

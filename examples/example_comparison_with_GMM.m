@@ -7,7 +7,7 @@
 %
 %
 % Description
-%   In this script an implementation of the global matrix model as 
+%   In this script an implementation of the global matrix model as
 %   described in (Lowe, 1995) is compared with the partial wave
 %   implementation.
 %
@@ -21,7 +21,7 @@
 %   (1) interface partial wave boundary conditions check (displacement and stress)
 %   (2) comparison of BC's between the GMM and PW models
 %   (3) comparison of partial wave amplitudes between GMM and PW
-%   
+%
 %   Note: there is excellent agreement between the two models and the
 %   normalised error is (or very close to) machine precision. The error is
 %   angle and frequency dependent. At some pairs of angle and frequency
@@ -32,12 +32,11 @@
 %   INITALISE AND RUN PARTIAL WAVE MODEL
 % =========================================================================
 cls; % clear variables, close figures, clean command window
-% path to toolbox functions 
+% path to toolbox functions
 addpath('../src-pw/')
 
 % initialise the medium class with four layers
-medium = Medium.generateLayeredMedium(...
-    'PET',Inf, 'aluminium',50e-6,'PMMA',20e-6,'glass',Inf);
+medium = Medium('PET',Inf, 'aluminium',50e-6,'PMMA',20e-6,'glass',Inf);
 
 % initialise the elastic matrix class
 model = ElasticMatrix(medium);
@@ -57,9 +56,9 @@ model.calculate
 % =========================================================================
 %   TEST 1 : CHECK PARTIAL WAVE INTERFACE CONDITIONS
 % =========================================================================
-% The displacement and stress at the interface between layers can be 
-% calculated from the material field matrix in each layer above and below the 
-% interface. This part of the script checks that the boundary conditions at 
+% The displacement and stress at the interface between layers can be
+% calculated from the material field matrix in each layer above and below the
+% interface. This part of the script checks that the boundary conditions at
 % the interface are being matched.
 %
 
@@ -126,10 +125,13 @@ for idx = 1:length(medium) - 1
     ylabel('Frequency [MHz]')
     colorbar
     axis square
-   
+    
 end
 
-suptitle('Interface test partial-wave boundary conditions')
+try
+    sgtitle('Interface test partial-wave boundary conditions')
+catch
+end
 
 % =========================================================================
 %  LOAD GMM MODEL DATA
@@ -359,15 +361,17 @@ ylabel('Error')
 title('\sigma_x_z - int 3')
 xlabel('Angle [\circ]')
 
-
-suptitle('Interface check GMM vs PW at an arbitrary frequency')
+try
+    sgtitle('Interface check GMM vs PW at an arbitrary frequency')
+catch
+end
 
 % =========================================================================
 %   TEST 3 : PARTIAL WAVE AMPLITUDE COMPARISON
 % =========================================================================
 %   The partial wave amplitudes are directly related the reflection and
 %   transmission coefficient, these are also produced by the GMM and are
-%   compared here. 
+%   compared here.
 
 % get partial wave amplitudes from Elstic Matrix
 pwMatrix = model.partialWaveAmplitudes;
@@ -535,8 +539,11 @@ plot(angleRange, normMe(abs(pwMatrix(25,:,11))) -  normMe(abs(gmmMatrix(25,:,12)
 ylabel('Error')
 
 % super title
-suptitle('Interface comparison for partial-wave and GMM wave amplitudes at an arbitrary frequency')
-
+try
+    
+    sgtitle('Interface comparison for partial-wave and GMM wave amplitudes at an arbitrary frequency')
+catch
+end
 
 % ========================================================================
 %   COMMENTS

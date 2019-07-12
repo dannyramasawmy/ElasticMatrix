@@ -13,12 +13,12 @@
 % =========================================================================
 %   INTIALISE MEDIUM AND ELASTICMATRIX
 % =========================================================================
+cls;
 % Firstly a Medium object needs to be created. For more details see the
 % example script : example_medium_class
 
 % initalise the medium
-myMedium = Medium.generateLayeredMedium(...
-    'water',Inf,'aluminium',0.001,'water',Inf);
+myMedium = Medium('water',Inf,'aluminium',0.001,'water',Inf);
 
 % ElasticMatrix can now be initalised, the ElasticMatrix class takes the
 % Medium object as an input argument.
@@ -87,10 +87,3 @@ myModel.setFilename( 'myElasticMatrixObject' );
 
 % the object can then be saved using the save method
 myModel.save;
-
-
-
-                
-% save                             
-
-% setFilename      
