@@ -1,10 +1,10 @@
 # ElasticMatrix
-The ElasticMatrix software implements the partial-wave method [1] to model elastic wave propagation in multilayered anisotropic media up to transverse-isotropic and orthotropic symmetry when the wave propagation is along a plane of symmetry.
+The ElasticMatrix software implements the partial-wave method [1] to model elastic wave propagation in multilayered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
-- The ./examples folder contains example scripts demonstrating some of the capabilities of the code. (currently being populated)
+- The ./examples folder contains example scripts demonstrating some of the capabilities of the code.
 - The ./documentation folder contains relevant papers for the mathematical background.
 - The ./src-pw folder contains the source code for the partial wave method, the -pw refers to the partial-wave method, in future the global matrix method [2] will also be implemented.
-- run ./examples/example_compatability_test to check the toolbox will work with your version of MATLAB. This has been tested for MATLAB 2016 and above
+- run ./examples/run_all.m  will run through every example and checks the code will execute correctly on your version of MATLAB
 
 ### Capabilities
 Some of the code functionalitiy:
@@ -19,7 +19,15 @@ Some of the code functionalitiy:
 - [2] Lowe, Michael JS. "Matrix techniques for modeling ultrasonic waves in multilayered media." IEEE transactions on ultrasonics, ferroelectrics, and frequency control 42.4 (1995): 525-542.
 - [3] Ramasawmy, D. R., et al. "Analysis of the Directivity of Glass Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions on ultrasonics, ferroelectrics, and frequency control (2019).
 
+### Future updates
+- Dispersion curve tracing still needs updating
+- Automatic sorting of calculation parameters (angles, frequencies, wavenumbers, phasespeed) 
+
 ### Update log:
+2019-07-12
+- Dispersion curve algorithm is much faster
+- examples folder is almost complete
+
 2019-07-04
 - Dispersion curve tracing still needs updating
 - Automatic sorting of calculation parameters (angles, frequencies, wavenumbers, phasespeed) needs updating
