@@ -34,7 +34,7 @@ function [figureHandle, obj] = plotSlowness(obj)
             hold on
             % qL - (quasi)-compressional
             [kx, kz_qL] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_qL1);
-            plot(kx, kz_qL, 'k')
+            plot(kx, kz_qL, 'k.')
             % qSV - (quasi)-shear-vertical
             [kx, kz_qSV] = getRealDataPoints( obj(plotDx).slowness.kx, obj(plotDx).slowness.kz_qSV1);
             plot(kx, kz_qSV, 'k--')
@@ -48,7 +48,7 @@ function [figureHandle, obj] = plotSlowness(obj)
             box on
             xlabel('k_x / \omega')
             ylabel('k_z / \omega')
-            
+            axis equal
             % plot legend outside
             if plotCounter == 1
                 legend('(q)-L','(q)-SV','(q)-SH','Location','southwest')
@@ -77,12 +77,15 @@ function [kx, kz] = getRealDataPoints( inKx, inKz)
     %       Seperates the real data points of the slowness profiles
     %
     
-    % take the real parts which are non-zero
-    kz = abs( real( inKz ) );
-    kz = kz(kz > 0);
+    % with anisotropic symmetries there may be two points on a qSV curve
+    % for the same kx. In these cases the remainder of the qSV curve
+    % appears in qL.
+    realIdxs = (imag(inKz) == 0);
     
-    % this is positive anyway
-    kx = abs( real( inKx( kz > 0 ) ));
+    % 
+    kz = abs( real( inKz( realIdxs ) ) );
+    kx = abs( real( inKx( realIdxs ) ) );
+    
     
     % just for ease in plotting a legend
     if isempty(kz)

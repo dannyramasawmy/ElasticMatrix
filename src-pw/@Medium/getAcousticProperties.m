@@ -49,7 +49,7 @@ function [ mediumLayer ] = getAcousticProperties( material )
     % assign the stiffness matrix
     try
         % if the stiffness matrix is defined
-        mediumLayer.cMat = allMaterialStruct.(material).cMat;
+        mediumLayer.stiffnessMatrix = allMaterialStruct.(material).stiffnessMatrix;
     catch
         % evaluate string for c, density
         c = allMaterialStruct.(material).c;
@@ -57,7 +57,7 @@ function [ mediumLayer ] = getAcousticProperties( material )
         cs = allMaterialStruct.(material).cs;
         % evaluate string for rho, density
         rho = allMaterialStruct.(material).rho;
-        mediumLayer.cMat = Medium.soundSpeedDensityConversion(c, cs, rho);
+        mediumLayer.stiffnessMatrix = Medium.soundSpeedDensityConversion(c, cs, rho);
     end
     
     

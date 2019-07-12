@@ -1,4 +1,4 @@
-function [cMat] = soundSpeedDensityConversion(c, cs, rho)
+function [stiffnessMatrix] = soundSpeedDensityConversion(c, cs, rho)
     %% lameConversion v1 date:  2019-01-15
     % 
     %   Author
@@ -15,6 +15,6 @@ function [cMat] = soundSpeedDensityConversion(c, cs, rho)
     lambda  = (c)^2 * rho - 2*mu;
     
     % convert lame parameters
-    cMat    = Medium.lameConversion(lambda, mu);
+    stiffnessMatrix    = Medium.lameConversion(lambda, mu);
     
 end

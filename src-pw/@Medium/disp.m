@@ -22,10 +22,10 @@ function obj = disp(obj)
         printMe(idx).State       = obj(idx).state;
         % table 2
         printMe2(idx).Index      = idx;
-        printMe2(idx).C11        = obj(idx).cMat(1,1)/1e9;
-        printMe2(idx).C13        = obj(idx).cMat(1,3)/1e9;
-        printMe2(idx).C33        = obj(idx).cMat(3,3)/1e9;
-        printMe2(idx).C55        = obj(idx).cMat(5,5)/1e9;
+        printMe2(idx).C11        = obj(idx).stiffnessMatrix(1,1)/1e9;
+        printMe2(idx).C13        = obj(idx).stiffnessMatrix(1,3)/1e9;
+        printMe2(idx).C33        = obj(idx).stiffnessMatrix(3,3)/1e9;
+        printMe2(idx).C55        = obj(idx).stiffnessMatrix(5,5)/1e9;
     end
     
     % display the table

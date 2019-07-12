@@ -1,6 +1,6 @@
 function obj = calculate(obj)
     % Calcualte method runs the partial wave implementation
-    warning off
+    warning off % sometimes it will spit out a warning
     
     disp('... Calculating matrix method ... ')
     % calculate the partial wave method
@@ -9,7 +9,7 @@ function obj = calculate(obj)
         = calculateMatrixModel(...
         obj.medium, obj.frequency, obj.angle, 1);
     
-    % DEBUG / FUTURE CODE - have everything in terms of the K-f matric
+    % DEBUG / FUTURE CODE - have everything in terms of the K-f matrix
     % model
     %      [~,field_variables, partial_wave_amplitudes, unnormalised_amplitudes, temp ] ...
     %         = Calculate_Matrix_Model_Kf(...

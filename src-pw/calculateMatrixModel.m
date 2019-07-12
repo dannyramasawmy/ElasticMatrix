@@ -39,7 +39,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     % =====================================================================
     
     % final phase velocity
-    phaseVel = sqrt(medium(1).cMat(1,1) / medium(1).density);
+    phaseVel = sqrt(medium(1).stiffnessMatrix(1,1) / medium(1).density);
     
     % the number of layers
     numLayers = length(medium);
@@ -86,12 +86,12 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             
             % loop over the medium layers and extract the important properties
             %   alpha - partial wave amplitudes
-            %   C_mat - stiffness matrix for each material
+            %   stiffness matrix - stiffness matrix for each material
             %   p_vec - polarisation of each partial wave
             for layIdx = 1:length(medium)
-                [ matProp(layIdx).alpha, matProp(layIdx).cMat, matProp(layIdx).pVec ] = ...
+                [ matProp(layIdx).alpha, matProp(layIdx).stiffnessMatrix, matProp(layIdx).pVec ] = ...
                     calculateAlphaCoefficients(...
-                    medium(layIdx).cMat, cp, medium(layIdx).density );
+                    medium(layIdx).stiffnessMatrix, cp, medium(layIdx).density );
             end
             
             
@@ -116,17 +116,17 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
                 % upper field matrix of interface
                 [fieldMatrices(ifcIdx).upper, itfcPhase(ifcIdx).up  ]   = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_up).alpha, k, itfcPosition(ifcIdx), matProp(idx_up).cMat, matProp(idx_up).pVec );
+                    matProp(idx_up).alpha, k, itfcPosition(ifcIdx), matProp(idx_up).stiffnessMatrix, matProp(idx_up).pVec );
                 
                 % lower field matrix of interface
                 [fieldMatrices(ifcIdx).lower, itfcPhase(ifcIdx).dw ]    = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_lw).alpha, k, itfcPosition(ifcIdx), matProp(idx_lw).cMat, matProp(idx_lw).pVec );
+                    matProp(idx_lw).alpha, k, itfcPosition(ifcIdx), matProp(idx_lw).stiffnessMatrix, matProp(idx_lw).pVec );
             end
             
             % scaling factor for the field matrices as the stress equations
-            % are significantly larger
-            scaleFm = omega^2 * medium(1).density;
+            % are significantly larger, this is sometimes 1
+            scaleFm = omega^2 * medium(2).density;
             
             
             % initalise the global matrix

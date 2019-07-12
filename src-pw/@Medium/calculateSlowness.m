@@ -1,5 +1,5 @@
 function obj = calculateSlowness(obj)
-    %% setCMat v1 date:  2019-01-15
+    %% setStiffnessMatrix v1 date:  2019-01-15
     %
     %   Author
     %   Danny Ramasawmy
@@ -52,7 +52,7 @@ function [slownessProfiles] = calculateSlownessLiquid( material )
     %   waves)
     
     % get the compressional wave speed
-    phase_vel = sqrt(material(1).cMat(1,1) / material(1).density);
+    phase_vel = sqrt(material(1).stiffnessMatrix(1,1) / material(1).density);
     
     % get the slowness profiles
     [slownessProfiles] = calculateSlownessAnisotropic( material, phase_vel );
@@ -80,7 +80,8 @@ function [slownessProfiles] = calculateSlownessIsotropic( material )
     
     % find the shear speed (lowest phase velocity)
     phase_vel = sqrt(...
-        ((material(1).cMat(1,1) - material(1).cMat(1,3)) / 2 ) / material(1).density);
+        ((material(1).stiffnessMatrix(1,1) - material(1).stiffnessMatrix(1,3)) / 2 ) /...
+        material(1).density);
     
     % calculate the slowness profiles
     [slownessProfiles] = calculateSlownessAnisotropic( material, phase_vel);
@@ -107,10 +108,10 @@ function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
     % =========================================================================
     % generate a medium
     
-    N = 2000;
+    N = 5000;
     angle_vec = linspace(0,90,N);
-    angle_vec(1) = 0.000001;
-    angle_vec(N) = 89.999999;
+    angle_vec(1) = 0 + eps;
+    angle_vec(N) = 90 - eps;
     
     % precalculated factors
     freq = 1e6;
@@ -119,7 +120,7 @@ function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
         phase_vel = varargin{1};
     catch
         % esitmate of lowest phase velocity
-        phase_vel = sqrt(material(1).cMat(5,5) / material(1).density);
+        phase_vel = sqrt(material(1).stiffnessMatrix(5,5) / material(1).density) * 0.5;
     end
     
     
@@ -144,9 +145,9 @@ function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
         %   C_mat - stiffness matrix for each material
         %   p_vec - polarisation of each partial wave
         
-        [ m_p.alpha, m_p.cMat, m_p.pVec, m_p.sh_coeff ] = ...
+        [ m_p.alpha, m_p.stiffnessMatrix, m_p.pVec, m_p.sh_coeff ] = ...
             calculateAlphaCoefficients(...
-            material.cMat, cp, material.density );
+            material.stiffnessMatrix, cp, material.density );
         
         % =================================================================
         %   CALCUALTE WAVEVECTOR COMPONENTS

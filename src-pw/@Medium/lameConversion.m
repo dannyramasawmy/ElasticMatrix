@@ -1,4 +1,4 @@
-function [cMat]  = lameConversion(lambda, mu)
+function [stiffnessMatrix]  = lameConversion(lambda, mu)
     %% lameConversion v1 date:  2019-01-15
     % 
     %   Author
@@ -13,7 +13,7 @@ function [cMat]  = lameConversion(lambda, mu)
     diagnl = lambda + 2 * mu;
     
     % make stiffness matrix
-    cMat = [...
+    stiffnessMatrix = [...
         diagnl, lambda, lambda, 0,      0,      0;
         lambda, diagnl, lambda, 0,      0,      0;
         lambda, lambda, diagnl, 0,      0,      0;

@@ -172,6 +172,9 @@ function obj = calculateDispersionCurves(obj)
     % increment in the k-wavenumber
     kIncrement = [kxTmp(1):10:kxTmp(end)];
     
+    % plotting indicies
+    plottingCounter = round(linspace(1,length(kIncrement),100));
+    
     for counterIdx = 1:length(kIncrement)-1
         
         % the chosen y_point
@@ -275,17 +278,25 @@ function obj = calculateDispersionCurves(obj)
             
         end
         
-        
-        
-        figure(10)
-        hold on
-        for tmptmpdx = 1:length(myModes)
-            plot( myModes(tmptmpdx).y, myModes(tmptmpdx).x/1e6,'k-')
+        % to speed up the calculation only force drawing the figure 100 times
+        if sum(plottingCounter == counterIdx)
+            % plot of the determinant map
+            figure(10)
+            hold on
+            for tmptmpdx = 1:length(myModes)
+                % find lenghth (plot less)
+                plotIxs = round(linspace(1,numel(myModes(tmptmpdx).y),15));
+                plot( myModes(tmptmpdx).y, myModes(tmptmpdx).x/1e6,'k-')
+            end
+            
+            if counterIdx == 1
+                xlabel('Wavenumber [m^-^1]')
+                ylabel('Frequency [MHz]')
+                title('Determinant map - with dispersion curve traces')
+            end
+            drawnow
         end
-        xlabel('Wavenumber [m^-^1]')
-        ylabel('Frequency [MHz]')
-        title('Determinant map - with dispersion curve traces')
-        drawnow
+        
     end
     
     % get the phase speed

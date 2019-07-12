@@ -7,11 +7,11 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
     %
     %   Descriptions:
     %       Plots the parameters at every interface of the
-    %   multi-layered medium.
+    %   multi-layered medium. (only for Angle and Frequency)
     %
     
     % =====================================================================
-    %   ERROR CHECKIGN
+    %   ERROR CHECKING
     % =====================================================================
     
     % if any layers are a vacuum do not allow to plot
@@ -20,6 +20,22 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             warning('Interface parameters are 0 for a vacuum')
             return
         end
+    end
+    
+    % check angle and frequency vectors
+    if isempty(obj.angle)
+        warning(...
+            ['Angle vector is empty, this is currently only available for '...
+            ,'Angle and frequency'])
+        return;
+    end
+    
+    % check angle and frequency vectors
+    if isempty(obj.frequency)
+        warning(...
+            ['Angle vector is empty, this is currently only available for '...
+            ,'Angle and frequency'])
+        return;
     end
     
     % =====================================================================
@@ -59,28 +75,28 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             subplot(2,2,1)
             plot(frequencyRange, abs(uzUp), 'k')
             % labels
-            xlabel('Displacement [m]')
-            ylabel('Stress [Pa]')
+            xlabel('Frequency [MHz]')
+            ylabel('Displacement [Pa]')
             title('Displacement - z')
             
             % plot uz
             subplot(2,2,2)
             plot(frequencyRange, abs(uxUp), 'k')
-            xlabel('Displacement [m]')
-            ylabel('Stress [Pa]')
+            xlabel('Frequency [MHz]')
+            ylabel('Displacement [Pa]')
             title('Displacement - x')
             
             % plot sigma zz
             subplot(2,2,3)
             plot(frequencyRange, abs(sigZZup), 'k')
-            xlabel('Displacement [m]')
+            xlabel('Frequency [MHz]')
             ylabel('Stress [Pa]')
             title('Stress - zz')
             
             % plot sigma xz
             subplot(2,2,4)
             plot(frequencyRange, abs(sigXZup), 'k')
-            xlabel('Displacement [m]')
+            xlabel('Frequency [MHz]')
             ylabel('Stress [Pa]')
             title('Stress - xz')
             
@@ -90,28 +106,28 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             subplot(2,2,1)
             plot(angleRange, abs(uzUp), 'k')
             % labels
-            xlabel('Displacement [m]')
-            ylabel('Stress [Pa]')
+            xlabel('Angle [\circ]')
+            ylabel('Displacement [Pa]')
             title('Displacement - z')
             
             % plot uz
             subplot(2,2,2)
             plot(angleRange, abs(uxUp), 'k')
-            xlabel('Displacement [m]')
-            ylabel('Stress [Pa]')
+            xlabel('Angle [\circ]')
+            ylabel('Displacement [Pa]')
             title('Displacement - x')
             
             % plot sigma zz
             subplot(2,2,3)
             plot(angleRange, abs(sigZZup), 'k')
-            xlabel('Displacement [m]')
+            xlabel('Angle [\circ]')
             ylabel('Stress [Pa]')
             title('Stress - zz')
             
             % plot sigma xz
             subplot(2,2,4)
             plot(angleRange, abs(sigXZup), 'k')
-            xlabel('Displacement [m]')
+            xlabel('Angle [\circ]')
             ylabel('Stress [Pa]')
             title('Stress - xz')
             
@@ -160,6 +176,9 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             ylabel('Frequency [MHz]')
             colorbar
         end
+        
+        % over title
+        sgtitle(['Interface ',num2str(idx)])
     end
     
     

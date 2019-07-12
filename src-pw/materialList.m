@@ -9,7 +9,7 @@
 %   Please add any new materials in the same format seen below. The relevant
 %   properties are c (compressional speed) [ms^-1], cs (shear speed) [ms^-1] 
 %   and rho (density) [kgm^-3]. For anisotropic materials store the 6X6
-%   stiffness matrix (cMat), however currently only C(1,1), C(1,3), C(3,3)
+%   stiffness matrix (stiffnessMatrix), however currently only C(1,1), C(1,3), C(3,3)
 %   and C(5,5) are used as these correspond to x_1 and x_3 coordinates.
 %
 %   Possible states are:
@@ -26,7 +26,7 @@
 %   % to add orthotropic/transverse isotropic materials
 %   allMaterialStruct.NAME.rho                   =  ...      ;
 %   allMaterialStruct.NAME.state                 =  'Anisotropic'      ; 
-%   allMaterialStruct.NAME.cMat                  =  [6 x 6 matrix]      ;
+%   allMaterialStruct.NAME.stiffnessMatrix       =  [6 x 6 matrix]      ;
 
 % clearing step (if the list has been updated)
 try
@@ -91,6 +91,13 @@ allMaterialStruct.PVDF.c                        =   2250     ;
 allMaterialStruct.PVDF.cs                       =   1410     ; 
 allMaterialStruct.PVDF.rho                      =   1780     ; 
 allMaterialStruct.PVDF.state                    = 'Isotropic';
+
+% PVDF2 ===================================================================
+% this is from Rose, Ultrasonic guided waves in solid media
+allMaterialStruct.PVDF2.c                       =   2670     ; 
+allMaterialStruct.PVDF2.cs                      =   1120     ; 
+allMaterialStruct.PVDF2.rho                     =   1180     ; 
+allMaterialStruct.PVDF2.state                   = 'Isotropic';
 
 % Glass ===================================================================
 allMaterialStruct.glass.c                       =   5570     ; 
@@ -172,6 +179,13 @@ allMaterialStruct.aluminium.cs                  =   3100        ;
 allMaterialStruct.aluminium.rho                 =   2700        ;
 allMaterialStruct.aluminium.state               = 'Isotropic'   ;
 
+% aluminium2 ==============================================================
+% this is from Rose, Ultrasonic guided waves in solid media
+allMaterialStruct.aluminium2.c                  =   6250; 
+allMaterialStruct.aluminium2.cs                 =   3100        ; 
+allMaterialStruct.aluminium2.rho                =   2700        ;
+allMaterialStruct.aluminium2.state              = 'Isotropic'   ;
+
 % steel ===================================================================
 allMaterialStruct.steel1020.c                   =   5890        ; 
 allMaterialStruct.steel1020.cs                  =   3240        ; 
@@ -225,9 +239,9 @@ allMaterialStruct.copper.state                  = 'Isotropic'   ;
 % CubicInAs ===============================================================
 % from Nayfeh - wave propogation in layered anisotropic media
 % from Nayfeh - rotated at 0 degrees
-allMaterialStruct.CubicInAs0.rho            =   5670        ;
-allMaterialStruct.CubicInAs0.state          = 'Anisotropic' ;
-allMaterialStruct.CubicInAs0.cMat           =  1.0e+09 *[...
+allMaterialStruct.CubicInAs0.rho                =   5670        ;
+allMaterialStruct.CubicInAs0.state              = 'Anisotropic' ;
+allMaterialStruct.CubicInAs0.stiffnessMatrix    =  1.0e+09 *[...
     83.29         45.26       45.26       0           0           0;
     45.26       83.29         45.26       0           0           0;
     45.26       45.26       83.29         0           0           0;
@@ -240,7 +254,7 @@ allMaterialStruct.CubicInAs0.cMat           =  1.0e+09 *[...
 % rotated at 45 degrees
 allMaterialStruct.CubicInAs45.rho                =   5670    ;
 allMaterialStruct.CubicInAs45.state              = 'Anisotropic'  ;
-allMaterialStruct.CubicInAs45.cMat    =  1.0e+09 *[...
+allMaterialStruct.CubicInAs45.stiffnessMatrix    =  1.0e+09 *[...
     103.86      24.68       45.26       0           0           0;
     24.68       103.86      45.26       0           0           0;
     45.26       45.26       83.29       0           0           0;
@@ -252,7 +266,7 @@ allMaterialStruct.CubicInAs45.cMat    =  1.0e+09 *[...
 % from I. Abubakar - free vibrations of a transversely isotropic plate
 allMaterialStruct.beryl.rho                 =   2700        ;
 allMaterialStruct.beryl.state               = 'Anisotropic' ;
-allMaterialStruct.beryl.cMat                =  1.0e+09 *[...
+allMaterialStruct.beryl.stiffnessMatrix     =  1.0e+09 *[...
     23.63      	6.61        6.61        0           0           0;
     6.61        23.63       6.61        0           0           0;
     6.61        6.61        26.94       0           0           0;
@@ -264,7 +278,7 @@ allMaterialStruct.beryl.cMat                =  1.0e+09 *[...
 % from PAYTON - elstic wave propogation in transversely isotropic media
 allMaterialStruct.apatite.rho               =   2700         ; % unknown 
 allMaterialStruct.apatite.state             = 'Anisotropic'  ;
-allMaterialStruct.apatite.cMat              =  1.0e+09 *[...
+allMaterialStruct.apatite.stiffnessMatrix   =  1.0e+09 *[...
     16.7      	1.31        6.6         0           0           0;
     1.31        16.7        6.6         0           0           0;
     6.6         6.6         14.0        0           0           0;
@@ -276,7 +290,7 @@ allMaterialStruct.apatite.cMat              =  1.0e+09 *[...
 % from PAYTON - elstic wave propogation in transversely isotropic media
 allMaterialStruct.beryl2.rho                =   2700        ;
 allMaterialStruct.beryl2.state              = 'Anisotropic' ;
-allMaterialStruct.beryl2.cMat               =  1.0e+09 *[...
+allMaterialStruct.beryl2.stiffnessMatrix    =  1.0e+09 *[...
     28.2      	9.94        6.95        0           0           0;
     9.94        28.2        6.95        0           0           0;
     6.95        6.95        24.8        0           0           0;
@@ -288,7 +302,7 @@ allMaterialStruct.beryl2.cMat               =  1.0e+09 *[...
 % from PAYTON - elstic wave propogation in transversely isotropic media
 allMaterialStruct.zinc.rho                  =   2700            ;
 allMaterialStruct.zinc.state                = 'Anisotropic'     ;
-allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
+allMaterialStruct.zinc.stiffnessMatrix      =  1.0e+09 *[...
     16.5      	3.1         5.0         0           0           0;
     3.1         16.5        5.0         0           0           0;
     5.0         5.0         6.2         0           0           0;
@@ -300,7 +314,7 @@ allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
 % from PAYTON - elstic wave propogation in transversely isotropic media
 allMaterialStruct.zinc.rho                  =   2700            ;
 allMaterialStruct.zinc.state                = 'Anisotropic'     ;
-allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
+allMaterialStruct.zinc.stiffnessMatrix      =  1.0e+09 *[...
     6.2         5.0         5.0         0           0           0;
     5.0         16.5        3.1         0           0           0;
     5.0         3.1         16.5        0           0           0;
@@ -312,7 +326,7 @@ allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
 % Nayfeh - Anisotropic layered media book
 % allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 % allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-% allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
+% allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
 %     155.43      3.72        3.72        0           0           0;
 %     3.72        16.34       3.72        0           0           0;
 %     3.72        3.72        16.34       0           0           0;
@@ -322,7 +336,7 @@ allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
 
 % allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 % allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-% allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
+% allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
 %     155.43      3.72        3.72        0           0           0;
 %     3.72        16.34       4.96        0           0           0;
 %     3.72        4.96        16.34       0           0           0;
@@ -332,7 +346,7 @@ allMaterialStruct.zinc.cMat                 =  1.0e+09 *[...
 
 allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
+allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
     145.79      3.77        8.33        0           0           0;
     3.77        16.34       4.91        0           0           0;
     8.33        4.91        16.77       0           0           0;
@@ -342,7 +356,7 @@ allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
 
 allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
+allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
     145.79      8.33        3.77        0           0           0;
     8.33        16.77       4.91        0           0           0;
     3.77        4.91        16.34       0           0           0;
@@ -354,7 +368,7 @@ allMaterialStruct.graphiteEpoxy.cMat    =  1.0e+09 *[...
 %  Nayfeh - wave propogation in layered anisotropic media
 allMaterialStruct.GaAs.rho                  =   5307            ;
 allMaterialStruct.GaAs.state                = 'Anisotropic'     ;
-allMaterialStruct.GaAs.cMat                 =  1.0e+09 *[...
+allMaterialStruct.GaAs.stiffnessMatrix      =  1.0e+09 *[...
     111.8       53.8        53.8        0           0           0;
     53.8        111.8       53.8        0           0           0;
     53.8        3.72        111.8       0           0           0;
@@ -406,7 +420,7 @@ allMaterialStruct.parylene2.state               = 'Isotropic'   ;
 % Anisotropic Paryene estimate ============================================
 allMaterialStruct.ParCA.rho                 =   1289         ;
 allMaterialStruct.ParCA.state               = 'Anisotropic'  ;
-allMaterialStruct.ParCA.cMat                =  1.0e+09 *[...
+allMaterialStruct.ParCA.stiffnessMatrix                =  1.0e+09 *[...
     6.2388    3.1194    3.1194*0.9      0           0           0;
     3.1194    6.2388    3.1194          0           0           0;
     3.1194    3.1194    6.2388*1.5      0           0           0;
