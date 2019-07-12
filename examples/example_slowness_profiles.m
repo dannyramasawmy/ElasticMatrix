@@ -12,7 +12,7 @@
 % =========================================================================
 %   PLOT SLOWNESS CURVES
 % =========================================================================
-cls;
+cls; % clears variables and closes figures
 % firstly create a Medium object with each material needed to generate a
 % plot. Here the slowness profiles of water, glass and beryl will be
 % generated
