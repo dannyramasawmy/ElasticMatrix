@@ -20,6 +20,7 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     %   '2DStress'
     %   'Vector'
     %   'Mesh'
+    %   'Surf'
     %   'All'
     %
     % Example:
@@ -50,6 +51,15 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     flagDisplacement1D = 0;
     flagStress2D = 0;
     flagDisplacement2D = 0;
+    
+    % error check input field is correct
+    if isa(fieldValues, 'double')
+        if isnan(fieldValues)
+            figureHandle = 0;
+            warning('Field is NaN check .calcualteField');
+            return;
+        end
+    end
     
     % sort the inputs
     if isempty(varargin)

@@ -87,7 +87,7 @@ function [figureHandle, obj] = plotRCoefficients(obj)
         hold off
         % labels
         xlabel('Frequency [MHz]')
-        legend('|R_L|','|T_S|','|T_L|','|T_S|')
+        legend('|R_L|','|R_S|','|T_L|','|T_S|')
         
         
     elseif length(obj.frequency) == 1
@@ -100,7 +100,7 @@ function [figureHandle, obj] = plotRCoefficients(obj)
         hold off
         % labels
         xlabel('Angle [\circ]')
-        legend('|R_L|','|T_S|','|T_L|','|T_S|')
+        legend('|R_L|','|R_S|','|T_L|','|T_S|')
         
         
     else

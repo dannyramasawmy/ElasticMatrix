@@ -7,14 +7,36 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
     %
     %   Description
     %       Calculates the displacement field at angle (angleChoice) and
-    %       frequency (freqChoice);
+    %       frequency (freqChoice); First layer cannot be a 'vacuum' and
+    %       the input arguments must be an angle and frequency. The code
+    %       will be updated in the future to accept phasevelocity and
+    %       wavenumber input arguments.
     %
     % inputs:
-    %   (angle, frequency, {vector-Z, vector-X}, )
+    %   (angle, frequency, {vector-Z, vector-X}, time )
     %
     %
     %
-    %% ====================================================================
+    % =====================================================================
+    %   CHECK THE INUTS
+    % =====================================================================
+    % currently the only be calculate over an angle and frequency - this
+    % will be updated to a phase velocity in the future
+    
+    % error checking
+    if strcmp(obj.medium(1).state,'Vacuum')
+        warning('The first layer cannot currently be a vacuum.')
+        fields = NaN;
+        return;
+    end
+    
+    if strcmp(obj.medium(1).state,'Gas')
+        warning('The first layer cannot currently be a gas.')
+        fields = NaN;
+        return;
+    end
+    
+    % ====================================================================
     %   CHOOSE APPROPRIATE FREQUENCY / ANGLE
     % =====================================================================
     
@@ -35,7 +57,7 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
 %     waveAmplitudes = (obj.partialWaveAmplitudes(fidx, aidx,:));
     
     
-    %% ====================================================================
+    % =====================================================================
     %   PRECALCULATIONS
     % =====================================================================
     % final phase velocity
