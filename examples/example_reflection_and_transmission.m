@@ -48,7 +48,7 @@ plot(angleRange, abs(RS), 'c.')
 plot(angleRange, abs(TL), 'r.')
 plot(angleRange, abs(TS), 'm.')
 hold off
-
+legend('|R_L| EM','|R_S| EM','|T_L| EM','|T_S| EM','|R_L| Rose','|R_S| Rose','|T_L| Rose','|T_S| Rose')
 % errors
 errorRL = (abs(RL) - abs(myModel.partialWaveAmplitudes(1, :, 2))) ./ abs(RL);
 errorRS = (abs(RS) - abs(myModel.partialWaveAmplitudes(1, :, 1))) ./ abs(RS);
@@ -93,6 +93,7 @@ plot(angleRange, abs(RL), 'b.')
 plot(angleRange, abs(TL), 'r.')
 plot(angleRange, abs(TS), 'm.')
 hold off
+legend('|R_L| EM','|T_L| EM','|T_S| EM','|R_L| Rose','|T_L| Rose','|T_S| Rose')
 
 % errors
 errorRL = (abs(RL) - abs(myModel.partialWaveAmplitudes(1, :, 2))) ./ abs(RL);
