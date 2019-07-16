@@ -20,10 +20,15 @@ Some of the code functionalitiy:
 - [3] Ramasawmy, D. R., et al. "Analysis of the Directivity of Glass Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions on ultrasonics, ferroelectrics, and frequency control (2019).
 
 ### Future updates
-- Dispersion curve tracing still needs updating
-- Automatic sorting of calculation parameters (angles, frequencies, wavenumbers, phasespeed) 
+- Dispersion curve tracing still needs updating to search in imaginary space / inplement alternative algorithm
+- group velocity (dispersion curves)
+- energy velocity (slowness profiles)
 
 ### Update log:
+2019-07-16
+- sorting of calculation parameters when calling .calculate needs 2 of 4, frequency + angle/phasespeed/wavenumber
+- examples updated
+
 2019-07-12
 - Dispersion curve algorithm is much faster
 - examples folder is almost complete
