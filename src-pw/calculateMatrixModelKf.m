@@ -12,8 +12,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     %   Solves the partial wave model.
     %       1 = x direction
     %       3 = z direction
-    %       this function is done in wavenumber(Kx)-frequency space for the
-    %       dispersion curve calculation
+    %       this function is calculated in wavenumber(Kx)-frequency space 
     %
     %       INPUTS:
     %           medium - medium classz
@@ -36,18 +35,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     if returnFieldVariable ~= 1
         fieldVariables = 0;
     end
-    
-    % a debugging variable
-    %     temp = [];
-    % ## DEBGUG
-    %     % overide functions - converts angles into phase velocities for
-    %     % dispersion curve calcualtions
-    %     if isempty(varargin)
-    %
-    %
-    %     end
-    
-    
+      
     % =====================================================================
     %   PRECALCULATIONS
     % =====================================================================
@@ -83,7 +71,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     % check both the frequency_vecotr and wavenumber vector are the same
     % length
     if length(frequencyVec) ~= length(wavenumberVec)
-        % break if vectors \rent the right length
+        % break if vectors are not the right length
         return;
     end
     
@@ -92,6 +80,8 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     
     % loop over the vector length for frequency and wavenumber
     for fKIdx = 1:nVector
+        
+        
         
         
         % basis of phase speed from first layer
@@ -231,131 +221,136 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
         %             metrics( freq_idx, angle_idx ) = -abs(cond(sys_mat));
         metrics( fKIdx)     = (det(  sysMat));
         
-        %{
-              % FIND ME DEBUG
+        % for dispersion curve analysis the remaining calculations are not
+        % necessary, hence this is only performed when an extra input
+        % argumnet is given
+        if returnFieldVariable == 1
+            
+            % FIND ME DEBUG
             % loop over each layer
-            for layer_dx = 1:num_layers
-                switch layer_dx
-               
+            for layerIdx = 1:numLayers
+                switch layerIdx
+                    
                     case 1
                         % first layer / reflection coefficient
-                        partial_wave_amplitudes(freq_idx, kx_idx, 1) = ...
-                            output(1) / B_1 / m_p(layer_dx).alpha(1);
-                        partial_wave_amplitudes(freq_idx, kx_idx, 2) = ...
+                        partialWaveAmplitudes(fKIdx, 1) = ...
+                            output(1) / B_1 / matProp(layerIdx).alpha(1);
+                        partialWaveAmplitudes(fKIdx, 2) = ...
                             output(2) / B_1 ;
                         
                         
-                          
-                    case num_layers
-                        output_idx = 4*(layer_dx - 2)+ [3,4];
+                        
+                    case numLayers
+                        outputIdx = 4*(layerIdx - 2)+ [3,4];
                         % last layer/ transmission coefficient
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / m_p(layer_dx).alpha(1);
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(2)) = ...
-                            output(output_idx(2)) / B_1 ;
-                                                    
+                        partialWaveAmplitudes(fKIdx, outputIdx(1)) = ...
+                            output(outputIdx(1)) / B_1 / matProp(layerIdx).alpha(1);
+                        partialWaveAmplitudes(fKIdx, outputIdx(2)) = ...
+                            output(outputIdx(2)) / B_1 ;
+                        
                     otherwise
                         % intermediate coefficients
-                        output_idx = 4*(layer_dx - 2)+ [3,4,5,6];
+                        outputIdx = 4*(layerIdx - 2)+ [3,4,5,6];
                         % shear outputs
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / m_p(layer_dx).alpha(1);
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(2)) = ...
-                            output(output_idx(2)) / B_1 / m_p(layer_dx).alpha(1);
-                                                
+                        partialWaveAmplitudes(fKIdx, outputIdx(1)) = ...
+                            output(outputIdx(1)) / B_1 / matProp(layerIdx).alpha(1);
+                        partialWaveAmplitudes(fKIdx, outputIdx(2)) = ...
+                            output(outputIdx(2)) / B_1 / matProp(layerIdx).alpha(1);
+                        
                         % compressional outputs
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(3)) = ...
-                            output(output_idx(3)) / B_1 ;
-                        partial_wave_amplitudes(freq_idx, kx_idx, output_idx(4)) = ...
-                            output(output_idx(4)) / B_1 ;
+                        partialWaveAmplitudes(fKIdx, outputIdx(3)) = ...
+                            output(outputIdx(3)) / B_1 ;
+                        partialWaveAmplitudes(fKIdx, outputIdx(4)) = ...
+                            output(outputIdx(4)) / B_1 ;
                         
                 end
             end
             
+            %{
             % incident field is the B_1 column of the field matrix (3rd
             % row)
             % reflected field is output (1 + 2)
             % all field variables uppers
             % FIND ME DEBUG
-            i_norml_stress = abs(field_matrices(1).upper(3,[4]) * B_1) ;
-            r_norml_stress = abs(field_matrices(1).upper(3,[1 3 4]) * [output(1:2); B_1]);
-            r_shear_stress = abs(field_matrices(1).upper(4,[1 3 4]) * [output(1:2); B_1]);
-            t_norml_stress = abs(field_matrices(end).lower(3,[2,4]) * output([end-1, end]));
-            t_shear_stress = abs(field_matrices(end).lower(4,[2,4]) * output([end-1, end]));
+         
+            iNormlStress = abs(fieldMatrices(1).upper(3,[4]) * B_1) ;
+            rNormlStress = abs(fieldMatrices(1).upper(3,[1 3 4]) * [output(1:2); B_1]);
+            rShearStress = abs(fieldMatrices(1).upper(4,[1 3 4]) * [output(1:2); B_1]);
+            tNormlStress = abs(fieldMatrices(end).lower(3,[2,4]) * output([end-1, end]));
+            tShearStress = abs(fieldMatrices(end).lower(4,[2,4]) * output([end-1, end]));
             
-            RL = r_norml_stress / i_norml_stress;
-            RS = r_shear_stress / i_norml_stress;
-            TL = t_norml_stress / i_norml_stress;
-            TS = t_shear_stress / i_norml_stress;
+            RL = rNormlStress / iNormlStress;
+            RS = rShearStress / iNormlStress;
+            TL = tNormlStress / iNormlStress;
+            TS = tShearStress / iNormlStress;
             
             temp(freq_idx, kx_idx, :) = [RL, RS, TL, TS] ;
             
             
+            % {
             %
             %     field_variables(idx).upper(freq_idx, angle_idx, 1:4) = ...
             %       field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
-
-                                
+            
+            
             %     % all field variables lower
             %     field_variables(idx).lower(freq_idx, angle_idx, 1:4) = ...
             %                  field_matrices(idx).lower(:,[2,4]) * output(choice+4:end);
-                                
-                                
+            
+            %}
             % =============================================================
             %   CALCULATE OUTPUT DISPLACEMENTS - FULL ELASTIC MATRIX
             % =============================================================
             
-            if return_field_variable == 1;
-                % loop over th enumber of interfaces and calcualte the dispalcement
-                if num_of_interfaces == 1;
-                    % for a single interface
-                    idx = 1;
-                    
-                    % all field variables uppers
-                    field_variables(idx).upper(freq_idx, kx_idx, 1:4) = ...
-                        field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
-                    
-                    % all field variables lower
-                    field_variables(idx).lower(freq_idx, kx_idx, 1:4) = ...
-                        field_matrices(idx).lower(:,[2 4]) * output(3:4);
-                else
-                    % for more than one interface
-                    for idx = 1:num_of_interfaces
-                        choice = (idx - 2)*4 + 3;
-                        
-                        switch idx
-                            case 1
-                                % all field variables uppers
-                                field_variables(idx).upper(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
-                                
-                                % all field variables lower
-                                field_variables(idx).lower(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).lower(:,:) * output(3:6);
-                                
-                            case num_of_interfaces
-                                % all field variables upper
-                                field_variables(idx).upper(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).upper(:,:) * output(choice:choice+3);
-                                
-                                % all field variables lower
-                                field_variables(idx).lower(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).lower(:,[2,4]) * output(choice+4:end);
-                                
-                            otherwise
-                                % all field variables upper
-                                field_variables(idx).upper(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).upper(:,:) * output(choice:choice+3);
-                                
-                                % all field variables lower
-                                field_variables(idx).lower(freq_idx, kx_idx, 1:4) = ...
-                                    field_matrices(idx).lower(:,:) * output(choice+4:choice+7);
-                        end
-                    end
-                end % if num_of_interface
-            end % return displacemnts
             
-        %}
+            % loop over th enumber of interfaces and calcualte the dispalcement
+            if numInterfaces == 1
+                % for a single interface
+                idx = 1;
+                
+                % all field variables uppers
+                fieldVariables(idx).upper(fKIdx, 1:4) = ...
+                    field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
+                
+                % all field variables lower
+                fieldVariables(idx).lower(fKIdx, 1:4) = ...
+                    field_matrices(idx).lower(:,[2 4]) * output(3:4);
+            else
+                % for more than one interface
+                for idx = 1:numInterfaces
+                    choice = (idx - 2)*4 + 3;
+                    
+                    switch idx
+                        case 1
+                            % all field variables uppers
+                            fieldVariables(idx).upper(fKIdx,  1:4) = ...
+                                fieldMatrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
+                            
+                            % all field variables lower
+                            fieldVariables(idx).lower(fKIdx,  1:4) = ...
+                                fieldMatrices(idx).lower(:,:) * output(3:6);
+                            
+                        case numInterfaces
+                            % all field variables upper
+                            fieldVariables(idx).upper(fKIdx, 1:4) = ...
+                                fieldMatrices(idx).upper(:,:) * output(choice:choice+3);
+                            
+                            % all field variables lower
+                            fieldVariables(idx).lower(fKIdx, 1:4) = ...
+                                fieldMatrices(idx).lower(:,[2,4]) * output(choice+4:end);
+                            
+                        otherwise
+                            % all field variables upper
+                            fieldVariables(idx).upper(fKIdx, 1:4) = ...
+                                fieldMatrices(idx).upper(:,:) * output(choice:choice+3);
+                            
+                            % all field variables lower
+                            fieldVariables(idx).lower(fKIdx,  1:4) = ...
+                                fieldMatrices(idx).lower(:,:) * output(choice+4:choice+7);
+                    end
+                end
+            end % if num_of_interface
+        end % return displacemnts
         
         
     end

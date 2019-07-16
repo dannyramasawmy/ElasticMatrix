@@ -177,7 +177,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             output = sys_mat \ knowns;
             
             unnormalisedAmplitudes(freqIdx, angleIdx, :) = output;
-%             % partial wave amplitudes
+            % partial wave amplitudes
             partialWaveAmplitudes(freqIdx, angleIdx, :) = ...
                 zeros(size(output));
             
@@ -199,40 +199,40 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             %             metrics.sysM( freq_idx, angle_idx ).S   = LHS       ;
             %             metrics.rank( freq_idx, angle_idx )     = rank( LHS);
             %}
-%             metrics( freq_idx, angle_idx ) = -abs(cond(sys_mat));
+            %             metrics( freq_idx, angle_idx ) = -abs(cond(sys_mat));
             metrics( freqIdx, angleIdx )     = (det(  sys_mat));
             
-              % FIND ME DEBUG
+            % FIND ME DEBUG
             % loop over each layer
-            for layer_dx = 1:numLayers
-                switch layer_dx
+            for layerIdx = 1:numLayers
+                switch layerIdx
                     
                     case 1
                         % first layer / reflection coefficient
                         partialWaveAmplitudes(freqIdx, angleIdx, 1) = ...
-                            output(1) / B_1 / matProp(layer_dx).alpha(1);
+                            output(1) / B_1 / matProp(layerIdx).alpha(1);
                         partialWaveAmplitudes(freqIdx, angleIdx, 2) = ...
                             output(2) / B_1 ;
                         
                         
-                          
+                        
                     case numLayers
-                        output_idx = 4*(layer_dx - 2)+ [3,4];
+                        output_idx = 4*(layerIdx - 2)+ [3,4];
                         % last layer/ transmission coefficient
                         partialWaveAmplitudes(freqIdx, angleIdx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / matProp(layer_dx).alpha(1);
+                            output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
                         partialWaveAmplitudes(freqIdx, angleIdx, output_idx(2)) = ...
                             output(output_idx(2)) / B_1 ;
-                                                    
+                        
                     otherwise
                         % intermediate coefficients
-                        output_idx = 4*(layer_dx - 2)+ [3,4,5,6];
+                        output_idx = 4*(layerIdx - 2)+ [3,4,5,6];
                         % shear outputs
                         partialWaveAmplitudes(freqIdx, angleIdx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / matProp(layer_dx).alpha(1);
+                            output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
                         partialWaveAmplitudes(freqIdx, angleIdx, output_idx(2)) = ...
-                            output(output_idx(2)) / B_1 / matProp(layer_dx).alpha(1);
-                                                
+                            output(output_idx(2)) / B_1 / matProp(layerIdx).alpha(1);
+                        
                         % compressional outputs
                         partialWaveAmplitudes(freqIdx, angleIdx, output_idx(3)) = ...
                             output(output_idx(3)) / B_1 ;
@@ -242,11 +242,13 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
                 end
             end
             
+            
             % incident field is the B_1 column of the field matrix (3rd
             % row)
-            % reflected field is output (1 + 2) 
+            % reflected field is output (1 + 2)
             % all field variables uppers
             % FIND ME DEBUG
+            %{
             iNormlStress = abs(fieldMatrices(1).upper(3,[4]) * B_1) ;
             rNormlStress = abs(fieldMatrices(1).upper(3,[1 3 4]) * [output(1:2); B_1]);
             rShearStress = abs(fieldMatrices(1).upper(4,[1 3 4]) * [output(1:2); B_1]);
@@ -259,18 +261,18 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             TS = tShearStress / iNormlStress;
             
             temp(freqIdx, angleIdx, :) = [RL, RS, TL, TS] ;
-            
+            %}
             
             %
             %     field_variables(idx).upper(freq_idx, angle_idx, 1:4) = ...
             %       field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
-
-                                
+            
+            
             %     % all field variables lower
             %     field_variables(idx).lower(freq_idx, angle_idx, 1:4) = ...
             %                  field_matrices(idx).lower(:,[2,4]) * output(choice+4:end);
-                                
-                                
+            
+            
             % =============================================================
             %   CALCULATE OUTPUT DISPLACEMENTS - FULL ELASTIC MATRIX
             % =============================================================

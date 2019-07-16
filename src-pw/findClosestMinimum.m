@@ -75,7 +75,7 @@ function xmin = findClosestMinimum(funHand, startingPoint, increment, maxRange)
         if maxExceed > 1000
             xmin = startingPoint;
             breakout = 0;
-            disp('Limit reached')
+            % disp('Limit reached')
         end
         
         maxExceed = maxExceed +1;

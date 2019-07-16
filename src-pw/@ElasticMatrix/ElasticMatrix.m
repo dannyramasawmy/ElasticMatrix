@@ -21,7 +21,7 @@ classdef ElasticMatrix < handle
     % closed properties
     properties (SetAccess = private, GetAccess = public)
         medium                          % Medium class oject
-        partialWaveAmplitudes         % partial wav
+        partialWaveAmplitudes           % partial wav
         amplitudes
         xDisplacement                  % x-displacement at interface
         zDisplacement                  % z-displacement at interface

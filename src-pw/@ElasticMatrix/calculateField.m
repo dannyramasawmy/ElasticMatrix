@@ -1,4 +1,4 @@
-function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
+function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     %% displacementField v1 date:  2019-01-15
     % 
     %   Author
@@ -15,7 +15,8 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
     % inputs:
     %   (angle, frequency, {vector-Z, vector-X}, time )
     %
-    %
+    %   FUTURE 
+    %   - add an optional phasespeed input argument 
     %
     % =====================================================================
     %   CHECK THE INUTS
@@ -36,6 +37,13 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
         return;
     end
     
+    if isempty(obj.frequency) || isempty(obj.angle)
+        warning('Please set an angle and frequency using .setAngle, .setFrequency.')
+        warning(' then call .calculate.')
+        fields = NaN;
+        return;
+    end
+        
     % ====================================================================
     %   CHOOSE APPROPRIATE FREQUENCY / ANGLE
     % =====================================================================
@@ -53,9 +61,7 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
 %     disp(['Frequency chosen: '  ,   num2str(freq_vec/1e6), ' MHz'])
     
     % output wave amplitudes from calculated model
-    waveAmplitudes = (obj.unnormalisedAmplitudes(fidx, aidx,:));
-%     waveAmplitudes = (obj.partialWaveAmplitudes(fidx, aidx,:));
-    
+    waveAmplitudes = (obj.unnormalisedAmplitudes(fidx, aidx,:));   
     
     % =====================================================================
     %   PRECALCULATIONS
@@ -65,9 +71,6 @@ function [fields, obj] = calculateField(obj, angleChoice, freqChoice, varargin)
     
     % the number of layers
     numLayers = length(obj.medium);
-    
-    % the number of interfaces
-%     num_of_interfaces = numLayers - 1;
     
     % angle and phase velocity
     angle = angleVec;
