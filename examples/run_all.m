@@ -42,7 +42,6 @@ pause(2);
 example_reflection_and_transmission; 
 pause(2);
 
-
 % plotting dispalcement and stress at the interface
 example_interface_parameters;
 pause(2);
@@ -54,7 +53,6 @@ pause(2);
 % plotting a displacement and stress field
 example_plot_field_parameters_movie;        
 pause(2);
-
 
 % dispersion curve calcualtion comparison with disperse
 example_dispersion_curve_titanium_plate;  

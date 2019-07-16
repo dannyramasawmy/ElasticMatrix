@@ -47,8 +47,9 @@ chosenAngle = 19.99;
 chosenFrequency = 4.425e6;
 
 % run calculate field
-disp('[outputField] = model.calculatedField(angle, frequency, {Z_hf, X_hf})')
-[outputField] = model.calculateField(chosenAngle, chosenFrequency, {Zhf, Xhf});
+disp('[outputField] = model.calculatedField(angle, frequency, chosenFrequency, {Z_hf, X_hf})')
+[outputField] = model.calculateField( ...
+    chosenFrequency, chosenAngle, {Zhf, Xhf});
 
 % output field is a structure that contains
 %   - z - normal displacement field
@@ -103,7 +104,7 @@ disp('Note: Z = 0 is the interface between the first and second layer')
 % calcualte the field at a certain time
 timeIndex = 0e-6;
 [outputField] = model.calculateField(...
-    chosenAngle, chosenFrequency, {Zhf, Xhf}, timeIndex);
+    chosenFrequency, chosenAngle, {Zhf, Xhf}, timeIndex);
 
 % plot the figure with the input argument for the first step - this creates
 % two new figures where the handles are assigned to
@@ -113,7 +114,7 @@ newFigureHandle = model.plotField( outputField, 'Mesh', 'Surf');
 % create the new / updated field
 timeIndex = 0.1e-6;
 [updatedField] = model.calculateField(...
-    chosenAngle, chosenFrequency, {Zhf, Xhf}, timeIndex);
+    chosenFrequency, chosenAngle, {Zhf, Xhf}, timeIndex);
 
 % plot a new figure, but instead of giving plotting figure input arguments
 % give the figure handle from the previous plotting step - this will update

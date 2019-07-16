@@ -38,8 +38,8 @@ myModel.setMedium( myMedium );
 % =========================================================================
 % The paramaters to calculate over are the frequency, angle, wavenumber and
 % phasespeed. Only two need to be set, if more than two are set the code
-% will calculate over only two in the order angle -> frequency ->
-% wavenumber -> phasespeed.
+% will calculate over only two in the order frequency -> angle ->
+% phasespeed -> wavenumber .
 
 % set a range of angles in [deg]
 myModel.setAngle( linspace(0,45,100) );
@@ -48,10 +48,10 @@ myModel.setAngle( linspace(0,45,100) );
 myModel.setFrequency( linspace(0.1e6, 5e6, 100) );
 
 % set a range of wavenumbers in [1/m]
-myModel.setWavenumber( linspace(1, 100, 100) );
+myModel.setWavenumber( linspace(1, 10000, 101) );
 
 % set phasespeeds
-myModel.setPhasespeed( linspace(50, 1000,100) )
+myModel.setPhasespeed( linspace(50, 1000, 101) )
 
 % =========================================================================
 %   RUNNING THE MATRIX METHOD
@@ -60,9 +60,9 @@ myModel.setPhasespeed( linspace(50, 1000,100) )
 % to run the matrix method for the case of an incident compressional wave
 % in the first layer use .calcualte, as mentioned previously, this will
 % first sort the inputs and calculate using the first two parameters in the
-% order anlge -> frequency -> wavenumber -> phasespeed
+% order frequency -> angle -> phasespeed -> wavenumber
 myModel.calculate;
-
+myModel.disp;
 % there are other methods that can be run:
 % For estimating dispersion curves:
 % .calculateDispersionCurves        

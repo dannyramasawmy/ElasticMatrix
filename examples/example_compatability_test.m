@@ -292,7 +292,7 @@ totalCounter = totalCounter + 1;
 disp('Test: [fieldStructure] = ElasticMatrix.calculateField(angle, frequency, {Zvector, Xvector}) ')
 try
     plotVector = linspace(-1.5,0.5,128)*1e-3;
-    field = model.calculateField(15, 50e6, {plotVector, plotVector});
+    field = model.calculateField(50e6, 15, {plotVector, plotVector});
     disp('pass')
     totalPass = totalPass + 1;
 catch

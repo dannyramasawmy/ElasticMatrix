@@ -67,8 +67,8 @@ tvec =  linspace(0e-6, 0.5e-6, 100);
 for tdx = 1:length(tvec)
     
     % calculate fields for a symmetric and anti-symmetric mode
-    fieldS = model.calculateField(chosenAngleS, chosenFreqS, {Zhf, Xhf}, tvec(tdx));
-    fieldA = model.calculateField(chosenAngleA, chosenFreqA, {Zhf, Xhf}, tvec(tdx));
+    fieldS = model.calculateField(chosenFreqS, chosenAngleS, {Zhf, Xhf}, tvec(tdx));
+    fieldA = model.calculateField(chosenFreqA, chosenAngleA, {Zhf, Xhf}, tvec(tdx));
     
     % for the FIRST loop - -use a plotting argument
     if tdx == 1
