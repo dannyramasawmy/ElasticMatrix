@@ -1,0 +1,63 @@
+REFERENCES.txt
+
+DESCRIPTION
+  This file contains the references used in ElasticMatrix.
+
+ABOUT
+  author          - Danny Ramasawmy
+  contact         - dannyramasawmy+elasticmatrix@gmail.com
+  date            - 18 - july 	- 2019
+  last update     - 18 - july 	- 2019
+
+This file is part of the ElasticMatrix toolbox.
+Copyright (c) 2019 Danny Ramasawmy.
+
+This file is part of ElasticMatrix. ElasticMatrix is free software: you
+can redistribute it and/or modify it under the terms of the GNU Lesser
+General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+ElasticMatrix is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with ElasticMatrix. If not, see <http://www.gnu.org/licenses/>.
+
+
+Reference list:
+[1] Ramasawmy, Danny R., et al. "ElasticMatrix: A MATLAB Toolbox for 
+    Anisotropic Elastic Wave Propagation in Layered Media.", (2019).
+
+[2] Ramasawmy, Danny R., et al. "Analysis of the Directivity of Glass 
+    Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions on 
+    ultrasonics, ferroelectrics, and frequency control, (2019).
+
+[3] Lowe, Michael JS. "Matrix techniques for modeling ultrasonic waves in 
+    multilayered media." IEEE transactions on ultrasonics, ferroelectrics,
+    and frequency control, (1995).
+
+[4] Nayfeh, Adnan H. "The general problem of elastic wave propagation in
+    multilayered anisotropic media." The Journal of the Acoustical Society 
+    of America (1991).
+
+[5] Pavlakovic, Brian, et al. "Disperse: A general purpose program for 
+    creating dispersion curves." Review of progress in quantitative
+    nondestructive evaluation. Springer, Boston, (1997).
+
+[6] Rose, Joseph L. "Ultrasonic guided waves in solid media." 
+    Cambridge university press, (2014).
+
+[7] Cheeke, J. David N. "Fundamentals and applications of ultrasonic 
+    waves." CRC press, (2016).
+
+[8] Beard, P. "Transduction mechanisms of the Fabry-Perot polymer film 
+    sensing concept for wideband ultrasound detection"  IEEE transactions 
+    on ultrasonics, ferroelectrics, and frequency control, (1999).
+
+[9] Cox, Benjamin T., and Paul C. Beard. "The frequency-dependent 
+    directivity of a planar Fabry-Perot polymer film ultrasound sensor." 
+    IEEE transactions on ultrasonics, ferroelectrics, and frequency 
+    control, (2007).
+
