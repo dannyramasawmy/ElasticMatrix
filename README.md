@@ -25,6 +25,9 @@ Some of the code functionalitiy:
 - energy velocity (slowness profiles)
 
 ### Update log:
+2019-07-18
+- reorder folders, delete some data and papers from documentation (replaced with a reference list)
+
 2019-07-16
 - sorting of calculation parameters when calling .calculate needs 2 of 4, frequency + angle/phasespeed/wavenumber
 - examples updated
