@@ -121,7 +121,7 @@ timeIndex = 0.1e-6;
 % the two figures and not create two new figures
 newFigureHandle = model.plotField( updatedField, newFigureHandle);
 
-
+disp('Note: for CubicInAs part of the qSV curve is represented in the qL curve')
 
 
 

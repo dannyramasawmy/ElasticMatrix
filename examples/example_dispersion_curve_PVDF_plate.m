@@ -73,7 +73,7 @@ xlabel('Frequency [MHz]')
 ylabel('Phase Velocity [km/s]')
 % legend('ElasticMatrix','Disperse')
 box on
-title('ElasticMatrix (lines) + Disperse (points)')
+title('ElasticMatrix (lines)')
 
 
 

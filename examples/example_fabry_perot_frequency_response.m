@@ -39,8 +39,6 @@ titles = {'Water Backed 50um PET',...
 % Figure 1 handle
 mainFigHand = figure;
 
-load('../data/Beard1999FrequencyResponseFabryPerotData.mat');
-
 % different cases to plot
 for idx = 1:6
     % Generate a structure
@@ -50,37 +48,31 @@ for idx = 1:6
             myMedium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'water',1);
-            measurementData = waterBacked50umPET;
         case 2
             % 'Glass Backed 50um PET'
             myMedium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'glass',1);
-            measurementData = glassBacked50umPET;
         case 3
             % 'PMMA Backed 50um PET',...
             myMedium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'PMMA',1);
-            measurementData = pmmaBacked50umPET;
         case 4
             % 'Water Backed 23um PET',...
             myMedium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'water',1);
-            measurementData = waterBacked23umPET;
         case 5
             % 'Glass Backed 23um PET',...
             myMedium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'glass',1);
-            measurementData = glassBacked23umPET;
         case 6
             % 'PMMA Backed 23 PET',};
             myMedium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'PMMA',1);
-            measurementData = pmmaBacked23umPET;
     end
     
     % initalise FabryPerot class    
@@ -103,13 +95,8 @@ for idx = 1:6
     % get handle for subplot
     subplot(3,2,idx);
     
-    % copy into main figure
-    hold on
     % plot the model data
     plot(temp.frequency /1e6 , modelData ./ modelData(1), 'k')
-    % plot the measurement data
-    plot(measurementData(:,1), (measurementData(:,2)),'k.')
-    hold off
     
     % labels
     title(titles{idx})
@@ -119,7 +106,7 @@ for idx = 1:6
     box on
     xlabel('Frequency [MHz]')
     ylabel('Normalised Mean Stress Amplitude')
-    legend('Model','Beard','Location','southwest')
+    legend('Model','Location','southwest')
     
 end
 

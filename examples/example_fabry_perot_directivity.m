@@ -94,34 +94,6 @@ sfg;
 myDirData = sensor.getDirectivity('normalise');
 
 % =========================================================================
-%   COMPARISON WITH MEASUREMENT DATA
-% =========================================================================
-% Here data taken from a measurment of a sensor with the same construction 
-% is loaded from the data folder and compared with the model of the 
-% directional response
-
-% load the data
-load('../data/glassEtalonFabryPerotDirectivityData.mat')
-
-figure;
-% plot the measurement data from 0 -> 40 degrees
-imagesc(angles,freqs/1e6,normDirL /(max(normDirL(:,162))))
-% plot the modelled data from -40 -> 0 degrees (the data is symmetric)
-hold on
-imagesc(-sensor.angle, sensor.frequency/1e6, (sensor.getDirectivity('normalise')))
-
-% labels
-ylim([0 50])
-axis xy
-xlabel('Angle [\circ]')
-ylabel('Frequency [MHz]')
-colormap parula
-caxis([0 1])
-colorbar
-axis square
-title('Measured vs Modelled Directivity')
-
-% =========================================================================
 %   ADD DISPERSION CURVE DATAS
 % =========================================================================
 
