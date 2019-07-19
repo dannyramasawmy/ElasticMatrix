@@ -1,22 +1,72 @@
 function obj = calculateSlowness(obj)
-    %% setStiffnessMatrix v1 date:  2019-01-15
+    %CALCULATESLOWNESS Calculates the slowness profiles.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   CALCULATESLOWNESS is a method of the Medium class. This function
+    %   calculates the slowness profiles of each material in the Medium
+    %   object. This is found by defining a range of phase-speeds and
+    %   calculating the slowness of each bulk wave using the Christoffel
+    %   equation, see ./documentation/REFERENCES.txt.
     %
-    %   Description
-    %       Calculates the slowness profiles for each material in the
-    %       layered object
+    % USEAGE
+    %   obj.calculateSlowness;
+    %   calculateSlowness(obj);
+    %
+    % INPUTS
+    %   obj             - Medium object.
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   obj             - returns the input object      []
+    %
+    %   The .slowness property is a structure of wave-vector components
+    %   normalized by an arbitrary frequency. Effectively they are k/omega
+    %   with units of [s/m].
+    %
+    %   obj.slowness            - property of Medium, (structure)
+    %   obj.slowness.kx         - horizontal component (vector)
+    %   obj.slowness.kz_qL1     - (quasi-)L  vertical component -ve
+    %   obj.slowness.kz_qL2     - (quasi-)L  vertical component +ve
+    %   obj.slowness.kz_qSV1    - (quasi-)SV vertical component -ve
+    %   obj.slowness.kz_qSV2    - (quasi-)SV vertical component +ve
+    %   obj.slowness.kz_qSH     - (quasi-)SH vertical component +ve
+    %
+    % DEPENDENCIES
+    %   calculateAlphaCoefficients(...) - Christoffel equation
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 19 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
-    
-    % loop over every material
+    % loop over each material
     for idx = 1:length(obj)
         
-        % different solution for different materials
+        % different solution for different types of materials
         switch obj(idx).state
             case {'Vacuum', 'Unknown'}
-                % slowness curvess do not exist
+                % slowness curves do not exist
                 obj(idx).slowness = NaN;
                 
             case {'Gas', 'Liquid'}
@@ -30,7 +80,7 @@ function obj = calculateSlowness(obj)
                 obj(idx).slowness = calculateSlownessAnisotropic( obj(idx) );
                 
             otherwise
-                % slowness ccannot be calculated
+                % slowness cannot be calculated
                 obj(idx).slowness = NaN;
         end
         
@@ -38,147 +88,144 @@ function obj = calculateSlowness(obj)
     
 end
 
-function [slownessProfiles] = calculateSlownessLiquid( material )
-    % calculateSlownessLiquid
+function [slowness] = calculateSlownessLiquid( material )
+    %CALCULATESLOWNESSLIQUID Calculates the slowness profiles.
     %
-    % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
-    % Date      :   2019-01-25  -   created
+    % DESCRIPTION
+    %   CALCULATESLOWNESSLIQUID calculates the slowness profiles for a
+    %   liquid material. Note, liquids cannot support a shear wave.
     %
-    %
-    % Description
-    %   This function is for liquid materials (only support compressional
-    %   waves)
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 19 - July     - 2019
     
     % get the compressional wave speed
-    phase_vel = sqrt(material(1).stiffnessMatrix(1,1) / material(1).density);
-    
-    % get the slowness profiles
-    [slownessProfiles] = calculateSlownessAnisotropic( material, phase_vel );
-    
-    % other parameters are non-physical for liquids
-    slownessProfiles.kz_qSH = NaN;
-    slownessProfiles.kz_qSV1 = NaN;
-    slownessProfiles.kz_qSV2 = NaN;
-    
-end
-
-
-function [slownessProfiles] = calculateSlownessIsotropic( material )
-    % calculateSlownessIsotropic
-    %
-    % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
-    % Date      :   2019-01-25  -   created
-    %
-    %
-    % Description
-    %   This function is for isotropic materials (support compressional and
-    %   shear waves)
-    
-    % find the shear speed (lowest phase velocity)
-    phase_vel = sqrt(...
-        ((material(1).stiffnessMatrix(1,1) - material(1).stiffnessMatrix(1,3)) / 2 ) /...
+    phase_velocity = sqrt(material(1).stiffnessMatrix(1,1) /...
         material(1).density);
     
-    % calculate the slowness profiles
-    [slownessProfiles] = calculateSlownessAnisotropic( material, phase_vel);
+    % get the slowness profiles
+    [slowness] = calculateSlownessAnisotropic(material, phase_velocity);
+    
+    % other parameters are non-physical for liquids
+    slowness.kz_qSH     = NaN;
+    slowness.kz_qSV1    = NaN;
+    slowness.kz_qSV2    = NaN;
     
 end
 
 
-function [slownessProfiles] = calculateSlownessAnisotropic( material , varargin)
-    %% TestScript
+function [slowness] = calculateSlownessIsotropic( material )
+    %CALCULATESLOWNESSISOTROPIC Calculates the slowness profiles.
     %
-    % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
-    % Date      :   2019-01-25  -   created
+    % DESCRIPTION
+    %   CALCULATESLOWNESSISOTROPIC calculates the slowness profiles for a
+    %   isotropic materials.
     %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 19 - July     - 2019
+    
+    % find the shear speed (lowest phase velocity)
+    phase_velocity = sqrt(...
+        ((material.stiffnessMatrix(1,1) - material.stiffnessMatrix(1,3)) / 2 )...
+        / material.density);
+    
+    % calculate the slowness profiles
+    [slowness] = calculateSlownessAnisotropic( material, phase_velocity);
+    
+end
+
+
+function [slowness] = calculateSlownessAnisotropic( material , varargin)
+    %CALCULATESLOWNESSANISOTROPIC Calculates the slowness profiles.
     %
-    % Description
-    %   This function is fir finding the slowness profiles of anisotropic
-    %   materials
+    % DESCRIPTION
+    %   CALCULATESLOWNESSANISOTROPIC calculates the slowness profiles for a
+    %   anisotropic material.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 19 - July     - 2019
     
     
-    %% ========================================================================
-    %   PLOT SLOWNESS PROFILES
-    % =========================================================================
-    % generate a medium
+    % =====================================================================
+    %   SOLVE CHRISTOFFEL EQUATION
+    % =====================================================================
     
+    % number of sampling points
     N = 5000;
+    % define propagation vector
     angle_vec = linspace(0,90,N);
-    angle_vec(1) = 0 + eps;
+    angle_vec(1) = 0  + eps; % avoid zero errors
     angle_vec(N) = 90 - eps;
     
-    % precalculated factors
-    freq = 1e6;
-    
+    % for liquid and isotropic materials a phase_velocity is defined
     try
-        phase_vel = varargin{1};
+        max_phase_velocity = varargin{1};
     catch
-        % esitmate of lowest phase velocity
-        phase_vel = sqrt(material(1).stiffnessMatrix(5,5) / material(1).density) * 0.5;
+        % estimate of lowest phase velocity
+        max_phase_velocity = sqrt(material(1).stiffnessMatrix(5,5) /...
+            material(1).density) * 0.5;
     end
     
+    % initialize output, wave-vector components
+    slowness.kx = zeros(size(angle_vec));
+    slowness.kz_qL1 = zeros(size(angle_vec));
+    slowness.kz_qL2 = zeros(size(angle_vec));
+    slowness.kz_qSV1 = zeros(size(angle_vec));
+    slowness.kz_qSV2 = zeros(size(angle_vec));
+    slowness.kz_qSH = zeros(size(angle_vec));
     
+    % loop over each phase velocity
     for angle_idx = 1:length(angle_vec)
         
-        % basis of phase speed from first layer
-        % angle and phase velocity
+        % propagation direction
         angle = angle_vec(angle_idx);
         theta = angle * pi /180;
+        % phase velocity at that angle
+        cp = max_phase_velocity / sin(theta);
         
-        cp = phase_vel / sin(theta);
         % frequency
         omega = 2* pi * 1e6;
         k = omega / cp ;
         
-        % =============================================================
+        % =================================================================
         %   MATERIAL PROPERTIES FOR EACH LAYER
-        % =============================================================
+        % =================================================================
         
         % loop over the medium layers and extract the important properties
-        %   alpha - partial wave amplitudes
-        %   C_mat - stiffness matrix for each material
-        %   p_vec - polarisation of each partial wave
+        %   alpha           - wave-vector ratio
+        %   stiffnessMatrix - stiffness matrix for each material
+        %   p_vec           - polarization of each partial wave
         
         [ m_p.alpha, m_p.stiffnessMatrix, m_p.pVec, m_p.sh_coeff ] = ...
             calculateAlphaCoefficients(...
             material.stiffnessMatrix, cp, material.density );
         
         % =================================================================
-        %   CALCUALTE WAVEVECTOR COMPONENTS
+        %   CALCUALTE WAVEVECTOR / FREQUENCY COMPONENTS
         % =================================================================
         
-        % horizontal component same for qL and qSH qSV waves
-        kx(angle_idx) = k /omega;
+        % horizontal component is the same for qL and qSH qSV waves
+        slowness.kx (angle_idx)     = k / omega;                    % [s/m]
         
-        % vertical component - compressional wave
-        kz_qL1(angle_idx) = k * m_p(1).alpha(4) /omega;
-        kz_qL2(angle_idx) = k * m_p(1).alpha(3) /omega;
+        % vertical component - (q)L wave
+        slowness.kz_qL1(angle_idx)  = k * m_p(1).alpha(4) / omega;  % [s/m]
+        slowness.kz_qL2 (angle_idx) = k * m_p(1).alpha(3) / omega;  % [s/m]
         
-        % vertical component qSV waves
-        kz_qSV1(angle_idx) = k * m_p(1).alpha(2) /omega;
-        kz_qSV2(angle_idx) = k * m_p(1).alpha(1) /omega;
+        % vertical component - (q)SV waves
+        slowness.kz_qSV1(angle_idx) = k * m_p(1).alpha(2) / omega;  % [s/m]
+        slowness.kz_qSV2(angle_idx) = k * m_p(1).alpha(1) / omega;  % [s/m]
         
-        % vertical component qSH waves
-        kz_qSH(angle_idx) = k * m_p(1).sh_coeff /omega;
+        % vertical component - (q)SH waves
+        slowness.kz_qSH (angle_idx) = k * m_p(1).sh_coeff / omega;  % [s/m]
         
-        % assign output
-        slownessProfiles.kx = kx;
-        slownessProfiles.kz_qL1 = kz_qL1;
-        slownessProfiles.kz_qL2 = kz_qL2;
-        slownessProfiles.kz_qSV1 = kz_qSV1;
-        slownessProfiles.kz_qSV2 = kz_qSV2;
-        slownessProfiles.kz_qSH = kz_qSH;
     end
-    
-    
-    
-    
-    
     
 end

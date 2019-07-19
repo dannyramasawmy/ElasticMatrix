@@ -1,19 +1,58 @@
-%% cls -
+%CLS - clears the current workspace, command window and figures
 %
-% Author    :   Danny Ramasawmy
-%               rmapdrr@ucl.ac.uk
-%               dannyramasawmy@gmail.com
-% Date      :   2016-11-01  -   created
+% DESCRIPTION
+%   CLS clears the command window, the variables in the
+%   workspace and closes any open figures.
 %
+% USEAGE
+%   [] = cls;
 %
-% Description
-%   This file clears the workspace/closes all figures/clears command window
+% INPUTS
+%   []              - there are no inputs           []
 %
-% ERROR     :   2016-11-01
-%    fixed  -   will not clear variables if cls is called as a function           
+% OPTIONAL INPUTS
+%   []              - there are no optional inputs  []
 %
+% OUTPUTS
+%   []              - there are no outputs          []
+%
+% DEPENDENCIES
+%   []              - there are no dependencies     []
+%
+% ABOUT
+%   author          - Danny Ramasawmy
+%   contact         - dannyramasawmy+elasticmatrix@gmail.com
+%   date            - 01 - November - 2016
+%   last update     - 19 - July     - 2019
+%
+% This file is part of the ElasticMatrix toolbox.
+% Copyright (c) 2019 Danny Ramasawmy.
+%
+% This file is part of ElasticMatrix. ElasticMatrix is free software:
+% you can redistribute it and/or modify it under the terms of the GNU
+% Lesser General Public License as published by the Free Software
+% Foundation, either version 3 of the License, or (at your option) any
+% later version.
+%
+% ElasticMatrix is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+% Lesser General Public License for more details.
+%
+% You should have received a copy of the GNU Lesser General Public
+% License along with ElasticMatrix. If not, see
+% <http://www.gnu.org/licenses/>.
 
+% =========================================================================
+%   CLEAR WORKSPACE
+% =========================================================================
 
+% close figures
 close all;
-clear all;   %#ok<CLALL> % supress clear all warning
+
+% clear variables
+
+clear all;   %#ok<CLALL> % suppress clear all warning
+
+% clear command window
 clc;

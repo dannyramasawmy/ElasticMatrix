@@ -2,8 +2,7 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(angleRange, 
     % calculateReflectionTransmissionAnalytic
     %
     % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
+    %               rmapdrr@ucl.ac.uk dannyramasawmy@gmail.com
     % Date      :   2019-07-05  -   created
     %
     % This function calculates the analytical reflection and transmission
@@ -14,7 +13,7 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(angleRange, 
     %   Cambridge university press, 2014.
     % [2] Cheeke, J. David N. Fundamentals and applications of ultrasonic
     %   waves. CRC press, 2016.
-    %
+
     %
     % =====================================================================
     %   SORT MATERIAL PROPERTIES
@@ -30,7 +29,7 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(angleRange, 
             end
             
             % check the layers are not anisotropic
-            if sum(strcmp({mediumObject(1).state, mediumObject(2).state}, 'Anisotropic')) > 0
+            if sum(strcmp({mediumObject(1).state, mediumObject(2).state},'Anisotropic')) > 0
                 warning('This function is not valid for anisotropic materials')
             end
             
@@ -41,8 +40,7 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(angleRange, 
         return;
     end
     
-    % reassign data
-    % density
+    % reassign data density
     rho1    = mediumObject(1).density;
     rho2    = mediumObject(2).density;
     % compressional speed
@@ -72,13 +70,11 @@ function  [RL, RS, TL, TS] = rTSolutionRose(cL1, cL2, cT1, cT2, rho1, rho2, angl
     % rTSolutionRose
     %
     % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
+    %               rmapdrr@ucl.ac.uk dannyramasawmy@gmail.com
     % Date      :   2019-07-05  -   created
     %
     % This function calcualtes the R and T coefficients between two half
-    % spacaes which both have elastic properties
-    % no reflected shear
+    % spacaes which both have elastic properties no reflected shear
     %
     % [1] Rose, Joseph L. Ultrasonic guided waves in solid media.
     %   Cambridge university press, 2014.
@@ -106,8 +102,7 @@ function  [RL, RS, TL, TS] = rTSolutionRose(cL1, cL2, cT1, cT2, rho1, rho2, angl
         betaL = asin( sin(theta) * cL2 / cN );
         betaT = asin( sin(theta) * cT2 / cN );
         
-        % calculate wave-vectors
-        % horizontal component
+        % calculate wave-vectors horizontal component
         kx = (omega / cN) * sin(theta);
         
         % compresional wavevector
@@ -162,17 +157,15 @@ function  [RL, RS, TL, TS] = rTSolutionCheeke(cL1, cL2, cS2, rho1, rho2, angleRa
     %
     
     % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
+    %               rmapdrr@ucl.ac.uk dannyramasawmy@gmail.com
     % Date      :   2019-07-05  -   created
     %
     % This function calcualtes the R and T coefficients between two half
     % spacaes where the first layer has fluid properties and the second
     % layer has elastic properties
     %
-    %   solution is from [1]
-    %   [1] Cheeke, J. David N. Fundamentals and applications of ultrasonic
-    %   waves. CRC press, 2016.
+    %   solution is from [1] [1] Cheeke, J. David N. Fundamentals and
+    %   applications of ultrasonic waves. CRC press, 2016.
     %
     
     % initalise coefficient matrices

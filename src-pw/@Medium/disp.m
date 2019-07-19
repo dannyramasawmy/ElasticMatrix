@@ -1,36 +1,82 @@
 function obj = disp(obj)
-    %% disp v1 date:  2019-01-15
-    % 
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    %DISP Displays the important properties of the Medium object.
     %
-    %   Description
-    %       Displays the medium object using the table class.
+    % DESCRIPTION
+    %   DISP prints the key properties of the Medium object to the command
+    %   window. It makes use of the the table classes in MATLAB.
+    %
+    % USEAGE
+    %   obj.disp;
+    %   disp(obj);
+    %
+    % INPUTS
+    %   obj             - Medium object                 []
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   []              - the outputs                   []
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 19 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
+    
+    % print lines
+    printLineBreaks;
     
     % message
     disp('    __________________Medium________________')
     disp(' ')
     
+    % preallocate structure
+    print_table(    length(obj))  = struct;
+    print_table_2(  length(obj))  = struct;
+    
     % copy fields to print
     for idx = 1:length(obj)
+    
         % table 1
-        printMe(idx).Index       = idx;
-        printMe(idx).Name        = obj(idx).name;
-        printMe(idx).Thickness   = obj(idx).thickness;
-        printMe(idx).Rho         = obj(idx).density;
-        printMe(idx).State       = obj(idx).state;
+        print_table(idx).index       = idx;
+        print_table(idx).name        = obj(idx).name;
+        print_table(idx).thickness   = obj(idx).thickness;
+        print_table(idx).density     = obj(idx).density;
+        print_table(idx).state       = obj(idx).state;
+        
         % table 2
-        printMe2(idx).Index      = idx;
-        printMe2(idx).C11        = obj(idx).stiffnessMatrix(1,1)/1e9;
-        printMe2(idx).C13        = obj(idx).stiffnessMatrix(1,3)/1e9;
-        printMe2(idx).C33        = obj(idx).stiffnessMatrix(3,3)/1e9;
-        printMe2(idx).C55        = obj(idx).stiffnessMatrix(5,5)/1e9;
+        print_table_2(idx).index      = idx;
+        print_table_2(idx).C11        = obj(idx).stiffnessMatrix(1,1)/1e9;
+        print_table_2(idx).C13        = obj(idx).stiffnessMatrix(1,3)/1e9;
+        print_table_2(idx).C33        = obj(idx).stiffnessMatrix(3,3)/1e9;
+        print_table_2(idx).C55        = obj(idx).stiffnessMatrix(5,5)/1e9;
     end
     
     % display the table
-    disp(struct2table(printMe));
-    disp('    - Stiffness coefficients given in GPa')
-    disp(struct2table(printMe2));
+    disp(struct2table(print_table));
+    disp(' Stiffness coefficients given in GPa')
+    disp(struct2table(print_table_2));
     
 end

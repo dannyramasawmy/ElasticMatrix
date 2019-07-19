@@ -7,7 +7,7 @@ function obj = calculateDispersionCurvesCoarse(obj)
     %
     %   Description
     %       Calculates the dispersion curves - quick method.
-    
+    disp('...coarse dispersion curve function...')
     % this function calculates dispersion curves
     warning off
     

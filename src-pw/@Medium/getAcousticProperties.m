@@ -9,7 +9,7 @@ function [ mediumLayer ] = getAcousticProperties( material )
     %       Loads the material list and assigns the properties to the
     %       class attributes.
     
-    materialList;
+    allMaterialStruct = materialList;
     
     %% ====================================================================
     %   ASSIGN OBJECT FIELDS
