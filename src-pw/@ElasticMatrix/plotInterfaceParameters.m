@@ -53,20 +53,20 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
         figureHandle.(figureString) = figure;
         
         % extract uz
-        uzUp = obj.zDisplacement(idx).upper;
-        uzDw = obj.zDisplacement(idx).lower;
+        uzUp = obj.z_displacement(idx).upper;
+        uzDw = obj.z_displacement(idx).lower;
         
         % extract ux
-        uxUp = obj.xDisplacement(idx).upper;
-        uxDw = obj.xDisplacement(idx).lower;
+        uxUp = obj.x_displacement(idx).upper;
+        uxDw = obj.x_displacement(idx).lower;
         
         % extract sigma_zz
-        sigZZup = obj.sigmaZZ(idx).upper;
-        sigZZdw = obj.sigmaZZ(idx).lower;
+        sigZZup = obj.sigma_zz(idx).upper;
+        sigZZdw = obj.sigma_zz(idx).lower;
         
         % extract sigma_xz
-        sigXZup = obj.sigmaXZ(idx).upper;
-        sigXZdw = obj.sigmaXZ(idx).lower;
+        sigXZup = obj.sigma_xz(idx).upper;
+        sigXZdw = obj.sigma_xz(idx).lower;
         
         
         % sort to determine the plot type

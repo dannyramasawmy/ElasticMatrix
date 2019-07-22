@@ -382,7 +382,7 @@ function [figureHandle] = plot1DStress(fieldValues, figureHandle, xSamplePositio
     figure(figureHandle.stress1D);
     
     % calculate the normalised displacement
-    oneDimSigmaZZ = normMe(real(...
+    one_dim_sigma_zz = normMe(real(...
         fieldValues.sigZZ(xSamplePosition,:)...
         ));
     oneDimSigmaXZ = normMe(real(...
@@ -390,7 +390,7 @@ function [figureHandle] = plot1DStress(fieldValues, figureHandle, xSamplePositio
         ));
     
     % plot z displacement
-    plot(fieldValues.zVec,oneDimSigmaZZ,'k')
+    plot(fieldValues.zVec,one_dim_sigma_zz,'k')
     % plot x displacement
     hold on
     plot(fieldValues.zVec,oneDimSigmaXZ,'k--')

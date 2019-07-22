@@ -44,11 +44,11 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(angleRange, 
     rho1    = mediumObject(1).density;
     rho2    = mediumObject(2).density;
     % compressional speed
-    cL1     = sqrt(mediumObject(1).stiffnessMatrix(1,1) ./ rho1);
-    cL2     = sqrt(mediumObject(2).stiffnessMatrix(1,1) ./ rho2);
+    cL1     = sqrt(mediumObject(1).stiffness_matrix(1,1) ./ rho1);
+    cL2     = sqrt(mediumObject(2).stiffness_matrix(1,1) ./ rho2);
     % shear speed
-    cS1     = sqrt(mediumObject(1).stiffnessMatrix(5,5) ./ rho1);
-    cS2     = sqrt(mediumObject(2).stiffnessMatrix(5,5) ./ rho2);
+    cS1     = sqrt(mediumObject(1).stiffness_matrix(5,5) ./ rho1);
+    cS2     = sqrt(mediumObject(2).stiffness_matrix(5,5) ./ rho2);
     
     % choose calculation option
     switch mediumObject(1).state

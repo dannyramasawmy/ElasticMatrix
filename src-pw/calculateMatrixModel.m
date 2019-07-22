@@ -1,4 +1,4 @@
-function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes temp] = ...
+function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes temp] = ...
         calculateMatrixModel( medium, frequencyVec, angleVec, returnFieldVariable, varargin )
     %% Solve_Matrix_Model - v1.0 Date: 2018-
     %
@@ -39,7 +39,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     % =====================================================================
     
     % final phase velocity
-    phaseVel = sqrt(medium(1).stiffnessMatrix(1,1) / medium(1).density);
+    phaseVel = sqrt(medium(1).stiffness_matrix(1,1) / medium(1).density);
     
     % the number of layers
     numLayers = length(medium);
@@ -89,9 +89,9 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             %   stiffness matrix - stiffness matrix for each material
             %   p_vec - polarisation of each partial wave
             for layIdx = 1:length(medium)
-                [ matProp(layIdx).alpha, matProp(layIdx).stiffnessMatrix, matProp(layIdx).pVec ] = ...
+                [ matProp(layIdx).alpha, matProp(layIdx).stiffness_matrix, matProp(layIdx).pVec ] = ...
                     calculateAlphaCoefficients(...
-                    medium(layIdx).stiffnessMatrix, cp, medium(layIdx).density );
+                    medium(layIdx).stiffness_matrix, cp, medium(layIdx).density );
             end
             
             
@@ -116,12 +116,12 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
                 % upper field matrix of interface
                 [fieldMatrices(ifcIdx).upper, itfcPhase(ifcIdx).up  ]   = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_up).alpha, k, itfcPosition(ifcIdx), matProp(idx_up).stiffnessMatrix, matProp(idx_up).pVec );
+                    matProp(idx_up).alpha, k, itfcPosition(ifcIdx), matProp(idx_up).stiffness_matrix, matProp(idx_up).pVec );
                 
                 % lower field matrix of interface
                 [fieldMatrices(ifcIdx).lower, itfcPhase(ifcIdx).dw ]    = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_lw).alpha, k, itfcPosition(ifcIdx), matProp(idx_lw).stiffnessMatrix, matProp(idx_lw).pVec );
+                    matProp(idx_lw).alpha, k, itfcPosition(ifcIdx), matProp(idx_lw).stiffness_matrix, matProp(idx_lw).pVec );
             end
             
             % scaling factor for the field matrices as the stress equations
@@ -176,9 +176,9 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
             % inverse system of equations
             output = sys_mat \ knowns;
             
-            unnormalisedAmplitudes(freqIdx, angleIdx, :) = output;
+            unnormalised_amplitudes(freqIdx, angleIdx, :) = output;
             % partial wave amplitudes
-            partialWaveAmplitudes(freqIdx, angleIdx, :) = ...
+            partial_wave_amplitudes(freqIdx, angleIdx, :) = ...
                 zeros(size(output));
             
             % DEBUG direct comparison for  F - S - S
@@ -209,9 +209,9 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
                     
                     case 1
                         % first layer / reflection coefficient
-                        partialWaveAmplitudes(freqIdx, angleIdx, 1) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, 1) = ...
                             output(1) / B_1 / matProp(layerIdx).alpha(1);
-                        partialWaveAmplitudes(freqIdx, angleIdx, 2) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, 2) = ...
                             output(2) / B_1 ;
                         
                         
@@ -219,24 +219,24 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
                     case numLayers
                         output_idx = 4*(layerIdx - 2)+ [3,4];
                         % last layer/ transmission coefficient
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(1)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(1)) = ...
                             output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(2)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(2)) = ...
                             output(output_idx(2)) / B_1 ;
                         
                     otherwise
                         % intermediate coefficients
                         output_idx = 4*(layerIdx - 2)+ [3,4,5,6];
                         % shear outputs
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(1)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(1)) = ...
                             output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(2)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(2)) = ...
                             output(output_idx(2)) / B_1 / matProp(layerIdx).alpha(1);
                         
                         % compressional outputs
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(3)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(3)) = ...
                             output(output_idx(3)) / B_1 ;
-                        partialWaveAmplitudes(freqIdx, angleIdx, output_idx(4)) = ...
+                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(4)) = ...
                             output(output_idx(4)) / B_1 ;
                         
                 end

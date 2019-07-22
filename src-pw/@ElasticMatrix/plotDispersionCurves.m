@@ -16,7 +16,7 @@ function [figureHandle, obj] = plotDispersionCurves( obj )
     % curves are.
     
     % number of modes
-    dispersionCurves = obj.dispersionCurves;
+    dispersionCurves = obj.dispersion_curves;
     
     % number of curves
     nCurves =  length(dispersionCurves);
@@ -39,13 +39,13 @@ function [figureHandle, obj] = plotDispersionCurves( obj )
         % choose first figure
         figure(figureHandle.fig1)
         hold on
-        plot(obj.dispersionCurves(modeDx).y /1e3, obj.dispersionCurves(modeDx).x /1e6, plotStyle)
+        plot(obj.dispersion_curves(modeDx).y /1e3, obj.dispersion_curves(modeDx).x /1e6, plotStyle)
         hold off
         
         % choose second figure
         figure(figureHandle.fig2)
         hold on
-        plot(obj.dispersionCurves(modeDx).x /1e6, obj.dispersionCurves(modeDx).c /1e3, plotStyle)
+        plot(obj.dispersion_curves(modeDx).x /1e6, obj.dispersion_curves(modeDx).c /1e3, plotStyle)
         hold off
     end
     

@@ -68,10 +68,10 @@ function obj = disp(obj)
         
         % table 2
         print_table_2(idx).index      = idx;
-        print_table_2(idx).C11        = obj(idx).stiffnessMatrix(1,1)/1e9;
-        print_table_2(idx).C13        = obj(idx).stiffnessMatrix(1,3)/1e9;
-        print_table_2(idx).C33        = obj(idx).stiffnessMatrix(3,3)/1e9;
-        print_table_2(idx).C55        = obj(idx).stiffnessMatrix(5,5)/1e9;
+        print_table_2(idx).C11        = obj(idx).stiffness_matrix(1,1)/1e9;
+        print_table_2(idx).C13        = obj(idx).stiffness_matrix(1,3)/1e9;
+        print_table_2(idx).C33        = obj(idx).stiffness_matrix(3,3)/1e9;
+        print_table_2(idx).C55        = obj(idx).stiffness_matrix(5,5)/1e9;
     end
     
     % display the table

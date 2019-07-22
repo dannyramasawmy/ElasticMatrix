@@ -1,65 +1,141 @@
-function [ mediumLayer ] = getAcousticProperties( material )
-    %% functionTemplateFile v1 date:  2019-01-15
+function [ medium_layer ] = getAcousticProperties( material )
+    %GETACOUSTICPROPERTIES Returns material properties for a material.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   GETACOUSTICPROPERTIES(material) takes an input string corresponding
+    %   to a material defined in materialList.m and returns a Medium object
+    %   of size [1, 1] with the attributes assigned.
     %
-    %   Description
-    %       Loads the material list and assigns the properties to the
-    %       class attributes.
+    % USEAGE
+    %   medium_object = Medium.getAcousticProperties('materialName');
+    %
+    % INPUTS 
+    %   material        - a string corresponding to a predefined material
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs []
+    %
+    % OUTPUTS
+    %   obj.name                - name of the material
+    %   obj.state               - state of the material (Gas/Isotropic,...)
+    %   obj.thickness           - thickness of the layer    [m]
+    %   obj.density             - density                   [kg/m^3]
+    %   obj.stiffness_matrix    - 6 X 6 stiffness matrix    [Pa]
+    %
+    % DEPENDENCIES
+    %   materialList() defines all the predefined materials
+    %   [all_materials] = materialList();
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 20 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
-    allMaterialStruct = materialList;
     
-    %% ====================================================================
+    % =====================================================================
+    %   VALIDATE INPUTS
+    % =====================================================================
+
+    % get the list of all the materials
+    all_materials = materialList;
+    
+    % check inputs
+    inputCheck(material, fieldnames(all_materials));
+    
+    % =====================================================================
     %   ASSIGN OBJECT FIELDS
     % =====================================================================
     
-    % get the material
-    mediumLayer = Medium;
-    % assign fields
-    mediumLayer.name = material;
+    % null constructore / define a new Medium object
+    medium_layer = Medium;
     
-    % assign state
+    % assign the input name to the object
+    medium_layer.setName(1, material);
+    
+    % assign the material state
     try
-        % check the state is a correct keyword
-        switch allMaterialStruct.(material).state
+        % check the state is in the all_materials structure
+        switch all_materials.(material).state
             case {'Unknown','Vacuum','Gas','Liquid','Isotropic','Anisotropic'}
-                mediumLayer.state = allMaterialStruct.(material).state;
+                medium_layer.state = all_materials.(material).state;
             otherwise
-                error('Layer state is not valid / defined');
+                error('Layer state is not valid / defined.');
         end
         
     catch
-        warning(['Check material state : ',material])
-        mediumLayer.state = 'Unknown';
+        % if the material is not defined
+        warning(['Check material state : ',material,'.'])
+        medium_layer.state = 'Unknown';
     end
     
-    % check state is valid
-    
-    
-    % assign nedsity
+    % assign density
     try
-        mediumLayer.density =  allMaterialStruct.(material).rho;
+        medium_layer.density =  all_materials.(material).rho;
     catch
         warning('Density not assigned')
-        mediumLayer.density = 0;
+        medium_layer.density = 0;
     end
     
     % assign the stiffness matrix
     try
         % if the stiffness matrix is defined
-        mediumLayer.stiffnessMatrix = allMaterialStruct.(material).stiffnessMatrix;
+        medium_layer.setStiffnessMatrix(...
+            1,all_materials.(material).stiffness_matrix);
     catch
         % evaluate string for c, density
-        c = allMaterialStruct.(material).c;
+        c = all_materials.(material).c;
         % evaluate string for cs, shear speed
-        cs = allMaterialStruct.(material).cs;
+        cs = all_materials.(material).cs;
         % evaluate string for rho, density
-        rho = allMaterialStruct.(material).rho;
-        mediumLayer.stiffnessMatrix = Medium.soundSpeedDensityConversion(c, cs, rho);
+        density = all_materials.(material).rho;
+        % calculate stiffness matrix
+        stiffness_matrix = Medium.soundSpeedDensityConversion(c, cs, density);
+        % set stiffness matrix
+        medium_layer.setStiffnessMatrix(1, stiffness_matrix);
     end
     
+end
+
+function inputCheck(material, all_materials_fields)
+    %INPUTCHECK checks the inputs for getAcousticProperties().
+    %
+    % DESCRIPTION
+    %   INPUTCHECK checks the properties for the function
+    %   getAcousticProperties(material). Firstly it checks the input is a
+    %   string and then checks if that string occurs in the all_materials
+    %   structure. The all_materials structure contains all the predefined
+    %   materials in ElasticMatrix.
+    %
+    % USEAGE
+    %   inputCheck(material, all_materials)
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 20 - July     - 2019
     
+    % validate material is a string which is in all_materials
+    validatestring(material, all_materials_fields,...
+        'getAcousticProperties','material',1);
     
 end

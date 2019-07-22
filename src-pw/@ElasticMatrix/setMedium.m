@@ -14,14 +14,14 @@ function obj = setMedium(obj, medium)
             obj.medium = medium;
         end
         
-        if ~isempty((obj.partialWaveAmplitudes))
+        if ~isempty((obj.partial_wave_amplitudes))
             % delete irrelevant fields
             warning('All class fields must be recalculated');
-            obj.partialWaveAmplitudes       = [];
-            obj.xDisplacement               = [];
-            obj.zDisplacement               = [];
-            obj.sigmaZZ                     = [];
-            obj.sigmaXZ                     = [];
+            obj.partial_wave_amplitudes       = [];
+            obj.x_displacement               = [];
+            obj.z_displacement               = [];
+            obj.sigma_zz                     = [];
+            obj.sigma_xz                     = [];
         end
         
     catch

@@ -306,7 +306,7 @@ function obj = calculateDispersionCurves(obj)
     
     
     %     myModes.y
-    obj.dispersionCurves = myModes;
+    obj.dispersion_curves = myModes;
     
     % attenuation search % FUTURE
     % disp('Calculating mode attenuation')

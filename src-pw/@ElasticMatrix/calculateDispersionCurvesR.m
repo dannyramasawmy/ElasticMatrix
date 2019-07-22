@@ -56,7 +56,7 @@ function [obj] = calculateDispersionCurvesR(obj)
     end
     
     
-    obj.dispersionCurves = output;
+    obj.dispersion_curves = output;
     
     warning on
 end

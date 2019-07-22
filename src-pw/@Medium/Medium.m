@@ -1,21 +1,64 @@
 classdef Medium < handle
-    %% Medium v1 date: 2019-01-15
+    %MEDIUM - one line description
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   A short description of the functionTemplate goes here.
     %
-    %   Descriptions:
-    %       Creates the medium for the partial wave method.
+    % USEAGE
+    %   outputs = functionTemplate(input, another_input)
+    %   outputs = functionTemplate(input, another_input, optional_input)
     %
+    % INPUTS
+    %   input           - the first input   [units]
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs []
+    %
+    % OUTPUTS
+    %   outputs         - the outputs       [units]
+    %
+    % DEPENDENCIES
+    %   handle class    - inherits the handle class in MALTAB
+    %
+    % PROPERTIES
+    %
+    %
+    % METHODS
+    %
+    %
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 21 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
+    
     
     % properties
     properties (GetAccess = public, SetAccess = private)
         name
-        state = '';
+        state 
         thickness
         density
-        stiffnessMatrix
+        stiffness_matrix
         slowness
     end
     
@@ -40,8 +83,8 @@ classdef Medium < handle
                 end
                 
                 % create an object array (vector)
-                objectLength = nargin / 2;
-                obj(objectLength) = obj;
+                object_length = nargin / 2;
+                obj(object_length) = obj;
                 
                 % assign fields
                 for idx = 1:2:nargin
@@ -55,18 +98,18 @@ classdef Medium < handle
                 end
                 
                 % auto set last layer thickness to Inf if not defined at the start
-                numberLayers = length(obj);
-                if obj(numberLayers).thickness ~= Inf
-                    obj.setThickness(numberLayers, Inf);
+                number_layers = length(obj);
+                if obj(number_layers).thickness ~= Inf
+                    obj.setThickness(number_layers, Inf);
                 end
                 
             else
                 % if there are no input arguments
                 % null constructor
-                obj.name      = 0;
-                obj.thickness = 0;
-                obj.density   = 0;
-                obj.stiffnessMatrix      = zeros(6);
+                obj.setName(1, '0');
+                obj.setThickness(1, 1);
+                obj.setDensity(1, 1);
+                obj.setStiffnessMatrix(1, zeros(6));
                 obj.state     = 'Unknown';
             end
             
@@ -87,7 +130,7 @@ classdef Medium < handle
         obj = calculateSlowness( obj );
         
         % plotting slowness
-        [ figureHandle, obj] = plotSlowness( obj );
+        [ figure_handle, obj] = plotSlowness( obj );
         
     end
     
@@ -98,11 +141,11 @@ classdef Medium < handle
         % show the available materials
         availableMaterials();
         % get the acoustic properties
-        mediumObject    = getAcousticProperties(materialName);
+        medium_object    = getAcousticProperties(materialName);
         % change lame coefficients to stiffness matrix
-        stiffnessMatrix = lameConversion(lambda, mu);
+        stiffness_matrix = lameConversion(lambda, mu);
         % change sound speeds and density into a stiffness matrix
-        stiffnessMatrix = soundSpeedDensityConversion(compressionalSpeed, shearSpeed, density);
+        stiffness_matrix = soundSpeedDensityConversion(compressionalSpeed, shearSpeed, density);
         
     end
     

@@ -102,7 +102,7 @@ function [slowness] = calculateSlownessLiquid( material )
     %   last update     - 19 - July     - 2019
     
     % get the compressional wave speed
-    phase_velocity = sqrt(material(1).stiffnessMatrix(1,1) /...
+    phase_velocity = sqrt(material(1).stiffness_matrix(1,1) /...
         material(1).density);
     
     % get the slowness profiles
@@ -131,7 +131,7 @@ function [slowness] = calculateSlownessIsotropic( material )
     
     % find the shear speed (lowest phase velocity)
     phase_velocity = sqrt(...
-        ((material.stiffnessMatrix(1,1) - material.stiffnessMatrix(1,3)) / 2 )...
+        ((material.stiffness_matrix(1,1) - material.stiffness_matrix(1,3)) / 2 )...
         / material.density);
     
     % calculate the slowness profiles
@@ -170,7 +170,7 @@ function [slowness] = calculateSlownessAnisotropic( material , varargin)
         max_phase_velocity = varargin{1};
     catch
         % estimate of lowest phase velocity
-        max_phase_velocity = sqrt(material(1).stiffnessMatrix(5,5) /...
+        max_phase_velocity = sqrt(material(1).stiffness_matrix(5,5) /...
             material(1).density) * 0.5;
     end
     
@@ -200,13 +200,13 @@ function [slowness] = calculateSlownessAnisotropic( material , varargin)
         % =================================================================
         
         % loop over the medium layers and extract the important properties
-        %   alpha           - wave-vector ratio
-        %   stiffnessMatrix - stiffness matrix for each material
-        %   p_vec           - polarization of each partial wave
+        %   alpha            - wave-vector ratio
+        %   stiffness_matrix - stiffness matrix for each material
+        %   p_vec            - polarization of each partial wave
         
-        [ m_p.alpha, m_p.stiffnessMatrix, m_p.pVec, m_p.sh_coeff ] = ...
+        [ m_p.alpha, m_p.stiffness_matrix, m_p.pVec, m_p.sh_coeff ] = ...
             calculateAlphaCoefficients(...
-            material.stiffnessMatrix, cp, material.density );
+            material.stiffness_matrix, cp, material.density );
         
         % =================================================================
         %   CALCUALTE WAVEVECTOR / FREQUENCY COMPONENTS

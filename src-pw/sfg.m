@@ -27,7 +27,7 @@ function sfg()
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 01 - November - 2016
-    %   last update     - 19 - July     - 2019
+    %   last update     - 20 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -68,12 +68,16 @@ function sfg()
     disp('... distributing figures ...')
     
     % if total_figures < 6, add new figures for a nice spacing
-    tmp_fig(6-total_figures) = figure;
     if total_figures < 6
+        % initialize array of figure handles
+        tmp_fig(6-total_figures) = figure;
         % create new figure array, effectively padding
         for idx = 1:(length(tmp_fig) - 1)
             tmp_fig(idx) = figure;
         end
+    else
+        % ignore and create an empty array
+        tmp_fig = [];
     end
     
     % get figure handles

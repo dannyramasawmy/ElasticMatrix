@@ -6,7 +6,7 @@ function all_materials = materialList()
 %   used with the Medium class. Please add any new materials in the same
 %   format seen below. The relevant properties are c (compressional speed)
 %   [ms^-1], cs (shear speed) [ms^-1] and rho (density) [kgm^-3]. For
-%   anisotropic materials store the 6X6 stiffness matrix (stiffnessMatrix).
+%   anisotropic materials store the 6X6 stiffness matrix (stiffness_matrix).
 %   However, in the current implementation of ElasticMAtrix only C(1,1),
 %   C(1,3), C(3,3), C(4,4) and C(5,5) are used as these correspond to x_1
 %   and x_3 coordinate axes. 
@@ -26,7 +26,7 @@ function all_materials = materialList()
 %   To add orthotropic, cubic, transverse isotropic or isotropic materials:
 %       allMaterialStruct.NAME.rho                   =  ...      ;
 %       allMaterialStruct.NAME.state                 =  'Anisotropic' ;
-%       allMaterialStruct.NAME.stiffnessMatrix       =  [6 x 6 matrix];
+%       allMaterialStruct.NAME.stiffness_matrix       =  [6 x 6 matrix];
 %
 % USEAGE
 %   materialList;
@@ -77,13 +77,17 @@ end
 % =========================================================================
 
 % Blank ===================================================================
-all_materials.blank.c                       =   1       ;
+% properties have been set to arbitrary values to not cause an error to be
+% flagged in the set functions of the Medium class
+all_materials.blank.c                       =   2       ;
 all_materials.blank.cs                      =   1       ;
 all_materials.blank.rho                     =   1       ;
 all_materials.blank.state                   = 'Unknown' ;
 
 % vacuum ==================================================================
-all_materials.vacuum.c                      = 0.01      ;
+% properties have been set to arbitrary values to not cause an error to be
+% flagged in the set functions of the Medium class
+all_materials.vacuum.c                      = 0.02      ;
 all_materials.vacuum.cs                     = 0.01      ;
 all_materials.vacuum.rho                    = 0.01      ;
 all_materials.vacuum.state                  = 'Vacuum'  ;
@@ -280,7 +284,7 @@ all_materials.copper.state                  = 'Isotropic'   ;
 % from Nayfeh - rotated at 0 degrees
 all_materials.CubicInAs0.rho                =   5670        ;
 all_materials.CubicInAs0.state              = 'Anisotropic' ;
-all_materials.CubicInAs0.stiffnessMatrix    =  1.0e+09 *[...
+all_materials.CubicInAs0.stiffness_matrix    =  1.0e+09 *[...
     83.29         45.26       45.26       0           0           0;
     45.26       83.29         45.26       0           0           0;
     45.26       45.26       83.29         0           0           0;
@@ -293,7 +297,7 @@ all_materials.CubicInAs0.stiffnessMatrix    =  1.0e+09 *[...
 % rotated at 45 degrees
 all_materials.CubicInAs45.rho                =   5670    ;
 all_materials.CubicInAs45.state              = 'Anisotropic'  ;
-all_materials.CubicInAs45.stiffnessMatrix    =  1.0e+09 *[...
+all_materials.CubicInAs45.stiffness_matrix    =  1.0e+09 *[...
     103.86      24.68       45.26       0           0           0;
     24.68       103.86      45.26       0           0           0;
     45.26       45.26       83.29       0           0           0;
@@ -305,7 +309,7 @@ all_materials.CubicInAs45.stiffnessMatrix    =  1.0e+09 *[...
 % from I. Abubakar - free vibrations of a transversely isotropic plate
 all_materials.beryl.rho                 =   2700        ;
 all_materials.beryl.state               = 'Anisotropic' ;
-all_materials.beryl.stiffnessMatrix     =  1.0e+09 *[...
+all_materials.beryl.stiffness_matrix     =  1.0e+09 *[...
     23.63      	6.61        6.61        0           0           0;
     6.61        23.63       6.61        0           0           0;
     6.61        6.61        26.94       0           0           0;
@@ -317,7 +321,7 @@ all_materials.beryl.stiffnessMatrix     =  1.0e+09 *[...
 % from PAYTON - elastic wave propagation in transversely isotropic media
 all_materials.apatite.rho               =   2700         ; % unknown
 all_materials.apatite.state             = 'Anisotropic'  ;
-all_materials.apatite.stiffnessMatrix   =  1.0e+09 *[...
+all_materials.apatite.stiffness_matrix   =  1.0e+09 *[...
     16.7      	1.31        6.6         0           0           0;
     1.31        16.7        6.6         0           0           0;
     6.6         6.6         14.0        0           0           0;
@@ -329,7 +333,7 @@ all_materials.apatite.stiffnessMatrix   =  1.0e+09 *[...
 % from PAYTON - elastic wave propagation in transversely isotropic media
 all_materials.beryl2.rho                =   2700        ;
 all_materials.beryl2.state              = 'Anisotropic' ;
-all_materials.beryl2.stiffnessMatrix    =  1.0e+09 *[...
+all_materials.beryl2.stiffness_matrix    =  1.0e+09 *[...
     28.2      	9.94        6.95        0           0           0;
     9.94        28.2        6.95        0           0           0;
     6.95        6.95        24.8        0           0           0;
@@ -341,7 +345,7 @@ all_materials.beryl2.stiffnessMatrix    =  1.0e+09 *[...
 % from PAYTON - elastic wave propagation in transversely isotropic media
 all_materials.zinc.rho                  =   2700            ;
 all_materials.zinc.state                = 'Anisotropic'     ;
-all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
+all_materials.zinc.stiffness_matrix      =  1.0e+09 *[...
     16.5      	3.1         5.0         0           0           0;
     3.1         16.5        5.0         0           0           0;
     5.0         5.0         6.2         0           0           0;
@@ -353,7 +357,7 @@ all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
 % from PAYTON - elastic wave propagation in transversely isotropic media
 all_materials.zinc.rho                  =   2700            ;
 all_materials.zinc.state                = 'Anisotropic'     ;
-all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
+all_materials.zinc.stiffness_matrix      =  1.0e+09 *[...
     6.2         5.0         5.0         0           0           0;
     5.0         16.5        3.1         0           0           0;
     5.0         3.1         16.5        0           0           0;
@@ -365,7 +369,7 @@ all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
 % Nayfeh - Anisotropic layered media book
 % allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 % allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-% allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
+% allMaterialStruct.graphiteEpoxy.stiffness_matrix    =  1.0e+09 *[...
 %     155.43      3.72        3.72        0           0           0;
 %     3.72        16.34       3.72        0           0           0;
 %     3.72        3.72        16.34       0           0           0;
@@ -375,7 +379,7 @@ all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
 
 % allMaterialStruct.graphiteEpoxy.rho                =   1600    ;
 % allMaterialStruct.graphiteEpoxy.state              = 'Anisotropic'  ;
-% allMaterialStruct.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
+% allMaterialStruct.graphiteEpoxy.stiffness_matrix    =  1.0e+09 *[...
 %     155.43      3.72        3.72        0           0           0;
 %     3.72        16.34       4.96        0           0           0;
 %     3.72        4.96        16.34       0           0           0;
@@ -385,7 +389,7 @@ all_materials.zinc.stiffnessMatrix      =  1.0e+09 *[...
 
 all_materials.graphiteEpoxy.rho                =   1600    ;
 all_materials.graphiteEpoxy.state              = 'Anisotropic'  ;
-all_materials.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
+all_materials.graphiteEpoxy.stiffness_matrix    =  1.0e+09 *[...
     145.79      3.77        8.33        0           0           0;
     3.77        16.34       4.91        0           0           0;
     8.33        4.91        16.77       0           0           0;
@@ -395,7 +399,7 @@ all_materials.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
 
 all_materials.graphiteEpoxy.rho                =   1600    ;
 all_materials.graphiteEpoxy.state              = 'Anisotropic'  ;
-all_materials.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
+all_materials.graphiteEpoxy.stiffness_matrix    =  1.0e+09 *[...
     145.79      8.33        3.77        0           0           0;
     8.33        16.77       4.91        0           0           0;
     3.77        4.91        16.34       0           0           0;
@@ -407,7 +411,7 @@ all_materials.graphiteEpoxy.stiffnessMatrix    =  1.0e+09 *[...
 %  Nayfeh - wave propagation in layered anisotropic media
 all_materials.GaAs.rho                  =   5307            ;
 all_materials.GaAs.state                = 'Anisotropic'     ;
-all_materials.GaAs.stiffnessMatrix      =  1.0e+09 *[...
+all_materials.GaAs.stiffness_matrix      =  1.0e+09 *[...
     111.8       53.8        53.8        0           0           0;
     53.8        111.8       53.8        0           0           0;
     53.8        3.72        111.8       0           0           0;
@@ -459,7 +463,7 @@ all_materials.parylene2.state               = 'Isotropic'   ;
 % Anisotropic Paryene estimate ============================================
 all_materials.ParCA.rho                 =   1289         ;
 all_materials.ParCA.state               = 'Anisotropic'  ;
-all_materials.ParCA.stiffnessMatrix                =  1.0e+09 *[...
+all_materials.ParCA.stiffness_matrix                =  1.0e+09 *[...
     6.2388    3.1194    3.1194*0.9      0           0           0;
     3.1194    6.2388    3.1194          0           0           0;
     3.1194    3.1194    6.2388*1.5      0           0           0;

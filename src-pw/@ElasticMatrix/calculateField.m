@@ -61,13 +61,13 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
 %     disp(['Frequency chosen: '  ,   num2str(freq_vec/1e6), ' MHz'])
     
     % output wave amplitudes from calculated model
-    waveAmplitudes = (obj.unnormalisedAmplitudes(fidx, aidx,:));   
+    waveAmplitudes = (obj.unnormalised_amplitudes(fidx, aidx,:));   
     
     % =====================================================================
     %   PRECALCULATIONS
     % =====================================================================
     % final phase velocity
-    phaseVel = sqrt(obj.medium(1).stiffnessMatrix(1,1) / obj.medium(1).density);
+    phaseVel = sqrt(obj.medium(1).stiffness_matrix(1,1) / obj.medium(1).density);
     
     % the number of layers
     numLayers = length(obj.medium);
@@ -177,16 +177,16 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     %   C_mat - stiffness matrix for each material
     %   p_vec - polarisation of each partial wave
     for layIdx = 1:numLayers
-        [ matProp(layIdx).alpha, matProp(layIdx).stiffnessMatrix, matProp(layIdx).pVec ] = ...
+        [ matProp(layIdx).alpha, matProp(layIdx).stiffness_matrix, matProp(layIdx).pVec ] = ...
             calculateAlphaCoefficients(...
-            obj.medium(layIdx).stiffnessMatrix, cp, obj.medium(layIdx).density );
+            obj.medium(layIdx).stiffness_matrix, cp, obj.medium(layIdx).density );
     end
     
     % initalise displacement matrices
-    xDisplacement  = zeros(size(Z));
-    zDisplacement  = zeros(size(Z));
-    normalStress   = zeros(size(Z));
-    shearStress    = zeros(size(Z));
+    x_displacement  = zeros(size(Z));
+    z_displacement  = zeros(size(Z));
+    normal_stress   = zeros(size(Z));
+    shear_stress    = zeros(size(Z));
     
     % time/phase loop
     time = 0;
@@ -211,7 +211,7 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
             
             % fluid correction in first layer
             fCorr = 1;
-            if matProp(layerIdx).stiffnessMatrix(5,5) < 5
+            if matProp(layerIdx).stiffness_matrix(5,5) < 5
 %                 disp('Corrected fluid')
                 fCorr = 0; % remove shear components
             end
@@ -236,14 +236,14 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
                     
 
                     % normal stress       
-                    sigmaZZ =  Psy .* stressNorm .* ( ...
-                        e1 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
-                        e3 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
-                        e4 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
+                    sigma_zz =  Psy .* stressNorm .* ( ...
+                        e1 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
+                        e3 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
+                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
                     
                     % shear stress
-                    st2 = matProp(layerIdx).stiffnessMatrix(5, 5) * stressNorm; % a coefficient
-                    sigmaXZ =  Psy .* fCorr .* st2 .*(...
+                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* fCorr .* st2 .*(...
                         e1 * (matProp(layerIdx).alpha(1) + matProp(layerIdx).pVec(1)) + ...
                         e3 * (matProp(layerIdx).alpha(3) + matProp(layerIdx).pVec(3)) + ... 
                         e4 * (matProp(layerIdx).alpha(4) + matProp(layerIdx).pVec(4))) ;
@@ -263,13 +263,13 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
                         e4 * matProp(layerIdx).pVec(4));         
 
                      % normal stress       
-                    sigmaZZ =  Psy .* stressNorm .* ( ...
-                        e2 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
-                        e4 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
+                    sigma_zz =  Psy .* stressNorm .* ( ...
+                        e2 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
+                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
                                         
                     % shear stress
-                    st2 = matProp(layerIdx).stiffnessMatrix(5, 5) * stressNorm; % a coefficient
-                    sigmaXZ =  Psy .* fCorr .* st2 .*(...
+                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* fCorr .* st2 .*(...
                         e2 * (matProp(layerIdx).alpha(2) + matProp(layerIdx).pVec(2)) + ...
                         e4 * (matProp(layerIdx).alpha(4) + matProp(layerIdx).pVec(4))) ;
                     
@@ -294,15 +294,15 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
                         e4 * matProp(layerIdx).pVec(4));
                     
                     % normal stress       
-                    sigmaZZ =   Psy .* stressNorm .* ( ...
-                        e1 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
-                        e2 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
-                        e3 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
-                        e4 * (matProp(layerIdx).stiffnessMatrix(1,3) + (matProp(layerIdx).stiffnessMatrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
+                    sigma_zz =   Psy .* stressNorm .* ( ...
+                        e1 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
+                        e2 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
+                        e3 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
+                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
                     
                     % shear stress
-                    st2 = matProp(layerIdx).stiffnessMatrix(5, 5) * stressNorm; % a coefficient
-                    sigmaXZ =  Psy .* fCorr .* st2 .*(...
+                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* fCorr .* st2 .*(...
                         e1 * (matProp(layerIdx).alpha(1) + matProp(layerIdx).pVec(1)) + ...
                         e2 * (matProp(layerIdx).alpha(2) + matProp(layerIdx).pVec(2)) + ...
                         e3 * (matProp(layerIdx).alpha(3) + matProp(layerIdx).pVec(3)) + ... 
@@ -314,18 +314,18 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
             end
             
             % assign calculated values
-            xDisplacement(layer(layerIdx).idxs) = ux;
-            zDisplacement(layer(layerIdx).idxs) = uz;
-            normalStress(layer(layerIdx).idxs)  = sigmaZZ;
-            shearStress(layer(layerIdx).idxs)   = sigmaXZ;
+            x_displacement(layer(layerIdx).idxs) = ux;
+            z_displacement(layer(layerIdx).idxs) = uz;
+            normal_stress(layer(layerIdx).idxs)  = sigma_zz;
+            shear_stress(layer(layerIdx).idxs)   = sigma_xz;
             
         end % fields in each layer
-        fields.xDisp    = xDisplacement;
-        fields.zDisp    = zDisplacement;
+        fields.xDisp    = x_displacement;
+        fields.zDisp    = z_displacement;
         fields.zVec     = zSteps;
         fields.xVec     = xSteps;
-        fields.sigZZ    = normalStress;
-        fields.sigXZ    = shearStress;
+        fields.sigZZ    = normal_stress;
+        fields.sigXZ    = shear_stress;
         
     end % time loop
     

@@ -22,13 +22,13 @@ function obj = calculate(obj)
     % the output variables to attributes:
     %
     % the field variables are assigned to:
-    %   obj.zDisplacement(layerIdx)
-    %   obj.xDisplacement(layerIdx)
-    %   obj.sigmaZZ(layerIdx)
-    %   obj.sigmaXZ(layerIdx)
+    %   obj.z_displacement(layerIdx)
+    %   obj.x_displacement(layerIdx)
+    %   obj.sigma_zz(layerIdx)
+    %   obj.sigma_xz(layerIdx)
     %
     % The partial wave amplitudes are assigned to and organised as:
-    %   obj.partialWaveAmplitudes (lengthFreqs X lengthVariable X amplitudes)
+    %   obj.partial_wave_amplitudes (lengthFreqs X lengthVariable X amplitudes)
     %   - lengthVariable will be length of angles/wavenumber/phasespeed
     %   vector
     %   - amplitudes(1) = upward travelling in 1st layer (reflected) qSV
@@ -61,7 +61,7 @@ function obj = calculate(obj)
     if inputVector == [1 1 0 0]
         disp('... frequency-angle calculation ...')
         % for calculating the matrix model in terms of angle and frequency
-        [~,fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes] ...
+        [~,fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes] ...
             = calculateMatrixModel(...
             obj.medium, obj.frequency, obj.angle, 1);
         
@@ -73,7 +73,7 @@ function obj = calculate(obj)
     if inputVector == [1 0 1 0]
         disp('... frequency-phasespeed calculation ...') 
         % for calculating the matrix model in terms of frequency-phasespeed
-        [~,fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes] ...
+        [~,fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes] ...
             = calculateMatrixModelFCphWrapper(...
             obj.medium, obj.frequency, obj.phasespeed, 1);        
         % DEBUG
@@ -84,7 +84,7 @@ function obj = calculate(obj)
         disp('... frequency-wavenumber calculation ...')
         % for calculating the model in terms of wavenumber and frequency
         
-        [~,fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes] ...
+        [~,fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes] ...
             = calculateMatrixModelKFWrapper(...
             obj.medium, obj.frequency, obj.wavenumber, 1);
         
@@ -97,26 +97,26 @@ function obj = calculate(obj)
     for idx = 1:length(fieldVariables)
         
         % assign normal displacment
-        obj.zDisplacement(idx).upper = fieldVariables(idx).upper(:,:,1);
-        obj.zDisplacement(idx).lower = fieldVariables(idx).lower(:,:,1);
+        obj.z_displacement(idx).upper = fieldVariables(idx).upper(:,:,1);
+        obj.z_displacement(idx).lower = fieldVariables(idx).lower(:,:,1);
         
         % assign tranvserse displacement
-        obj.xDisplacement(idx).upper = fieldVariables(idx).upper(:,:,2);
-        obj.xDisplacement(idx).lower = fieldVariables(idx).lower(:,:,2);
+        obj.x_displacement(idx).upper = fieldVariables(idx).upper(:,:,2);
+        obj.x_displacement(idx).lower = fieldVariables(idx).lower(:,:,2);
         
         % assign normal stress
-        obj.sigmaZZ(idx).upper = fieldVariables(idx).upper(:,:,3);
-        obj.sigmaZZ(idx).lower = fieldVariables(idx).lower(:,:,3);
+        obj.sigma_zz(idx).upper = fieldVariables(idx).upper(:,:,3);
+        obj.sigma_zz(idx).lower = fieldVariables(idx).lower(:,:,3);
         
         % assign shear stress
-        obj.sigmaXZ(idx).upper = fieldVariables(idx).upper(:,:,4);
-        obj.sigmaXZ(idx).lower = fieldVariables(idx).lower(:,:,4);
+        obj.sigma_xz(idx).upper = fieldVariables(idx).upper(:,:,4);
+        obj.sigma_xz(idx).lower = fieldVariables(idx).lower(:,:,4);
         
     end
     
     % for each partial wave amplitude
-    obj.partialWaveAmplitudes = partialWaveAmplitudes;
-    obj.unnormalisedAmplitudes = unnormalisedAmplitudes;
+    obj.partial_wave_amplitudes = partial_wave_amplitudes;
+    obj.unnormalised_amplitudes = unnormalised_amplitudes;
     
     % assign temporary variable for debugging
     obj.temp = temp;
@@ -184,7 +184,7 @@ function [inputVector] = checkInputs(obj)
     warning off
 end
 
-function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes]...
+function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes]...
         = calculateMatrixModelKFWrapper(medium, frequency, wavenumber, fieldVariableFlag)
     % calculateMatrixModelKFWrapper
     %
@@ -200,13 +200,13 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     for idx = 1:length(wavenumber)
         
         % run calculations
-        [tmpMetrics, tmpFieldVariables, tmpPartialWaveAmplitudes, tmpUnnormalisedAmplitudes] = ...
+        [tmpMetrics, tmpFieldVariables, tmp_partial_wave_amplitudes, tmp_unnormalised_amplitudes] = ...
             calculateMatrixModelKf(...
             medium, frequency, wavenumber(idx)*ones(1,length(frequency)), fieldVariableFlag);
         
         metrics(:, idx) = transpose(tmpMetrics);
-        partialWaveAmplitudes(:, idx, :) = tmpPartialWaveAmplitudes;
-        unnormalisedAmplitudes(:, idx, :) = tmpUnnormalisedAmplitudes;
+        partial_wave_amplitudes(:, idx, :) = tmp_partial_wave_amplitudes;
+        unnormalised_amplitudes(:, idx, :) = tmp_unnormalised_amplitudes;
         
         % assign field variables
         for layerDx = 1:length(tmpFieldVariables)
@@ -218,7 +218,7 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
     
 end
 
-function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes]...
+function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes]...
         = calculateMatrixModelFCphWrapper(medium, frequency, phasespeed, fieldVariableFlag)
     % calculateMatrixModelFCphWrapper
     %
@@ -233,13 +233,13 @@ function [metrics, fieldVariables, partialWaveAmplitudes, unnormalisedAmplitudes
         wavenumber = 2*pi*frequency / phasespeed(idx);
         
         % run calculations
-        [tmpMetrics, tmpFieldVariables, tmpPartialWaveAmplitudes, tmpUnnormalisedAmplitudes] = ...
+        [tmpMetrics, tmpFieldVariables, tmp_partial_wave_amplitudes, tmp_unnormalised_amplitudes] = ...
             calculateMatrixModelKf(...
             medium, frequency, wavenumber, fieldVariableFlag);
         
         metrics(:, idx) = transpose(tmpMetrics);
-        partialWaveAmplitudes(:, idx, :) = tmpPartialWaveAmplitudes;
-        unnormalisedAmplitudes(:, idx, :) = tmpUnnormalisedAmplitudes;
+        partial_wave_amplitudes(:, idx, :) = tmp_partial_wave_amplitudes;
+        unnormalised_amplitudes(:, idx, :) = tmp_unnormalised_amplitudes;
         
         % assign field variables
         for layerDx = 1:length(tmpFieldVariables)

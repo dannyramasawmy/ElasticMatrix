@@ -98,9 +98,9 @@ function obj = calculateDispersionCurvesCoarse(obj)
     end
     
     % assign object
-    obj.dispersionCurves.x = output(:,1);
-    obj.dispersionCurves.y = output(:,2);
-    obj.dispersionCurves.c = output(:,1);
+    obj.dispersion_curves.x = output(:,1);
+    obj.dispersion_curves.y = output(:,2);
+    obj.dispersion_curves.c = output(:,1);
     
     
     warning on

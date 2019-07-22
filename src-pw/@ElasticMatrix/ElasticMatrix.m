@@ -20,14 +20,14 @@ classdef ElasticMatrix < handle
     
     % closed properties
     properties (SetAccess = private, GetAccess = public)
-        medium                          % Medium class oject
-        partialWaveAmplitudes           % partial wav
+        medium                         % Medium class oject
+        partial_wave_amplitudes        % partial wav
         amplitudes
-        xDisplacement                  % x-displacement at interface
-        zDisplacement                  % z-displacement at interface
-        sigmaZZ                        % normal stress at interface
-        sigmaXZ                        % shear stress at interface
-        dispersionCurves               % coordinates of dispersion curve
+        x_displacement                  % x-displacement at interface
+        z_displacement                  % z-displacement at interface
+        sigma_zz                        % normal stress at interface
+        sigma_xz                        % shear stress at interface
+        dispersion_curves               % coordinates of dispersion curve
         
         % a temporary field - if users wish to add features / check
         % implementations this can be used to extract data while the model
@@ -36,8 +36,8 @@ classdef ElasticMatrix < handle
     end
     
     properties (SetAccess = private, GetAccess = private)
-        tempFeature                    % temporary variable for features
-        unnormalisedAmplitudes         % unormalised partial wave amplitudes
+        temp_feature                    % temporary variable for features
+        unnormalised_amplitudes         % unormalised partial wave amplitudes
         
     end
     

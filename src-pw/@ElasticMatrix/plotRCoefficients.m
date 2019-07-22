@@ -50,7 +50,7 @@ function [figureHandle, obj] = plotRCoefficients(obj)
     % get the partial wave amplitudes if possible
     try
         % get the partial wave amplitues
-        pwa = obj.partialWaveAmplitudes;
+        pwa = obj.partial_wave_amplitudes;
     catch
         warning('cannot plot, please use the .calculate method first')
     end
