@@ -50,10 +50,10 @@ plot(angleRange, abs(TS), 'm.')
 hold off
 legend('|R_L| EM','|R_S| EM','|T_L| EM','|T_S| EM','|R_L| Rose','|R_S| Rose','|T_L| Rose','|T_S| Rose')
 % errors
-errorRL = (abs(RL) - abs(myModel.partialWaveAmplitudes(1, :, 2))) ./ abs(RL);
-errorRS = (abs(RS) - abs(myModel.partialWaveAmplitudes(1, :, 1))) ./ abs(RS);
-errorTL = (abs(TL) - abs(myModel.partialWaveAmplitudes(1, :, 4))) ./ abs(TL);
-errorTS = (abs(TS) - abs(myModel.partialWaveAmplitudes(1, :, 3))) ./ abs(TS);
+errorRL = (abs(RL) - abs(myModel.partial_wave_amplitudes(1, :, 2))) ./ abs(RL);
+errorRS = (abs(RS) - abs(myModel.partial_wave_amplitudes(1, :, 1))) ./ abs(RS);
+errorTL = (abs(TL) - abs(myModel.partial_wave_amplitudes(1, :, 4))) ./ abs(TL);
+errorTS = (abs(TS) - abs(myModel.partial_wave_amplitudes(1, :, 3))) ./ abs(TS);
 
 % print errors
 disp('Mean errors for solid-solid medium')
@@ -96,10 +96,10 @@ hold off
 legend('|R_L| EM','|T_L| EM','|T_S| EM','|R_L| Rose','|T_L| Rose','|T_S| Rose')
 
 % errors
-errorRL = (abs(RL) - abs(myModel.partialWaveAmplitudes(1, :, 2))) ./ abs(RL);
-% errorRS = (abs(RS) - abs(myModel.partialWaveAmplitudes(1, :, 1))) ./ abs(RS);
-errorTL = (abs(TL) - abs(myModel.partialWaveAmplitudes(1, :, 4))) ./ abs(TL);
-errorTS = (abs(TS) - abs(myModel.partialWaveAmplitudes(1, :, 3))) ./ abs(TS);
+errorRL = (abs(RL) - abs(myModel.partial_wave_amplitudes(1, :, 2))) ./ abs(RL);
+% errorRS = (abs(RS) - abs(myModel.partial_wave_amplitudes(1, :, 1))) ./ abs(RS);
+errorTL = (abs(TL) - abs(myModel.partial_wave_amplitudes(1, :, 4))) ./ abs(TL);
+errorTS = (abs(TS) - abs(myModel.partial_wave_amplitudes(1, :, 3))) ./ abs(TS);
 
 % print errors
 disp('Mean errors for fluid-solid medium - no reflected shear')
@@ -109,8 +109,7 @@ disp(['Mean error TL : ', num2str(mean(errorTL))])
 disp(['Mean error TS : ', num2str(mean(errorTS))])
 disp(['Note, the errors for the case of a fluid first layer are larger as'... 
     ,' the partial wave method approximates the fluid layer as having a'...
-    ,' very low shear speed. In the future, the code will be updated to'...
-    ,' explicitly account for fluid layers.'])
+    ,' very low shear speed.'])
 
 
 

@@ -10,9 +10,12 @@
 %   object (see: example_medium_class for more details). 
 
 
-% =========================================================================
-%   INTIALISE MEDIUM AND ELASTICMATRIX
-% =========================================================================
+%% INTIALISE MEDIUM AND ELASTICMATRIX
+%{
+ Normal text goes here
+%}
+% other text like this
+
 cls;
 % Firstly a Medium object needs to be created. For more details see the
 % example script : example_medium_class

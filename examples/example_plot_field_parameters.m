@@ -7,8 +7,7 @@
 %
 % This script demonstrates how to plot the displacement and stress fields
 % for the layered medium. This is calculated for a certain angle and
-% frequency, the future code will accept a phase velocity and wavenumber as
-% an input. Currently the first layer cannot be a vacuum or air;
+% frequency. Currently the first layer cannot be a vacuum or air;
 
 % ========================================================================
 %   MODEL

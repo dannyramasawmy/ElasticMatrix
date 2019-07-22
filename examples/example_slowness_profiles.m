@@ -9,8 +9,7 @@
 %   the Medium class. Please refer to the example_medium_class.m script if
 %   unfamilar with the class attibutes and methods.
 
-% =========================================================================
-%   PLOT SLOWNESS CURVES
+%% PLOT SLOWNESS CURVES
 % =========================================================================
 cls; % clears variables and closes figures
 % firstly create a Medium object with each material needed to generate a
@@ -27,9 +26,7 @@ myMedium.calculateSlowness;
 myMedium.plotSlowness;
 
 
-% =========================================================================
-%   MANUAL PLOTTING
-% =========================================================================
+%%  MANUAL PLOTTING
 % to manually plot the curves, the kx vs kz data is given in a structure
 % form.
 
@@ -43,7 +40,7 @@ slownessDataMat_2 = myMedium(2).slowness;
 slownessDataMat_3 = myMedium(3).slowness;
 
 % The .calcualteSlowness function will return complex values under certain
-% conditions. Therefore only the real part should be plotted. 
+% conditions. Therefore only the real part should be plotted.
 % Additionally these may be positive or negative kz -> these are symmetric
 % however
 
@@ -66,9 +63,7 @@ legend('L','SV','SH')
 title('Manual slowness plot')
 
 
-% =========================================================================
-%   CALCULATE ERRORS
-% =========================================================================
+%%   CALCULATE ERRORS
 disp('Errors for glass are within numerical precision : ')
 
 % note the compressional speed of glass is 1/L curve
@@ -94,7 +89,7 @@ disp(['Errors for beryl are within numerical precision,'...
     ' however, the profile is not calculated exactly when  kz=0:,'...
     ' this has been indicated with an *.'])
 % get the stiffness matrix for beryl
-stiffnessMatrixBeryl = myMedium(3).stiffnessMatrix;
+stiffnessMatrixBeryl = myMedium(3).stiffness_matrix;
 densityBeryl = myMedium(3).density;
 
 % compare qL at kx = 0

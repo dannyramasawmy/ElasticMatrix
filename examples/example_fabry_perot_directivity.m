@@ -102,8 +102,8 @@ sensor.calculateDispersionCurvesCoarse;
 
 % plot the dispersion curve data
 hold on
-plot(-sensor.dispersionCurves.y, sensor.dispersionCurves.x/1e6,'k.')
-plot(sensor.dispersionCurves.y, sensor.dispersionCurves.x/1e6,'k.')
+plot(-sensor.dispersion_curves.y, sensor.dispersion_curves.x/1e6,'k.')
+plot(sensor.dispersion_curves.y, sensor.dispersion_curves.x/1e6,'k.')
 hold off
 
 
