@@ -39,7 +39,7 @@ titles = {'Water Backed 50um PET',...
 % Figure 1 handle
 mainFigHand = figure;
 
-load('../data/Beard1999FrequencyResponseFabryPerotData.mat');
+load('../testingData/Beard1999FrequencyResponseFabryPerotData.mat');
 
 % different cases to plot
 for idx = 1:6

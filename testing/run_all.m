@@ -88,5 +88,6 @@ example_fabry_perot_frequency_response;
 pause(2);
 
 % finish
-clc;
+delete('myElasticMatrixObject.mat')
+clc; close all;
 disp('... finished, all scripts have run...')

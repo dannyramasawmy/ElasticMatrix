@@ -67,20 +67,20 @@ figure(1);
 for idx = 1:length(medium) - 1
     
     % extract uz
-    uzUp = model.zDisplacement(idx).upper;
-    uzDw = model.zDisplacement(idx).lower;
+    uzUp = model.z_displacement(idx).upper;
+    uzDw = model.z_displacement(idx).lower;
     
     % extract ux
-    uxUp = model.xDisplacement(idx).upper;
-    uxDw = model.xDisplacement(idx).lower;
+    uxUp = model.x_displacement(idx).upper;
+    uxDw = model.x_displacement(idx).lower;
     
     % extract sigma_zz
-    sigZZup = model.sigmaZZ(idx).upper;
-    sigZZdw = model.sigmaZZ(idx).lower;
+    sigZZup = model.sigma_zz(idx).upper;
+    sigZZdw = model.sigma_zz(idx).lower;
     
     % extract sigma_xz
-    sigXZup = model.sigmaXZ(idx).upper;
-    sigXZdw = model.sigmaXZ(idx).lower;
+    sigXZup = model.sigma_xz(idx).upper;
+    sigXZdw = model.sigma_xz(idx).lower;
     
     % plot uz
     subplot(length(medium) - 1,4,4*(idx - 1) + 1 )
@@ -140,7 +140,7 @@ end
 % been included with the ElasticMatrix software. This will be in a future
 % release. Here the data from the equivalent model is loaded and sorted
 
-load('../data/gmmIsotropicModelData.mat')
+load('../testingData/gmmIsotropicModelData.mat')
 % displacement
 XDisplacements_1 = gmmIsotropicModelData.XDisplacements_1 ;
 ZDisplacements_1 = gmmIsotropicModelData.ZDisplacements_1 ;
@@ -184,11 +184,11 @@ figure(2);
 subplot(3,4,1)
 plot(angleRange, normMe(abs(gmm_ux_1(25,:))),'b')
 hold on
-plot(angleRange, normMe(abs(model.xDisplacement(1).lower(25,:))),'r.')
+plot(angleRange, normMe(abs(model.x_displacement(1).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_ux_1(25,:))) - normMe(abs(model.xDisplacement(1).lower(25,:)));
+error = normMe(abs(gmm_ux_1(25,:))) - normMe(abs(model.x_displacement(1).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -200,11 +200,11 @@ legend('GMM','Partial-wave','Error')
 subplot(3,4,5)
 plot(angleRange,normMe(abs(gmm_ux_2(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.xDisplacement(2).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.x_displacement(2).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_ux_2(25,:))) - normMe(abs(model.xDisplacement(2).lower(25,:)));
+error = normMe(abs(gmm_ux_2(25,:))) - normMe(abs(model.x_displacement(2).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -215,11 +215,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,9)
 plot(angleRange,normMe(abs(gmm_ux_3(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.xDisplacement(3).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.x_displacement(3).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_ux_3(25,:))) - normMe(abs(model.xDisplacement(3).lower(25,:)));
+error = normMe(abs(gmm_ux_3(25,:))) - normMe(abs(model.x_displacement(3).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -230,11 +230,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,2)
 plot(angleRange,normMe(abs(gmm_uz_1(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.zDisplacement(1).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.z_displacement(1).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_uz_1(25,:))) - normMe(abs(model.zDisplacement(1).lower(25,:)));
+error = normMe(abs(gmm_uz_1(25,:))) - normMe(abs(model.z_displacement(1).lower(25,:)));
 plot(angleRange,error,'k')
 ylabel('Error')
 title('u_z - int 1')
@@ -245,11 +245,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,6)
 plot(angleRange,normMe(abs(gmm_uz_2(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.zDisplacement(2).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.z_displacement(2).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_uz_2(25,:))) - normMe(abs(model.zDisplacement(2).lower(25,:)));
+error = normMe(abs(gmm_uz_2(25,:))) - normMe(abs(model.z_displacement(2).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -260,11 +260,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,10)
 plot(angleRange,normMe(abs(gmm_uz_3(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.zDisplacement(3).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.z_displacement(3).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_uz_3(25,:))) - normMe(abs(model.zDisplacement(3).lower(25,:)));
+error = normMe(abs(gmm_uz_3(25,:))) - normMe(abs(model.z_displacement(3).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -275,11 +275,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,3)
 plot(angleRange,normMe(abs(gmm_szz_1(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaZZ(1).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_zz(1).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_szz_1(25,:))) - normMe(abs(model.sigmaZZ(1).lower(25,:)));
+error = normMe(abs(gmm_szz_1(25,:))) - normMe(abs(model.sigma_zz(1).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -290,11 +290,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,7)
 plot(angleRange,normMe(abs(gmm_szz_2(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaZZ(2).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_zz(2).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_szz_2(25,:))) - normMe(abs(model.sigmaZZ(2).lower(25,:)));
+error = normMe(abs(gmm_szz_2(25,:))) - normMe(abs(model.sigma_zz(2).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -305,11 +305,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,11)
 plot(angleRange,normMe(abs(gmm_szz_3(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaZZ(3).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_zz(3).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_szz_3(25,:))) - normMe(abs(model.sigmaZZ(3).lower(25,:)));
+error = normMe(abs(gmm_szz_3(25,:))) - normMe(abs(model.sigma_zz(3).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -320,11 +320,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,4)
 plot(angleRange,normMe(abs(gmm_sxz_1(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaXZ(1).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_xz(1).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_sxz_1(25,:))) - normMe(abs(model.sigmaXZ(1).lower(25,:)));
+error = normMe(abs(gmm_sxz_1(25,:))) - normMe(abs(model.sigma_xz(1).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -335,11 +335,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,8)
 plot(angleRange,normMe(abs(gmm_sxz_2(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaXZ(2).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_xz(2).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_sxz_2(25,:))) - normMe(abs(model.sigmaXZ(2).lower(25,:)));
+error = normMe(abs(gmm_sxz_2(25,:))) - normMe(abs(model.sigma_xz(2).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -350,11 +350,11 @@ xlabel('Angle [\circ]')
 subplot(3,4,12)
 plot(angleRange,normMe(abs(gmm_sxz_3(25,:))),'b')
 hold on
-plot(angleRange,normMe(abs(model.sigmaXZ(3).lower(25,:))),'r.')
+plot(angleRange,normMe(abs(model.sigma_xz(3).lower(25,:))),'r.')
 hold off
 % errors
 yyaxis right
-error = normMe(abs(gmm_sxz_3(25,:))) - normMe(abs(model.sigmaXZ(3).lower(25,:)));
+error = normMe(abs(gmm_sxz_3(25,:))) - normMe(abs(model.sigma_xz(3).lower(25,:)));
 plot(angleRange,error,'k')
 % labels
 ylabel('Error')
@@ -374,7 +374,7 @@ end
 %   compared here.
 
 % get partial wave amplitudes from Elstic Matrix
-pwMatrix = model.partialWaveAmplitudes;
+pwMatrix = model.partial_wave_amplitudes;
 
 figure(3);
 
