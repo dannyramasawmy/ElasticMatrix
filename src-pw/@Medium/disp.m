@@ -19,7 +19,7 @@ function obj = disp(obj)
     %   []              - the outputs                   []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   printLineBreaks - plotting === across the screen
     %
     % ABOUT
     %   author          - Danny Ramasawmy
@@ -46,11 +46,11 @@ function obj = disp(obj)
     % <http://www.gnu.org/licenses/>.
     
     % print lines
-    printLineBreaks;
-    
+    printLineBreaks;    
     % message
-    disp('    __________________Medium________________')
-    disp(' ')
+    disp('    Medium')
+    printLineBreaks;
+
     
     % preallocate structure
     print_table(    length(obj))  = struct;

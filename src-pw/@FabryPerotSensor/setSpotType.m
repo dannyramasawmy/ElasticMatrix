@@ -1,4 +1,4 @@
-function obj = setSpotType(obj, spotType)
+function obj = setSpotType(obj, spot_type)
     %% setFrequency v1 date:  2019-01-15
     %
     %   Author
@@ -9,15 +9,15 @@ function obj = setSpotType(obj, spotType)
     %   Choose whether the interrogation is a Guassian, collimated beam.
     
     % format check on string
-    spotTypeFormatted = stringCheck(spotType);
+    spotTypeFormatted = stringCheck(spot_type);
     
     switch spotTypeFormatted
         case {'gaussian'}
-            obj.spotType = 'gaussian';
+            obj.spot_type = 'gaussian';
         case {'collimated'}
-            obj.spotType = 'collimated';
+            obj.spot_type = 'collimated';
         otherwise
-            obj.spotType = 'none';
+            obj.spot_type = 'none';
     end
     
 end

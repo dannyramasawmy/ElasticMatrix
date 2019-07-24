@@ -23,7 +23,7 @@ function printLineBreaks()
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 01 - November - 2016
-    %   last update     - 19 - July     - 2019
+    %   last update     - 22 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -43,7 +43,5 @@ function printLineBreaks()
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
-    disp(' ')
-    disp('========================================================')
-    disp(' ')
+    disp('===============================================================')
 end

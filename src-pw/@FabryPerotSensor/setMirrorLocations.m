@@ -1,4 +1,4 @@
-function obj = setMirrorLocations(obj, interfaceLocations)
+function obj = setMirrorLocations(obj, interface_locations)
     %% setMirrorLocations v1 date:  2019-01-15
     %
     %   Author
@@ -14,15 +14,15 @@ function obj = setMirrorLocations(obj, interfaceLocations)
     
     % check that the interface locations are integers
     boolVar = [...
-        checkInterfaceInput(interfaceLocations(1), numberLayers), ...
-        checkInterfaceInput(interfaceLocations(2), numberLayers)];
+        checkInterfaceInput(interface_locations(1), numberLayers), ...
+        checkInterfaceInput(interface_locations(2), numberLayers)];
         
     autoAssignFlag = 0;
     % assign mirror interfaces
     if boolVar == [1 1]
         % check inputs are in ascending order and assign
-            obj.mirrorLocations = ...
-                sort([interfaceLocations(1), interfaceLocations(2)]);
+            obj.mirror_locations = ...
+                sort([interface_locations(1), interface_locations(2)]);
     else
         autoAssignFlag = 1;
     end
@@ -35,7 +35,7 @@ function obj = setMirrorLocations(obj, interfaceLocations)
         % check number of layers is more than three - assign first and last
         % interfaces
         if numberLayers > 2
-            obj.mirrorLocations = [1, numberLayers-1];
+            obj.mirror_locations = [1, numberLayers-1];
         else
             error('obj.medium must be at least three layers');
         end

@@ -1,79 +1,107 @@
 function [figureHandle, obj] = plotInterfaceParameters( obj )
-    %% plotInterfaceParameters v1 date: 2019-01-15
+    %PLOTINTERFACEPARAMETERS Plots the parameters at the interface.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   PLOTINTERFACEPARAMETERS plots the displacement and stresses at the
+    %   interfaces of each layer. These are automatically calculated when
+    %   the partial-wave method is used (obj.calculate). The stresses and
+    %   displacements are relative to an input stress of 1MPa.
     %
-    %   Descriptions:
-    %       Plots the parameters at every interface of the
-    %   multi-layered medium. (only for Angle and Frequency)
+    %   Currently this function will only plot the frequency-angle
+    %   dependent stress and displacements. If the .frequency and .angle
+    %   properties are larger than [1 1] then a 2D plot will be used. If
+    %   either of .frequency or .angle have a dimension of [1 1] then a 1D
+    %   plot will be used.
     %
+    % USEAGE
+    %   obj.plotInterfaceParameters;
+    %
+    % INPUTS
+    %   obj.x_displacement      - displacement in x direction [m]
+    %   obj.z_displacement      - displacement in z direction [m]
+    %   obj.stress_zz           - normal stress
+    %   obj.stress_xz           - shear stress
+    %
+    %   Each of the above properties is a structure with .lower or .upper.
+    %   For example: obj.z_displacement(interface_idx).upper and
+    %   obj.z_displacement(interface_idx).lower. These refer to the field
+    %   parameters calculated above (upper) and below (lower) the
+    %   interface. The index, interface_idx indicates the interfaces
+    %   between each layer. See documentation/REFERENCES.txt.
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   figure_handle   - the figure_handle is returned []
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 22 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
-    % =====================================================================
-    %   ERROR CHECKING
-    % =====================================================================
-    
-    % if any layers are a vacuum do not allow to plot
-    for layerDx = 1:length(obj.medium)
-        if strcmp(obj.medium(layerDx).state,'Vacuum')
-            warning('Interface parameters are 0 for a vacuum')
-            return
-        end
-    end
-    
-    % check angle and frequency vectors
-    if isempty(obj.angle)
-        warning(...
-            ['Angle vector is empty, this is currently only available for '...
-            ,'Angle and frequency'])
-        return;
-    end
-    
-    % check angle and frequency vectors
-    if isempty(obj.frequency)
-        warning(...
-            ['Angle vector is empty, this is currently only available for '...
-            ,'Angle and frequency'])
-        return;
-    end
+    % check inputs
+    inputCheck(obj);
     
     % =====================================================================
     %   PLOTTING
     % =====================================================================
     
-    angleRange = obj.angle;
-    frequencyRange = obj.frequency;
+    % get plotting ranges
+    angle_range     = obj.angle;
+    frequency_range = obj.frequency;
     
     % check for every interface
     for idx = 1:length(obj.medium) - 1
         
-        % create a figure handle struct
-        figureString = ['interface',num2str(idx)];
+        % create a figure handle structure
+        figureString = ['interface_',num2str(idx)];
         figureHandle.(figureString) = figure;
         
-        % extract uz
-        uzUp = obj.z_displacement(idx).upper;
-        uzDw = obj.z_displacement(idx).lower;
+        % get uz
+        uz_up = obj.z_displacement(idx).upper;
+        % uzDw = obj.z_displacement(idx).lower; % alternative
         
-        % extract ux
-        uxUp = obj.x_displacement(idx).upper;
-        uxDw = obj.x_displacement(idx).lower;
+        % get ux
+        ux_up = obj.x_displacement(idx).upper;
+        % uxDw = obj.x_displacement(idx).lower; % alternative
         
-        % extract sigma_zz
-        sigZZup = obj.sigma_zz(idx).upper;
-        sigZZdw = obj.sigma_zz(idx).lower;
+        % get sigma_zz
+        sig_ZZ_up = obj.sigma_zz(idx).upper;
+        % sigZZdw = obj.sigma_zz(idx).lower; % alternative
         
-        % extract sigma_xz
-        sigXZup = obj.sigma_xz(idx).upper;
-        sigXZdw = obj.sigma_xz(idx).lower;
+        % get sigma_xz
+        sig_XZ_up = obj.sigma_xz(idx).upper;
+        % sigXZdw = obj.sigma_xz(idx).lower; % alternative
         
         
         % sort to determine the plot type
-        if length(angleRange) == 1
+        if length(angle_range) == 1
             % plot uz
             subplot(2,2,1)
-            plot(frequencyRange, abs(uzUp), 'k')
+            plot(frequency_range, abs(uz_up), 'k')
             % labels
             xlabel('Frequency [MHz]')
             ylabel('Displacement [Pa]')
@@ -81,30 +109,30 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             
             % plot uz
             subplot(2,2,2)
-            plot(frequencyRange, abs(uxUp), 'k')
+            plot(frequency_range, abs(ux_up), 'k')
             xlabel('Frequency [MHz]')
             ylabel('Displacement [Pa]')
             title('Displacement - x')
             
             % plot sigma zz
             subplot(2,2,3)
-            plot(frequencyRange, abs(sigZZup), 'k')
+            plot(frequency_range, abs(sig_ZZ_up), 'k')
             xlabel('Frequency [MHz]')
             ylabel('Stress [Pa]')
             title('Stress - zz')
             
             % plot sigma xz
             subplot(2,2,4)
-            plot(frequencyRange, abs(sigXZup), 'k')
+            plot(frequency_range, abs(sig_XZ_up), 'k')
             xlabel('Frequency [MHz]')
             ylabel('Stress [Pa]')
             title('Stress - xz')
             
             
-        elseif length(frequencyRange) == 1
+        elseif length(frequency_range) == 1
             % plot uz
             subplot(2,2,1)
-            plot(angleRange, abs(uzUp), 'k')
+            plot(angle_range, abs(uz_up), 'k')
             % labels
             xlabel('Angle [\circ]')
             ylabel('Displacement [Pa]')
@@ -112,21 +140,21 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             
             % plot uz
             subplot(2,2,2)
-            plot(angleRange, abs(uxUp), 'k')
+            plot(angle_range, abs(ux_up), 'k')
             xlabel('Angle [\circ]')
             ylabel('Displacement [Pa]')
             title('Displacement - x')
             
             % plot sigma zz
             subplot(2,2,3)
-            plot(angleRange, abs(sigZZup), 'k')
+            plot(angle_range, abs(sig_ZZ_up), 'k')
             xlabel('Angle [\circ]')
             ylabel('Stress [Pa]')
             title('Stress - zz')
             
             % plot sigma xz
             subplot(2,2,4)
-            plot(angleRange, abs(sigXZup), 'k')
+            plot(angle_range, abs(sig_XZ_up), 'k')
             xlabel('Angle [\circ]')
             ylabel('Stress [Pa]')
             title('Stress - xz')
@@ -134,8 +162,8 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
         else
             % plot uz
             subplot(2,2,1)
-            tmp = normMe(abs(uzUp));
-            imagesc(angleRange, frequencyRange/1e6,  tmp)
+            tmp = normMe(abs(uz_up));
+            imagesc(angle_range, frequency_range/1e6,  tmp)
             % labels
             title('Displacement - z')
             axis xy
@@ -145,8 +173,8 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             
             % plot ux
             subplot(2,2,2)
-            tmp = normMe(abs(uxUp));
-            imagesc(angleRange, frequencyRange/1e6, tmp)
+            tmp = normMe(abs(ux_up));
+            imagesc(angle_range, frequency_range/1e6, tmp)
             % labels
             title('Displacement - x')
             axis xy
@@ -156,8 +184,8 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             
             % plot sigma z
             subplot(2,2,3)
-            tmp = normMe(abs(sigZZup));
-            imagesc(angleRange, frequencyRange/1e6, tmp)
+            tmp = normMe(abs(sig_ZZ_up));
+            imagesc(angle_range, frequency_range/1e6, tmp)
             % labels
             title('Stress - zz')
             axis xy
@@ -167,8 +195,8 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
             
             % plot sigma x
             subplot(2,2,4)
-            tmp = normMe(abs(sigXZup));
-            imagesc(angleRange, frequencyRange/1e6, tmp)
+            tmp = normMe(abs(sig_XZ_up));
+            imagesc(angle_range, frequency_range/1e6, tmp)
             % labels
             title('Stress - xz')
             axis xy
@@ -180,5 +208,65 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
         % over title
         sgtitle(['Interface ',num2str(idx)])
     end
+end
+
+function inputCheck(obj)
+    %INPUTCHECK Checks the inputs for the current function.
+    %
+    % DESCRIPTION
+    %   INPUTCHECK(obj) checks the inputs for the function
+    %   plotInterfaceparameters(...). If any of the inputs are not valid,
+    %   the function will break and print errors to screen.
+    %
+    % USAGE
+    %   inputChecks(obj);
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 20 - July - 2019
+    %   last update     - 22 - July - 2019
+    
+    % do not plot for a vacuum
+    for layerDx = 1:length(obj.medium)
+        if strcmp(obj.medium(layerDx).state,'Vacuum')
+            error('Interface parameters are 0 for a vacuum')
+        end
+    end
+    
+    % check angle and frequency properties
+    if isempty(obj.angle)
+        error(...
+            ['obj.angle property is empty, .plotInterfaceParameters() is ',...
+            'currently only available for angle and frequency.'])
+    end
+    
+    % check angle and frequency properties
+    if isempty(obj.frequency)
+        error(...
+            ['obj.frequency property is empty, .plotInterfaceParameters()',...
+            ' is currently only available for angle and frequency.'])
+    end
+    
+    % check the relevant properties are populated - x-displacement
+    if isempty(obj.x_displacement)
+        error('obj.x_displacement is empty, please use the obj.calculate method.')
+    end
+    
+    % check the relevant properties are populated - z-displacement
+    if isempty(obj.z_displacement)
+        error('obj.z_displacement is empty, please use the obj.calculate method.')
+    end
+    
+    % check the relevant properties are populated - normal stress
+    if isempty(obj.sigma_zz)
+        error('obj.sigma_zz is empty, please use the obj.calculate method.')
+    end
+    
+    % check the relevant properties are populated - shear stress
+    if isempty(obj.sigma_xz)
+        error('obj.sigma_xz is empty, please use the obj.calculate method.')
+    end
     
     
+end

@@ -1,130 +1,157 @@
-function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
-    %% displacementField v1 date:  2019-01-15
-    % 
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, varargin)
+    %CALCULATEFIELD Calculates the displacement and stress fields.
     %
-    %   Description
-    %       Calculates the displacement field at angle (angleChoice) and
-    %       frequency (freqChoice); First layer cannot be a 'vacuum' and
-    %       the input arguments must be an angle and frequency. The code
-    %       will be updated in the future to accept phasevelocity and
-    %       wavenumber input arguments.
+    % DESCRIPTION
+    %   CALCULATEFIELD(...) plots the displacement and stress field in the
+    %   multi-layered structure for a given pair of frequency and angle. The
+    %   function takes the partial_wave_amplitudes calculated from the
+    %   .calculate function, and calculates the displacement and stress
+    %   within the multi-layered structure over a range of values X_hf and
+    %   Z_hf. Currently this function is limited to only plotting a single
+    %   angle and frequency and cannot plot if the first layer is a vacuum.
+    %   There are multiple types of figure-styles that can be plotted and
+    %   these are described below.
     %
-    % inputs:
-    %   (angle, frequency, {vector-Z, vector-X}, time )
+    % USEAGE
+    %   [figure_handle] = calculateField(frequency_choice, angle_choice);
+    %   [figure_handle] = calculateField(frequency_choice, angle_choice,...
+    %       {vector-Z, vector-X});
+    %   [figure_handle] = calculateField(frequency_choice, angle_choice,...
+    %       {vector-Z, vector-X}, time);
     %
-    %   FUTURE 
-    %   - add an optional phasespeed input argument 
+    % INPUTS
+    %   frequency_choice    - choice of frequency   [Hz]
+    %   angle_choice        - choice of angle       [degrees]
     %
-    % =====================================================================
-    %   CHECK THE INUTS
-    % =====================================================================
-    % currently the only be calculate over an angle and frequency - this
-    % will be updated to a phase velocity in the future
+    % OPTIONAL INPUTS
+    %   {z_vector, x_vector} - cell containing two vectors, these vectors
+    %   define the range in z and x and sample density. The grid on which
+    %   the field parameters are calculated are at [Z, X] =
+    %   meshgrid(z_vector, x_vector);
+    %
+    %   z_vector        - range of z-coordinates            [m]
+    %   x_vector        - range of x-coordinates            [m]
+    %   time            - time of propagation, default 0    [s]
+    %
+    % OUTPUTS
+    %   fields                  - structure with the calculated fields
+    %   fields.z_vector         - 1D vector of z-range          [m]
+    %   fields.x_vector         - 1D vector of x-range          [m]
+    %   fields.x_displacement   - 2D matrix of x-displacements  [m]
+    %   fields.z_displacement   - 2D matrix of z-displacements  [m]
+    %   fields.sigma_zz         - 2D matrix of normal stress    [Pa]
+    %   fields.sigma_xz         - 2D matrix of shear stress     [Pa]
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 22 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
-    % error checking
-    if strcmp(obj.medium(1).state,'Vacuum')
-        warning('The first layer cannot currently be a vacuum.')
-        fields = NaN;
-        return;
-    end
+    % check inputs
+    inputCheck(obj, frequency_choice, angle_choice, varargin)
     
-    if strcmp(obj.medium(1).state,'Gas')
-        warning('The first layer cannot currently be a gas.')
-        fields = NaN;
-        return;
-    end
-    
-    if isempty(obj.frequency) || isempty(obj.angle)
-        warning('Please set an angle and frequency using .setAngle, .setFrequency.')
-        warning(' then call .calculate.')
-        fields = NaN;
-        return;
-    end
-        
     % ====================================================================
     %   CHOOSE APPROPRIATE FREQUENCY / ANGLE
     % =====================================================================
     
+    disp('... calculating displacement and stress fields ...')
+    
     % find the closest amplitudes
-    [~, aidx] = findClosest(obj.angle, angleChoice);
-    [~, fidx] = findClosest(obj.frequency, freqChoice);
+    [~, aidx] = findClosest(obj.angle, angle_choice);
+    [~, fidx] = findClosest(obj.frequency, frequency_choice);
     
     % assign closest frequency and angle
-    freqVec = obj.frequency(fidx);
-    angleVec = obj.angle(aidx);
-    
-    % print to screen the angle and frequency
-%     disp(['Angle chosen: '      ,   num2str(angle_vec)    , 'degs'])
-%     disp(['Frequency chosen: '  ,   num2str(freq_vec/1e6), ' MHz'])
+    freq_vec = obj.frequency(fidx);
+    angle_vec = obj.angle(aidx);
     
     % output wave amplitudes from calculated model
-    waveAmplitudes = (obj.unnormalised_amplitudes(fidx, aidx,:));   
+    wave_amplitudes = (obj.unnormalised_amplitudes(fidx, aidx,:));
     
     % =====================================================================
     %   PRECALCULATIONS
     % =====================================================================
     % final phase velocity
-    phaseVel = sqrt(obj.medium(1).stiffness_matrix(1,1) / obj.medium(1).density);
+    phase_vel = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
+        obj.medium(1).density);
     
     % the number of layers
-    numLayers = length(obj.medium);
+    num_layers = length(obj.medium);
     
     % angle and phase velocity
-    angle = angleVec;
+    angle = angle_vec;
     theta = angle * pi /180;
-    % phase veloctids
-    cp = phaseVel / sin(theta);
+    % phase velocities
+    cp = phase_vel / sin(theta);
     % frequency
-    omega = 2* pi * freqVec;
+    omega = 2* pi * freq_vec;
     k = omega / cp ;
     
     % incident wave amplitude set to 1 MPa
     P_0 = 1e6;
     B_1 =  (P_0 * 1i*k) / (obj.medium(1).density*omega^2);
     
-%     waveAmplitudes = waveAmplitudes / ((P_0 * 1i*k) / (obj.medium(1).density*omega^2));
-%     B_1 = 1;
+    %     waveAmplitudes = waveAmplitudes / ((P_0 * 1i*k) / (obj.medium(1).density*omega^2));
+    %     B_1 = 1;
     
     
     %% ====================================================================
     %   INTERFACE POSITIONS
     % =====================================================================
     
-    % get the position of each interface, 0 is at the bottom halfspace interface
-    cumulativeThickness = 0e-6;
-    itfcPosition(numLayers-1) = cumulativeThickness;
+    % get the position of each interface, 0 is at the bottom half-space interface
+    cumulative_thickness = 0e-6;
+    itfc_position(num_layers-1) = cumulative_thickness;
     % loop over layers in the medium and extract thickness
-    for intIdx = numLayers-1:-1:2
-        % sum thicknesses apart from the 1 & N layers  (halfspaces)
-        cumulativeThickness = cumulativeThickness + obj.medium(intIdx).thickness;
+    for intIdx = num_layers-1:-1:2
+        % sum thicknesses apart from the 1 & N layers  (half-spaces)
+        cumulative_thickness = cumulative_thickness + obj.medium(intIdx).thickness;
         % interface position
-        itfcPosition(intIdx-1) = cumulativeThickness;
+        itfc_position(intIdx-1) = cumulative_thickness;
     end
     % set first boundary to be 0
-    itfcPosition = itfcPosition - max(itfcPosition);
+    itfc_position = itfc_position - max(itfc_position);
     
     %% ====================================================================
     %   DEFINE THE GRID
     % =====================================================================
     
     % choose number of samples
-    zSamples = 256;
-    xSamples = zSamples;
+    z_samples = 256;
+    x_samples = z_samples;
     
     % auto scale grid axes
-    zSteps = linspace(-40*10^-6  + min(itfcPosition), ...
-        40*10^-6   , zSamples);
-    xSteps = linspace(-1/ cp   , 1/ cp     , xSamples);
+    z_steps = linspace(-40*10^-6  + min(itfc_position), ...
+        40*10^-6   , z_samples);
+    x_steps = linspace(-1/ cp   , 1/ cp     , x_samples);
     
     try
         % varargin{1} - grid data
-        zSteps = varargin{1}{1};
-        xSteps = varargin{1}{2};
-        zSamples = length(zSteps);
-        xSamples = length(xSteps);
+        z_steps = varargin{1}{1};
+        x_steps = varargin{1}{2};
+        z_samples = length(z_steps);
+        x_samples = length(x_steps);
         
         
     catch
@@ -133,7 +160,7 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     end
     
     % define grid
-    [Z , X] = (meshgrid(zSteps,xSteps));
+    [Z , X] = (meshgrid(z_steps, x_steps));
     
     %% ====================================================================
     % GET THE SENSOR GEOMETRY - grid indices
@@ -142,17 +169,17 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     % first find which layer the indices belong too
     
     % Show the image
-    layer(1).idxs = find(Z >= itfcPosition(1));
+    layer(1).idxs = find(Z >= itfc_position(1));
     for ldx = 2:length(obj.medium)-1
-        tmp = find(Z >= itfcPosition(ldx) & Z < itfcPosition(ldx-1));
+        tmp = find(Z >= itfc_position(ldx) & Z < itfc_position(ldx-1));
         layer(ldx).idxs = tmp;
     end
-    layer(length(obj.medium)).idxs = find(Z < itfcPosition(end));
+    layer(length(obj.medium)).idxs = find(Z < itfc_position(end));
     
     % check with an image
-    myImage = zeros(size(Z));
+    my_image = zeros(size(Z));
     for ldx = 1:length(layer)
-        myImage(layer(ldx).idxs) = ldx;
+        my_image(layer(ldx).idxs) = ldx;
     end
     
     % plot geometry
@@ -175,14 +202,14 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     % loop over the medium layers and extract the important properties
     %   alpha - partial wave amplitudes
     %   C_mat - stiffness matrix for each material
-    %   p_vec - polarisation of each partial wave
-    for layIdx = 1:numLayers
-        [ matProp(layIdx).alpha, matProp(layIdx).stiffness_matrix, matProp(layIdx).pVec ] = ...
+    %   p_vec - polarization of each partial wave
+    for layIdx = 1:num_layers
+        [ mat_prop(layIdx).alpha, mat_prop(layIdx).stiffness_matrix, mat_prop(layIdx).pVec ] = ...
             calculateAlphaCoefficients(...
             obj.medium(layIdx).stiffness_matrix, cp, obj.medium(layIdx).density );
     end
     
-    % initalise displacement matrices
+    % initialize displacement matrices
     x_displacement  = zeros(size(Z));
     z_displacement  = zeros(size(Z));
     normal_stress   = zeros(size(Z));
@@ -190,123 +217,123 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
     
     % time/phase loop
     time = 0;
-    try 
+    try
         time = varargin{2};
     end
-        
+    
     % time / phase loop
     for tdx = time
         % loop over the layers
-        for layerIdx = 1:numLayers
+        for layer_idx = 1:num_layers
             
             % the dx and dz steps
-            dz1 = (Z(layer(layerIdx).idxs));
-            dx1 = (X(layer(layerIdx).idxs));
-            dz = reshape(dz1,xSamples,(length(dz1)/xSamples));
-            dx = reshape(dx1,xSamples,(length(dz1)/xSamples));
+            dz1 = (Z(layer(layer_idx).idxs));
+            dx1 = (X(layer(layer_idx).idxs));
+            dz = reshape(dz1,x_samples,(length(dz1)/x_samples));
+            dx = reshape(dx1,x_samples,(length(dz1)/x_samples));
             
             % common factor
-     
+            
             Psy = exp(1i * k * (dx - cp*tdx)) ;
             
             % fluid correction in first layer
-            fCorr = 1;
-            if matProp(layerIdx).stiffness_matrix(5,5) < 5
-%                 disp('Corrected fluid')
-                fCorr = 0; % remove shear components
+            f_corr = 1;
+            if mat_prop(layer_idx).stiffness_matrix(5,5) < 5
+                %                 disp('Corrected fluid')
+                f_corr = 0; % remove shear components
             end
             
-            stressNorm = 1i*k; 
+            stressNorm = 1i*k;
             
-            switch layerIdx
-                case 1 
+            switch layer_idx
+                case 1
                     
                     % amplitude and z-phase
-                    e1 = exp(1i * k * matProp(layerIdx).alpha(1) * dz) * waveAmplitudes(1) *fCorr;
-                    e3 = exp(1i * k * matProp(layerIdx).alpha(3) * dz) * waveAmplitudes(2);
-                    e4 = exp(1i * k * matProp(layerIdx).alpha(4) * dz) * B_1;
+                    e1 = exp(1i * k * mat_prop(layer_idx).alpha(1) * dz) * wave_amplitudes(1) *f_corr;
+                    e3 = exp(1i * k * mat_prop(layer_idx).alpha(3) * dz) * wave_amplitudes(2);
+                    e4 = exp(1i * k * mat_prop(layer_idx).alpha(4) * dz) * B_1;
                     
                     % x-displacement
                     ux = Psy .* (e1 + e3 + e4) ;
                     % y-displacement
                     uz = Psy .* (...
-                        e1 * matProp(layerIdx).pVec(1) + ...
-                        e3 * matProp(layerIdx).pVec(3) + ...
-                        e4 * matProp(layerIdx).pVec(4));
+                        e1 * mat_prop(layer_idx).pVec(1) + ...
+                        e3 * mat_prop(layer_idx).pVec(3) + ...
+                        e4 * mat_prop(layer_idx).pVec(4));
                     
-
-                    % normal stress       
+                    
+                    % normal stress
                     sigma_zz =  Psy .* stressNorm .* ( ...
-                        e1 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
-                        e3 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
-                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
+                        e1 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(1) * mat_prop(layer_idx).pVec(1)) + ...
+                        e3 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(3) * mat_prop(layer_idx).pVec(3)) + ...
+                        e4 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(4) * mat_prop(layer_idx).pVec(4)) ) ;
                     
                     % shear stress
-                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
-                    sigma_xz =  Psy .* fCorr .* st2 .*(...
-                        e1 * (matProp(layerIdx).alpha(1) + matProp(layerIdx).pVec(1)) + ...
-                        e3 * (matProp(layerIdx).alpha(3) + matProp(layerIdx).pVec(3)) + ... 
-                        e4 * (matProp(layerIdx).alpha(4) + matProp(layerIdx).pVec(4))) ;
+                    st2 = mat_prop(layer_idx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* f_corr .* st2 .*(...
+                        e1 * (mat_prop(layer_idx).alpha(1) + mat_prop(layer_idx).pVec(1)) + ...
+                        e3 * (mat_prop(layer_idx).alpha(3) + mat_prop(layer_idx).pVec(3)) + ...
+                        e4 * (mat_prop(layer_idx).alpha(4) + mat_prop(layer_idx).pVec(4))) ;
                     
                     
-                case numLayers
+                case num_layers
                     
                     % amplitude and z-phase
-                    e2 = exp(1i * k * matProp(layerIdx).alpha(2) * dz) * waveAmplitudes(end-1) *fCorr;
-                    e4 = exp(1i * k * matProp(layerIdx).alpha(4) * dz) * waveAmplitudes(end);
+                    e2 = exp(1i * k * mat_prop(layer_idx).alpha(2) * dz) * wave_amplitudes(end-1) *f_corr;
+                    e4 = exp(1i * k * mat_prop(layer_idx).alpha(4) * dz) * wave_amplitudes(end);
                     
                     % x-displacement
                     ux = Psy .* (e2 + e4) ;
                     % y-displacement
                     uz = Psy .* (...
-                        e2 * matProp(layerIdx).pVec(2) + ...
-                        e4 * matProp(layerIdx).pVec(4));         
-
-                     % normal stress       
+                        e2 * mat_prop(layer_idx).pVec(2) + ...
+                        e4 * mat_prop(layer_idx).pVec(4));
+                    
+                    % normal stress
                     sigma_zz =  Psy .* stressNorm .* ( ...
-                        e2 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
-                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
-                                        
+                        e2 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(2) * mat_prop(layer_idx).pVec(2)) + ...
+                        e4 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(4) * mat_prop(layer_idx).pVec(4)) ) ;
+                    
                     % shear stress
-                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
-                    sigma_xz =  Psy .* fCorr .* st2 .*(...
-                        e2 * (matProp(layerIdx).alpha(2) + matProp(layerIdx).pVec(2)) + ...
-                        e4 * (matProp(layerIdx).alpha(4) + matProp(layerIdx).pVec(4))) ;
+                    st2 = mat_prop(layer_idx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* f_corr .* st2 .*(...
+                        e2 * (mat_prop(layer_idx).alpha(2) + mat_prop(layer_idx).pVec(2)) + ...
+                        e4 * (mat_prop(layer_idx).alpha(4) + mat_prop(layer_idx).pVec(4))) ;
                     
                     
                     
                 otherwise
-                    amp_idx = (layerIdx - 2)*4 + 2;
+                    amp_idx = (layer_idx - 2)*4 + 2;
                     
                     % amplitude and z-phase
-                    e1 = exp(1i * k * matProp(layerIdx).alpha(1) * dz) * waveAmplitudes(amp_idx + 1);
-                    e2 = exp(1i * k * matProp(layerIdx).alpha(2) * dz) * waveAmplitudes(amp_idx + 2);
-                    e3 = exp(1i * k * matProp(layerIdx).alpha(3) * dz) * waveAmplitudes(amp_idx + 3);
-                    e4 = exp(1i * k * matProp(layerIdx).alpha(4) * dz) * waveAmplitudes(amp_idx + 4);
+                    e1 = exp(1i * k * mat_prop(layer_idx).alpha(1) * dz) * wave_amplitudes(amp_idx + 1);
+                    e2 = exp(1i * k * mat_prop(layer_idx).alpha(2) * dz) * wave_amplitudes(amp_idx + 2);
+                    e3 = exp(1i * k * mat_prop(layer_idx).alpha(3) * dz) * wave_amplitudes(amp_idx + 3);
+                    e4 = exp(1i * k * mat_prop(layer_idx).alpha(4) * dz) * wave_amplitudes(amp_idx + 4);
                     
                     % x-displacement
                     ux = Psy .* (e1 + e2 + e3 + e4) ;
                     % y-displacement
                     uz = Psy .* (...
-                        e1 * matProp(layerIdx).pVec(1) + ...
-                        e2 * matProp(layerIdx).pVec(2) + ...
-                        e3 * matProp(layerIdx).pVec(3) + ...
-                        e4 * matProp(layerIdx).pVec(4));
+                        e1 * mat_prop(layer_idx).pVec(1) + ...
+                        e2 * mat_prop(layer_idx).pVec(2) + ...
+                        e3 * mat_prop(layer_idx).pVec(3) + ...
+                        e4 * mat_prop(layer_idx).pVec(4));
                     
-                    % normal stress       
+                    % normal stress
                     sigma_zz =   Psy .* stressNorm .* ( ...
-                        e1 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(1) * matProp(layerIdx).pVec(1)) + ...
-                        e2 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(2) * matProp(layerIdx).pVec(2)) + ...
-                        e3 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(3) * matProp(layerIdx).pVec(3)) + ...
-                        e4 * (matProp(layerIdx).stiffness_matrix(1,3) + (matProp(layerIdx).stiffness_matrix(3,3)) * matProp(layerIdx).alpha(4) * matProp(layerIdx).pVec(4)) ) ;               
+                        e1 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(1) * mat_prop(layer_idx).pVec(1)) + ...
+                        e2 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(2) * mat_prop(layer_idx).pVec(2)) + ...
+                        e3 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(3) * mat_prop(layer_idx).pVec(3)) + ...
+                        e4 * (mat_prop(layer_idx).stiffness_matrix(1,3) + (mat_prop(layer_idx).stiffness_matrix(3,3)) * mat_prop(layer_idx).alpha(4) * mat_prop(layer_idx).pVec(4)) ) ;
                     
                     % shear stress
-                    st2 = matProp(layerIdx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
-                    sigma_xz =  Psy .* fCorr .* st2 .*(...
-                        e1 * (matProp(layerIdx).alpha(1) + matProp(layerIdx).pVec(1)) + ...
-                        e2 * (matProp(layerIdx).alpha(2) + matProp(layerIdx).pVec(2)) + ...
-                        e3 * (matProp(layerIdx).alpha(3) + matProp(layerIdx).pVec(3)) + ... 
-                        e4 * (matProp(layerIdx).alpha(4) + matProp(layerIdx).pVec(4))) ;
+                    st2 = mat_prop(layer_idx).stiffness_matrix(5, 5) * stressNorm; % a coefficient
+                    sigma_xz =  Psy .* f_corr .* st2 .*(...
+                        e1 * (mat_prop(layer_idx).alpha(1) + mat_prop(layer_idx).pVec(1)) + ...
+                        e2 * (mat_prop(layer_idx).alpha(2) + mat_prop(layer_idx).pVec(2)) + ...
+                        e3 * (mat_prop(layer_idx).alpha(3) + mat_prop(layer_idx).pVec(3)) + ...
+                        e4 * (mat_prop(layer_idx).alpha(4) + mat_prop(layer_idx).pVec(4))) ;
                     
                     
                     
@@ -314,21 +341,66 @@ function [fields, obj] = calculateField(obj, freqChoice, angleChoice, varargin)
             end
             
             % assign calculated values
-            x_displacement(layer(layerIdx).idxs) = ux;
-            z_displacement(layer(layerIdx).idxs) = uz;
-            normal_stress(layer(layerIdx).idxs)  = sigma_zz;
-            shear_stress(layer(layerIdx).idxs)   = sigma_xz;
+            x_displacement(layer(layer_idx).idxs) = ux;
+            z_displacement(layer(layer_idx).idxs) = uz;
+            normal_stress(layer(layer_idx).idxs)  = sigma_zz;
+            shear_stress(layer(layer_idx).idxs)   = sigma_xz;
             
         end % fields in each layer
-        fields.xDisp    = x_displacement;
-        fields.zDisp    = z_displacement;
-        fields.zVec     = zSteps;
-        fields.xVec     = xSteps;
-        fields.sigZZ    = normal_stress;
-        fields.sigXZ    = shear_stress;
+        fields.z_vector     = z_steps;
+        fields.x_vector     = x_steps;
+        fields.x_displacement    = x_displacement;
+        fields.z_displacement    = z_displacement;
+        fields.sigma_zz    = normal_stress;
+        fields.sigma_xz    = shear_stress;
         
     end % time loop
     
+end
+
+function inputCheck(obj, frequency_choice, angle_choice, varargin)
+    %INPUTCHECK Checks the inputs for the current function.
+    %
+    % DESCRIPTION
+    %   INPUTCHECK(obj, frequency_choice, angle_choice, varargin) checks
+    %   the inputs for the function calculateField(...). If any of the
+    %   inputs are not valid, the function will break and print errors to
+    %   screen.
+    %
+    % USAGE
+    %   inputChecks(obj, frequency_choice, angle_choice, varargin);
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 20 - July - 2019
+    %   last update     - 22 - July - 2019
+    
+    % vacuum not allowed
+    if strcmp(obj.medium(1).state,'Vacuum')
+        error('The first layer cannot currently be a vacuum.')
+    end
+ 
+    % vacuum not allowed
+    if strcmp(obj.medium(1).state,'Gas')
+        error('The first layer cannot currently be a gas.')
+    end
+    
+    % empty properties
+    if isempty(obj.frequency) || isempty(obj.angle)
+        error(['Please set an angle and frequency using .setAngle, .setFrequency.',...
+            'then call .calculate.'])
+    end
+    
+    % define attributes
+    attributes = {'real','positive'};
+    
+    % validate the attributes for input 1
+    validateattributes(frequency_choice,   {'numeric'},attributes,...
+        'calculateField','frequency_choice',1);
+    % validate the attributes for input 2
+    validateattributes(angle_choice,  {'numeric'},attributes,...
+        'calculateField','angle_choice',2);
     
     
 end

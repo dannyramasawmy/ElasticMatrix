@@ -16,8 +16,8 @@ function [obj] = calculateDirectivity(obj)
     
     % difference in vertical displacement of the mirrors
     directivity = ...
-        obj.z_displacement(obj.mirrorLocations(1)).upper - ...
-        obj.z_displacement(obj.mirrorLocations(2)).upper;    
+        obj.z_displacement(obj.mirror_locations(1)).upper - ...
+        obj.z_displacement(obj.mirror_locations(2)).upper;    
     
     % FINEME : FUTURE ADDITIONS
     % warning('### ADD OPTICAL BIREFRINGENCE ###')

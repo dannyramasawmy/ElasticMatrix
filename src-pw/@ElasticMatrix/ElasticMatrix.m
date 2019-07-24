@@ -144,7 +144,7 @@ classdef ElasticMatrix < handle
         obj = plotDispersionCurves(obj);
         obj = plotInterfaceParameters(obj);
         obj = plotField(obj, fieldValues, varargin);
-        obj = plotRCoefficients(obj);
+        obj = plotRTCoefficients(obj);
         
         % other
         obj = disp(obj);

@@ -46,7 +46,7 @@ function obj = calculate(obj)
     %   - merge all matrix model calculations into a single function
     %   - explicit removal of fluid layers
     
-    disp('... Calculating matrix method ... ')
+    disp('... calculating matrix method ... ')
     % calculate the partial wave method
     
     % sort input arguments

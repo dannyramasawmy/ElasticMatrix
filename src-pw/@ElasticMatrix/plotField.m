@@ -1,18 +1,55 @@
 function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
-    %% plotField v1 date:  2019-01-15
+    %PLOTFIELD Plots the displacement and stress field parameters.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   PLOTFIELD(...) plots the displacement and stress field parameters
+    %   for a given range of values. There are multiple types of
+    %   figure-styles that can be plotted. These are described below.
     %
-    %   Description
-    %       Calculates the displacement field at angle (angleChoice) and
-    %       frequency (freqChoice);
+    % USEAGE
+    %   [figure_handle] = plotField(fieldValues, plot_style);
+    %   [figure_handle] = plotField(fieldValues, figure_handle);
+    %
+    % INPUTS
+    %   field_values    - is a cell with two vectors    [units]
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs []
+    %
+    % OUTPUTS
+    %   outputs         - the outputs       [units]
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 22 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     %
     % inputs:
     %   (fieldValues )
     %   varargin{1} can be a structure of figure handles
-    %   or 
+    %   or
     %   varargin{1,2,...,n} can be plot types
     %   '1DDisplacement'
     %   '2DDisplacement'
@@ -158,7 +195,7 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % =====================================================================
     
     % generate mesh coordinates
-    [Z, X] = meshgrid(fieldValues.zVec, fieldValues.xVec);
+    [Z, X] = meshgrid(fieldValues.z_vector, fieldValues.x_vector);
     
     % plot mesh
     if flagSurf == 1
@@ -176,7 +213,7 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     end
     
     % position location for 1D plot (slice along x = 0)
-    xSamplePosition = round(length(fieldValues.xVec)/2);
+    xSamplePosition = round(length(fieldValues.x_vector)/2);
     
     % plot 1D stress
     if flagStress1D == 1
@@ -202,12 +239,12 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % =====================================================================
     
     % add the interfaces between each layer
-    figureHandle = addInterfaces(figureHandle, fieldValues.xVec, obj.medium);
+    figureHandle = addInterfaces(figureHandle, fieldValues.x_vector, obj.medium);
     
     
 end
 
-function [figureHandle] = addInterfaces(figureHandle, xVec, medium)
+function [figureHandle] = addInterfaces(figureHandle, x_vector, medium)
     % =====================================================================
     %   ADD LAYER INTERFACE
     % =====================================================================
@@ -238,7 +275,7 @@ function [figureHandle] = addInterfaces(figureHandle, xVec, medium)
                 % line
                 for idx = 1:length(interfaceLocations)
                     hold on
-                    plot([xVec(1),xVec(end)], ...
+                    plot([x_vector(1),x_vector(end)], ...
                         [interfaceLocations(idx),interfaceLocations(idx)],'r')
                     hold off
                 end
@@ -265,7 +302,7 @@ function [figureHandle] = addInterfaces(figureHandle, xVec, medium)
                     % line
                     for idx = 1:length(interfaceLocations)
                         hold on
-                        plot([xVec(1),xVec(end)], ...
+                        plot([x_vector(1),x_vector(end)], ...
                             [interfaceLocations(idx),interfaceLocations(idx)],'k')
                         hold off
                     end
@@ -287,13 +324,13 @@ function [figureHandle] = plot2DDisplacement(fieldValues, figureHandle)
     % z displacement
     subplot(1,2,1)
     % plot the z displacement
-    imagesc(fieldValues.xVec, fieldValues.zVec, real(fieldValues.zDisp(:,:))' );
+    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.z_displacement(:,:))' );
     title('Real Displacement u_z ');
     
     % x displacment
     subplot(1,2,2)
     % plot the x displacement
-    imagesc(fieldValues.xVec, fieldValues.zVec, real(fieldValues.xDisp(:,:))' );
+    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.x_displacement(:,:))' );
     title('Real Displacement u_x');
     
     % add labels
@@ -320,13 +357,13 @@ function [figureHandle] = plot2DStress(fieldValues, figureHandle)
     % z displacement
     subplot(1,2,1)
     % plot the z displacement
-    imagesc(fieldValues.xVec, fieldValues.zVec, real(fieldValues.sigZZ(:,:))' );
+    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.sigma_zz(:,:))' );
     title('Real Stress \sigma_z_z');
     
     % x displacment
     subplot(1,2,2)
     % plot the x displacement
-    imagesc(fieldValues.xVec, fieldValues.zVec, real(fieldValues.sigXZ(:,:))' );
+    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.sigma_xz(:,:))' );
     title('Real Stress \sigma_x_z');
     
     % add labels
@@ -349,26 +386,26 @@ function [figureHandle] = plot1DDisplacement(fieldValues, figureHandle, xSampleP
     
     % calculate the normalised displacement
     oneDimZ = normMe(real(...
-        fieldValues.zDisp(xSamplePosition,:)...
+        fieldValues.z_displacement(xSamplePosition,:)...
         ));
     oneDimx = normMe(real(...
-        fieldValues.xDisp(xSamplePosition,:)...
+        fieldValues.x_displacement(xSamplePosition,:)...
         ));
     
     % plot 1D displacement
     figure(figureHandle.displacement1D);
     % plot z displacement
-    plot(fieldValues.zVec,oneDimZ,'k')
+    plot(fieldValues.z_vector,oneDimZ,'k')
     % plot x displacement
     hold on
-    plot(fieldValues.zVec,oneDimx,'k--')
+    plot(fieldValues.z_vector,oneDimx,'k--')
     hold off
     % labels
     title('Displacement 1D');
     xlabel('Depth [\mum]');
     ylabel('Normalised Displacement');
     ylim([-1 1])
-    xlim([fieldValues.zVec(1) fieldValues.zVec(end)])
+    xlim([fieldValues.z_vector(1) fieldValues.z_vector(end)])
     legend('u_z','u_x')
     
 end
@@ -383,24 +420,24 @@ function [figureHandle] = plot1DStress(fieldValues, figureHandle, xSamplePositio
     
     % calculate the normalised displacement
     one_dim_sigma_zz = normMe(real(...
-        fieldValues.sigZZ(xSamplePosition,:)...
+        fieldValues.sigma_zz(xSamplePosition,:)...
         ));
     oneDimSigmaXZ = normMe(real(...
-        fieldValues.sigXZ(xSamplePosition,:)...
+        fieldValues.sigma_xz(xSamplePosition,:)...
         ));
     
     % plot z displacement
-    plot(fieldValues.zVec,one_dim_sigma_zz,'k')
+    plot(fieldValues.z_vector,one_dim_sigma_zz,'k')
     % plot x displacement
     hold on
-    plot(fieldValues.zVec,oneDimSigmaXZ,'k--')
+    plot(fieldValues.z_vector,oneDimSigmaXZ,'k--')
     hold off
     % labels
     title('Stress 1D');
     xlabel('Depth [\mum]');
     ylabel('Normalised Stress');
     ylim([-1 1])
-    xlim([fieldValues.zVec(1) fieldValues.zVec(end)])
+    xlim([fieldValues.z_vector(1) fieldValues.z_vector(end)])
     legend('\sigma_z_z','\sigma_x_z')
     
     
@@ -417,8 +454,8 @@ function [figureHandle] = plotVector(Z,X,fieldValues, figureHandle)
     sam = 1;
     
     %                 % make the u and v vectors for quiver; normalise arrows
-    v = real(fieldValues.xDisp(1:sam:end,1:sam:end)) / max(abs(fieldValues.xDisp(:)));
-    u = real(fieldValues.zDisp(1:sam:end,1:sam:end)) / max(abs(fieldValues.zDisp(:)));
+    v = real(fieldValues.x_displacement(1:sam:end,1:sam:end)) / max(abs(fieldValues.x_displacement(:)));
+    u = real(fieldValues.z_displacement(1:sam:end,1:sam:end)) / max(abs(fieldValues.z_displacement(:)));
     
     % need to down-sample mesh grid as well
     Z2 = Z(1:sam:end,1:sam:end);
@@ -435,8 +472,8 @@ function [figureHandle] = plotVector(Z,X,fieldValues, figureHandle)
     pBG = 0.00005;
     
     % reduce axis size
-    ylim([ min(fieldValues.zVec)-pBG, max(fieldValues.zVec)+pBG])
-    xlim([ min(fieldValues.xVec)-pBG, max(fieldValues.xVec)+pBG])
+    ylim([ min(fieldValues.z_vector)-pBG, max(fieldValues.z_vector)+pBG])
+    xlim([ min(fieldValues.x_vector)-pBG, max(fieldValues.x_vector)+pBG])
 end
 
 function [figureHandle] = plotMesh(Z,X,fieldValues,figureHandle)
@@ -448,19 +485,19 @@ function [figureHandle] = plotMesh(Z,X,fieldValues,figureHandle)
     % the Z,X mesh)
     %     fact  = 1.5e3;
     % some auto scaling
-    fact =  3.5520e-05 / sqrt(max(real(fieldValues.zDisp(:)).^2)+ max(real(fieldValues.xDisp(:)).^2));
+    fact =  3.5520e-05 / sqrt(max(real(fieldValues.z_displacement(:)).^2)+ max(real(fieldValues.x_displacement(:)).^2));
     %     fact = 10;
     
     % sampling interval
     samp = 1;
     
     % create horizontal lines
-    horizX = X(1:samp:end,1:samp:end) + fact * real(fieldValues.xDisp(1:samp:end,1:samp:end));
-    horizY = Z(1:samp:end,1:samp:end) + fact * real(fieldValues.zDisp(1:samp:end,1:samp:end));
+    horizX = X(1:samp:end,1:samp:end) + fact * real(fieldValues.x_displacement(1:samp:end,1:samp:end));
+    horizY = Z(1:samp:end,1:samp:end) + fact * real(fieldValues.z_displacement(1:samp:end,1:samp:end));
     
     % create vertical lines
-    vertX = X(1:samp:end,1:samp:end)' + fact * real(fieldValues.xDisp(1:samp:end,1:samp:end))';
-    vertY = Z(1:samp:end,1:samp:end)' + fact * real(fieldValues.zDisp(1:samp:end,1:samp:end))';
+    vertX = X(1:samp:end,1:samp:end)' + fact * real(fieldValues.x_displacement(1:samp:end,1:samp:end))';
+    vertY = Z(1:samp:end,1:samp:end)' + fact * real(fieldValues.z_displacement(1:samp:end,1:samp:end))';
     
     % open figure
     figure(figureHandle.mesh);
@@ -474,8 +511,8 @@ function [figureHandle] = plotMesh(Z,X,fieldValues,figureHandle)
     % labels
     title('Mesh Displacement Plot')
     plotBorderGap = 0.00005;
-    ylim( [fieldValues.zVec(1) - plotBorderGap, fieldValues.zVec(end) + plotBorderGap])
-    xlim( [fieldValues.xVec(1) - plotBorderGap, fieldValues.xVec(end) + plotBorderGap])
+    ylim( [fieldValues.z_vector(1) - plotBorderGap, fieldValues.z_vector(end) + plotBorderGap])
+    xlim( [fieldValues.x_vector(1) - plotBorderGap, fieldValues.x_vector(end) + plotBorderGap])
     box on
     xlabel('X [m]')
     ylabel('Z [m]')
@@ -492,10 +529,10 @@ function [figureHandle] = plotSurf(Z,X,fieldValues,figureHandle)
     figure(figureHandle.surf);
     
     % surf plot
-    surf(X,Z, sqrt(real(fieldValues.zDisp).^2 + real(fieldValues.xDisp).^2 ) )
+    surf(X,Z, sqrt(real(fieldValues.z_displacement).^2 + real(fieldValues.x_displacement).^2 ) )
     
     % surf plot
-    surf(X,Z, real(fieldValues.sigZZ) ) 
+    surf(X,Z, real(fieldValues.sigma_zz) )
     
     
     % labels

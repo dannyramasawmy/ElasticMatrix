@@ -9,9 +9,9 @@ classdef FabryPerotSensor < ElasticMatrix
     %       Models the FabryPerot ultrasound sensor.
     
     properties (SetAccess = private, GetAccess = public)
-        mirrorLocations                 % locations of the FP mirrors
-        spotSize                        % size of interrogation spot
-        spotType                        % Gaussian or collimated beam
+        mirror_locations                 % locations of the FP mirrors
+        spot_size                        % size of interrogation spot
+        spot_type                        % Gaussian or collimated beam
     end
     
     properties (SetAccess = private, GetAccess = private)
@@ -51,11 +51,11 @@ classdef FabryPerotSensor < ElasticMatrix
         end
         
         % set the interface locations of the mirrors
-        obj = setMirrorLocations(   obj, interfaceLocations );
+        obj = setMirrorLocations(   obj, interface_locations );
         % set the interrogation spot size
-        obj = setSpotSize(          obj, spotDiameter       );
+        obj = setSpotSize(          obj, spot_diameter       );
         % set the spot type (gaussian or collimated)
-        obj = setSpotType(          obj, spotType           );
+        obj = setSpotType(          obj, spot_type           );
         
         % calculate the directivity
         obj = calculateDirectivity( obj );   % FINDME : does not have optical birefringence yet
