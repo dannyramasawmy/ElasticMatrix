@@ -1,48 +1,85 @@
-function [ fieldMatrix, phaseInterface ] = ...
-        calculateFieldMatrixAnisotropic( alpha, k, interfacePosition, cMaterial, polarisationVector )
-    %% Calculate_Field_Matrix_Anisotropic - v1.0 Date: 2018-01-10
+function [ field_matrix, phase_interface ] = calculateFieldMatrixAnisotropic(...
+        alpha, k, itfc_position, stf_material, p_vector )
+    %CALCULATEFIELDMATRIX Calculates the field matrix.
     %
-    % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    % Date      :   2018-01-10 -   created
+    % DESCRIPTION
+    %   CALCULATEFIELDMATRIX calculates the field matrix for a transversely
+    %   isotropic solid. See documentation/REFERENCES.txt. In this
+    %   implementation the key elements of the 6X6 stiffness matrix (C) are
+    %   [C_11 C_13 C_33 C_55] where 3 is the z-direction and 1 is
+    %   the x-direction.
     %
+    % USEAGE
+    %   [ field_matrix, phase_interface ] = ...
+    %       calculateFieldMatrixAnisotropic(...
+    %       alpha, k, interface_position, stf_material, p_vector )
     %
-    % Description
-    %   C_material should be either [lambda mu] or stiffness matrix[6 x 6]
-    %   the important terms are
-    %       C = [C_11 C_13 C_33 C_55] where direction 3 is downwards
+    % INPUTS
+    %   alpha           - the ratio of vertical to horizontal wavenumber 
+    %                     that is returned from calculateAlphaCoefficients 
+    %   k               - horizontal wavenumber         [1/m]
+    %   itfc_position   - interface positions between material layers [m]
+    %   stf_material    - the materials 6X6 stiffness matrix          [Pa]
+    %   p_vector        - polarization vector returned from 
+    %                     calculateAlphaCoefficients                  []
     %
-    %   INPUTS are the stiffness matrix of the material or lame parameters
-    %   for isotropic materials, the phase velocity and density
-    %   OUTPUTS are the alpha_coefficients (which are like wavenumbers) and
-    %   the stiffness matrix
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs []
     %
-    % ERROR     :   2018-
+    % OUTPUTS
+    %   field_matrix    - 4X4 field matrix                            []
+    %   phase_interface - the phase at the interface                  []
     %
+    % DEPENDENCIES
+    %   calculateAlphaCoefficients() - requires outputs from this function
     %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 10 - January  - 2019
+    %   last update     - 25 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
     % =====================================================================
-    %   CALCULATE PHASE FACTORS
+    %   CALCULATE PHASE AT THE INTERFACE
     % =====================================================================
     
     % rename for convenience
-    pVec = polarisationVector;
+    pVec = p_vector;
     
     % interface coordinate - phase condition
-    phaseInterface = zeros(4);
-    phaseInterface(1,1) = exp(1i * k * alpha(1) * interfacePosition);
-    phaseInterface(2,2) = exp(1i * k * alpha(2) * interfacePosition);
-    phaseInterface(3,3) = exp(1i * k * alpha(3) * interfacePosition);
-    phaseInterface(4,4) = exp(1i * k * alpha(4) * interfacePosition);
+    phase_interface = zeros(4);
+    phase_interface(1,1) = exp(1i * k * alpha(1) * itfc_position);
+    phase_interface(2,2) = exp(1i * k * alpha(2) * itfc_position);
+    phase_interface(3,3) = exp(1i * k * alpha(3) * itfc_position);
+    phase_interface(4,4) = exp(1i * k * alpha(4) * itfc_position);
     
     % function handle
-    sts = @(alpha,U) (cMaterial(1,3) + (cMaterial(3,3))*alpha*U) * (1i * k);
-    st2 = cMaterial(5,5) * (1i * k);
+    sts = @(alpha,U) (stf_material(1,3) + (stf_material(3,3))*alpha*U)...
+        * (1i * k);
+    st2 = stf_material(5,5) * (1i * k);
     
     % =====================================================================
     %   CALCULATE FIELD MATRIX
     % =====================================================================
-
+    
     matrix = [...
         pVec(1),                      pVec(2),                      pVec(3),                  pVec(4)                   ; % u3 displacement @ interface
         1,                            1,                            1,                        1                         ; % U1 displacement @ interface
@@ -50,7 +87,7 @@ function [ fieldMatrix, phaseInterface ] = ...
         (alpha(1)+ pVec(1))*st2,      (alpha(2) + pVec(2))*st2,     (alpha(3) + pVec(3))*st2, (alpha(4) + pVec(4))*st2 ]; % S_xz @ interface
     
     % multiply by interface phase condition
-    fieldMatrix = matrix * phaseInterface;
+    field_matrix = matrix * phase_interface;
     
 end
 
