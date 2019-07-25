@@ -1,89 +1,131 @@
-function xmin = findClosestMinimum(funHand, startingPoint, increment, maxRange)
-    %% findClosestMinimum v1 date:  2019-01-15
+function x_min = findClosestMinimum(funHand, x0, increment, maximum_range)
+    %FINDCLOSESTMINIMUM Finds a local minimum of a function f(x) from x0.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   FINDCLOSESTMINIMUM finds the closest minimum in a function f(x)
+    %   from a starting point x0. An increment value and maximum function
+    %   range must also be provided. A 1 X 3 vector is created consisting
+    %   of the starting point (x0) and a small perturbation around it,
+    %   (increment), e.g., [x0-increment, x0, x0+increment]. The function
+    %   x_out = f(x) is evaluated at these three points. If x_out(1) <
+    %   x_out(2) < x_out(3) then the local minimum of f(x) is "to the left"
+    %   of the starting point. If x_out(1) > x_out(2) > x_out(3) then the
+    %   local minimum of f(x) is "to the right" of the starting point. The
+    %   starting point and the small perturbations are updated to reflect
+    %   this and f(x) is reevaluated. This continues until either: the
+    %   maxRange limit is hit, the max number of iterations (1000) is hit
+    %   or x_out(1) > x_out(2) < x_out(3). At this point fminbnd is used
+    %   to find the minimum of the function within the range x_out(1) and
+    %   x_out(3).
     %
-    %   Description
-    %   Find the closest minimum in a function (funHand) from a starting point
-    %   (startingPoint).
+    % USEAGE
+    %   x_min = findClosestMinimum(@funHand, x0, increment, maximum_range)
     %
-    % x = 1:100;
-    % A = (1-cos(2*pi*0.01*x)).*sin(2*pi*0.15*x);
+    % INPUTS
+    %   funHand(x)      - a function handle that must accept a vector and
+    %                     return a vector of the same length.   []
+    %   x0              - starting point, double,               []
+    %   increment       - a perturbation to evaluate the
+    %                     funHand[(x0-e, x0, x0+e])             []
+    %   maximum_range   - limit when evaluating funHand         []
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs          []
+    %
+    % OUTPUTS
+    %   x_min           - minimum x-value of funHand            []
+    %
+    % DEPENDENCIES
+    %   fminbnd         - find the minimum of a bounded function
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - March    - 2019
+    %   last update     - 25 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
-    % fun_hand = @(x) (1-cos(2*pi*0.01*x)).*sin(2*pi*0.15*x);
-    %
-    % x = linspace(1,100,1000);
-    %
-    % out = fun_hand(x);
-    %
-    % figure(1), plot(x, out)
-    %
-    %
-    % % starting point
-    % starting_point = 16;
-    % max_range = 4;
-    % increment = 0.5;
+    % vector of starting point plus and minus a small perturbation
+    x_in = ...
+        [x0 - increment, x0, x0 + increment ];
     
+    % break function flag
+    break_flag = 1;
     
-    % arrange vector
-    miniVec = ...
-        [startingPoint - increment, startingPoint, startingPoint + increment ];
+    % maximum number of iterations
+    max_iterations = 0;
     
-    breakout = 1;
-    maxExceed = 0;
-    while breakout
+    % initialize output vector
+    x_out = [0, 0, 0];
+    
+    % loop
+    while break_flag
         
+        % evaluate funHand at three points
         for idx = 1:3
-            threePoints(idx) = abs(funHand(miniVec(idx)));
+            x_out(idx) = abs(funHand(x_in(idx)));
         end
         
-        if threePoints(1) < threePoints(2) && threePoints(2) < threePoints(3)
-            
-            miniVec = [(miniVec(1)-increment), miniVec(1), miniVec(2)];
-            
-            
+        % if x_out is increasing shift x_in 
+        if x_out(1) < x_out(2) && x_out(2) < x_out(3)
+            % shift values of x_in to the left
+            x_in = [(x_in(1)-increment), x_in(1), x_in(2)];
         end
         
-        if threePoints(1) > threePoints(2) && threePoints(2) > threePoints(3)
-            
-            miniVec(1:3) = [miniVec(2), miniVec(3), (miniVec(3)+increment) ];
-            
+        % if x_out is decreasing shift x_in
+        if x_out(1) > x_out(2) && x_out(2) > x_out(3)
+            % shift values of x_in to the right
+            x_in(1:3) = [x_in(2), x_in(3), (x_in(3)+increment) ];
         end
         
-        if threePoints(2) < threePoints(1) && threePoints(2) < threePoints(3)
-            
-            xmin = fminbnd(funHand, miniVec(1), miniVec(3));
-            
-            %         mini_vec = mini_vec;
-            breakout = 0;
+        % if x_out is the minimum break while loop
+        if x_out(2) < x_out(1) && x_out(2) < x_out(3)
+            % use fminbnd to find the minimum of the function between the
+            % current range
+            x_min = fminbnd(funHand, x_in(1), x_in(3));
+            % set state of break to end while-loop
+            break_flag = 0;
         end
         
-        if miniVec(1) < (startingPoint - maxRange)
-            xmin = startingPoint;
-            breakout = 0;
+        % break if the maximum range is hit
+        if x_in(1) < (x0 - maximum_range)
+            % set the minimum to the starting point
+            x_min = x0;
+            % set state of break to end while-loop
+            break_flag = 0;
+        end
+        % break if the maximum range is hit       
+        if x_in(3) > (x0 + maximum_range)
+            % set the minimum to the starting point
+            x_min = x0;
+            % set state of break to end while-loop
+            break_flag = 0;
         end
         
-        if miniVec(3) > (startingPoint + maxRange)
-            
-            xmin = startingPoint;
-            breakout = 0;
-        end
-        
-        
-        if maxExceed > 1000
-            xmin = startingPoint;
-            breakout = 0;
+        % break if maximum number of iterations is hit
+        if max_iterations > 1000
+            x_min = x0;
+            break_flag = 0;
             % disp('Limit reached')
         end
         
-        maxExceed = maxExceed +1;
+        % increment number of iterations
+        max_iterations = max_iterations + 1;
     end
-    
-    % figure(1)
-    % hold on
-    % plot(starting_point, fun_hand(starting_point),'b*')
-    % plot(xmin, fun_hand(xmin),'r*')
-    % hold off
-    

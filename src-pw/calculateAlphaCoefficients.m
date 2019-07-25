@@ -103,7 +103,7 @@ function [ alphaCoefficients, cMaterial, polarisationVec, shCoeffs ] = ...
     
     
     %{
-    % ## FIND ME : FUTURE UPDATE 
+    % ## DEBUG : FUTURE UPDATE 
     %     % =====================================================================
     %     %   If the material is a fluid
     %     % =====================================================================
