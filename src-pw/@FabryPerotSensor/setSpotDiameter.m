@@ -1,35 +1,27 @@
-function obj = setSpotType(obj, spot_type)
-    %SETSPOTDTYPE Sets the interrogation laser spot type.
+function obj = setSpotDiameter(obj, spot_diameter)
+    %SETSPOTDIAMETER Sets the interrogation laser spot-diameter.
     %
     % DESCRIPTION
-    %   SETSPOTDTYPE sets the interrogation laser spot type for the
+    %   SETSPOTDIAMETER sets the interrogation laser spot diameter for the
     %   Fabry-Perot sensor. For me detail see documentation/REFERENCES.txt.
-    %   The interrogation spot-type may either be a Gaussian shape or a
-    %   'top-hat' collimated profile. The directional response is averaged
-    %   over the spot-type and a collimated or Gaussian beam will change
-    %   the effects of spatial averaging.
+    %   The interrogation spot-diameter will change the amount of spatial
+    %   averaging that occurs in the sensor. A large diameter will make the
+    %   sensor more directional.
     %
     % USEAGE
-    %   obj = setSpotType(obj, spot_type);
-    %
+    %   obj = setSpotSize(obj, spot_diameter);
+    %   
     % INPUTS
-    %   spot_type       - a string which can either be:    []
-    %                     - 'gaussian'
-    %                     - 'collimated'
-    %                     - 'none'
-    %                     MATLAB uses the validatestring function to check
-    %                     the inputs. This has some flexibility, allowing
-    %                     case-insensitive inputs and partially complete
-    %                     strings.
+    %   spot_diameter   - the laser interrogation spot diameter     [m]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs     []
+    %   []              - there are no optional inputs              []
     %
     % OUTPUTS
-    %   obj.spot_type   - the spot-type                    []
+    %   obj.spot_size  - the diameter of the interrogation spot     [m]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies         []
+    %   []              - there are no dependencies     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
@@ -55,25 +47,26 @@ function obj = setSpotType(obj, spot_type)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
-    
     % check inputs
-    output_string = inputCheck(spot_type);
+    inputCheck(spot_diameter);
     
-    % set spot type
-    obj.spot_type = output_string;
+    % set spot diameter;
+    obj.spot_diameter = spot_diameter;
+
     
 end
 
-function output_string = inputCheck(spot_type)
+
+function inputCheck(spot_diameter)
     %INPUTCHECK Checks the inputs for the current function.
     %
     % DESCRIPTION
-    %   INPUTCHECK(spot_type) checks the inputs for the function
-    %   setSpotType(...). If any of the inputs are not valid, the
+    %   INPUTCHECK(spot_diameter) checks the inputs for the function
+    %   setSpotDiameter(...). If any of the inputs are not valid, the
     %   function will break and print errors to screen.
     %
     % USAGE
-    %   inputChecks(spot_type);
+    %   inputChecks(spot_diameter);
     %
     % ABOUT
     %   author          - Danny Ramasawmy
@@ -81,11 +74,12 @@ function output_string = inputCheck(spot_type)
     %   date            - 20 - July - 2019
     %   last update     - 28 - July - 2019
     
-    % allowed inputs
-    spot_type_options = {'gaussian', 'collimated','none'};
+    % define attributes
+    attributes = {'real','positive'};
     
-    % validate material is a string which is in all_materials
-    output_string = validatestring(spot_type, spot_type_options,...
-        'setSpotType','spot_type',1);
+    % validate the attributes for input 1
+    validateattributes(spot_diameter,   {'numeric'},attributes,...
+        'setSpotDiameter','spot_diameter',1);
+   
     
 end

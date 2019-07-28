@@ -1,61 +1,136 @@
-function figHandle = plotDirectivity(obj, varargin)
-    %% plotDirectivity v1 date:  2019-01-15
+function figure_handle = plotDirectivity(obj, varargin)
+    %PLOTDIRECTIVITY Returns calculated directivity data.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   PLOTDIRECTIVITY(...) plots the directivity data held in property
+    %   obj.directivity. The directivity data is in general complex, this
+    %   function uses obj.getDirectivity to get the processed directivity.
     %
-    %   Description
-    %       Plots the calculated directional response. For specific types
-    %       of normalisation the input arguments to obj.getDirectivity can
-    %       be used
+    % USEAGE
+    %   figure_handle = plotDirectivity(obj, varargin)
+    %   figure_handle = plotDirectivity(obj, 'raw', 'real')
+    %   
+    % INPUTS
+    %   []              - there are no inputs           []
+    %
+    % OPTIONAL INPUTS
+    %   Multiple inputs are accepted, these must be strings:
+    %   - 'phase'         - phase of obj.directivity
+    %   - 'linear'        - normalized to normal incidence response 
+    %                       obj.directivity
+    %   - 'decibel'       - decibel scaling of 'linear'
+    %   - 'normalise'     - normalized to maximum value of normal incidence
+    %   - 'normal'        - normal incidence response
+    %
+    % OUTPUTS
+    %   figure_handle(idx).fig - figure handles to directivity figures.
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 05 - May      - 2019
+    %   last update     - 28 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
+    % valid plot inputs
+    plot_types = {'normal', 'normalise', 'linear', 'decibel', 'phase'};
     
-    % if there is no specific plot, then plot all of them
+    % if there is no specific plot input, plot all of them
     if isempty(varargin)
-        varargin = {'normal', 'normalise', 'linear', 'decibel', 'phase'};
+        varargin = plot_types;
     end
     
+    % preallocate figure handles space
+    figure_handle(length(varargin)).fig = [];
+    
     % otherwise plot the input arguments
-    for idx = 1:length(varargin)   
-        figHandle(idx).fig = figure;
+    for idx = 1:length(varargin)
+        
+        % open figure 
+        figure_handle(idx).fig = figure;
+        
         try
-           plotFigure(obj, figHandle(idx).fig, varargin{idx});
+            % check plot-type string inputs
+            plot_string = validatestring(varargin{idx}, plot_types);
+            
+            % plot the figure
+            plotFigure(obj, figure_handle(idx).fig, plot_string);
         catch
-            warning('Could not plot...')
-            close(figHandle(idx).fig);
-            figHandle(idx).fig = 0;
+            
+            % if the plot input is not valid
+            warning('Could not plot.')
+            close(figure_handle(idx).fig);
+            figure_handle(idx).fig = 0;
         end
     end
     
 end
 
-function plotFigure(obj, currentHandle, plotType)
-    % plotFigure v1 date:  2019-05-15
+function plotFigure(obj, current_handle, plot_type)
+    %PLOTFIGURE Plots the directivity and scales the colour axis.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   This function plots the directional response of Fabry-Perot
+    %   ultrasound sensors.
     %
-    %   Description
-    %       Plotting directivity
+    % USEAGE
+    %   plotFigure(obj, current_handle, plot_type)
+    %
+    % INPUTS
+    %   obj             - FabryPerotSensor object       []
+    %   current_handle  - figure handle
+    %   plot_type       - a string, see plotDirectiviy
+    %
+    % OPTIONAL INPUTS
+    %   []              - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   []              - there are no outputs          []
+    %
+    % DEPENDENCIES
+    %   []              - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 05 - May      - 2019
+    %   last update     - 28 - July     - 2019
     
-    % initalise figure
-    figure(currentHandle);
+    % initialize figure
+    figure(current_handle);
     
     % plot directivity
-    imagesc(obj.angle, obj.frequency/1e6, obj.getDirectivity(plotType));
-       
+    imagesc(obj.angle, obj.frequency/1e6, obj.getDirectivity(plot_type));
+    
     % labels
     xlabel('Angle [\circ]')
     ylabel('Frequency [MHz]')
-    
     axis xy square
     colormap hot
     colorbar
-    title(plotType)
+    title(plot_type)
     % colour axes
-    switch plotType
+    switch plot_type
         case 'decibel'
             caxis([-20 30])
         case 'linear'
@@ -66,14 +141,17 @@ function plotFigure(obj, currentHandle, plotType)
             caxis([-6 6])
     end
     
-    % don't use imagesc if it is a normal plot 
+    % don't use imagesc if it is a normal plot
     try
-        if plotType == 'normal'
-            plot(obj.frequency/1e6, obj.getDirectivity(plotType));
+        if strcmp(plot_type, 'normal')
+            plot(obj.frequency/1e6, obj.getDirectivity(plot_type));
+            % labels
             xlabel('Frequency [MHz]')
             title('normal')
         end
     catch
+        % do nothing
     end
     
 end
+

@@ -27,8 +27,8 @@ function obj = disp(obj)
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   date            - 14 - May      - 2019
+    %   last update     - 28 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -121,11 +121,11 @@ function obj = disp(obj)
     %   ADDITIONAL PROPERTIES
     % =====================================================================
     disp(' ')
-    disp('    Additional Properties:')
+    disp('    Fabry-Perot Sensor Properties:')
     disp(' ')
     
     % list of properties to display
-    string_list = {'mirror_locations', 'spot_size', 'spot_type'};
+    string_list = {'mirror_locations', 'spot_diameter', 'spot_type'};
     
     % initialize table
     print_table_3(length(string_list)).property     = '';

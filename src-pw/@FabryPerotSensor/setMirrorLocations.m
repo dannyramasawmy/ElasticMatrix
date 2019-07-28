@@ -1,25 +1,66 @@
 function obj = setMirrorLocations(obj, interface_locations)
-    %% setMirrorLocations v1 date:  2019-01-15
+    %SETMIRRORLOCATIONS Interface locations of mirrors.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   SETMIRRORLOCATIONS(...) sets the mirror locations of the
+    %   Fabry-Perot mirrors. Currently these can only be set as the
+    %   interfaces between layers. For a structure consisting of four
+    %   layers, there are three interfaces. The input to this function is
+    %   the index of the interfaces, (i.e., 1,2 or 3 for this example). Two
+    %   indices must be used, and they should be in ascending order.
     %
-    %   Description
-    %   Set the interface locations of the mirrors. Exects a vector of two
-    %   integers which is the interface of the first and last mirror.
+    % USEAGE
+    %   obj.setMirrorLocations(obj, interface_locations);
+    %   
+    % INPUTS
+    %   interface_locations     - a vector of size [2 X 1], with the inputs
+    %                             as follows [interface_index_1,
+    %                             interface_index_2]
+    %
+    % OPTIONAL INPUTS
+    %   []                      - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   obj.mirror_locations     - the interface locations      []
+    %
+    % DEPENDENCIES
+    %   []                      - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 05 - May      - 2019
+    %   last update     - 28 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
     
     % get the number of layers
-    numberLayers = length(obj.medium);
+    number_layers = length(obj.medium);
     
     % check that the interface locations are integers
-    boolVar = [...
-        checkInterfaceInput(interface_locations(1), numberLayers), ...
-        checkInterfaceInput(interface_locations(2), numberLayers)];
+    bool_var = [...
+        checkInterfaceInput(interface_locations(1), number_layers), ...
+        checkInterfaceInput(interface_locations(2), number_layers)];
         
     autoAssignFlag = 0;
     % assign mirror interfaces
-    if boolVar == [1 1]
+    if bool_var == [1 1]
         % check inputs are in ascending order and assign
             obj.mirror_locations = ...
                 sort([interface_locations(1), interface_locations(2)]);
@@ -30,12 +71,12 @@ function obj = setMirrorLocations(obj, interface_locations)
     
     if autoAssignFlag == 1
         % auto assign mirror interfaces
-        warning('Incorrect inputs, the mirror locations will be automatically assigned')
+        warning('Incorrect inputs, the mirror locations will be automatically assigned.')
         
         % check number of layers is more than three - assign first and last
         % interfaces
-        if numberLayers > 2
-            obj.mirror_locations = [1, numberLayers-1];
+        if number_layers > 2
+            obj.mirror_locations = [1, number_layers-1];
         else
             error('obj.medium must be at least three layers');
         end
@@ -44,37 +85,57 @@ function obj = setMirrorLocations(obj, interface_locations)
     
 end
 
-function [logicalOutput] = checkInterfaceInput(interfaceLocation, numberLayers)
-    %% checkInterfaceInput v1 date:  2019-01-15
+function [logical_output] = checkInterfaceInput(interface_location, n_layers)
+    %CHECKINTERFACEINPUT Interface locations check.
     %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
+    % DESCRIPTION
+    %   CHECKINTERFACEINPUT(...) checks the validity of the interface
+    %   location inputs.
     %
-    %   Description
-    %   Checks the interface choice is correct.
+    % USEAGE
+    %   [logical_output] = checkInterfaceInput(...
+    %       interface_location, n_layers)
+    %   
+    % INPUTS
+    %   interface_location      - a [2 X 1] vector
+    %   n_layers                - number of layers in obj.medium
+    %
+    % OPTIONAL INPUTS
+    %   []                      - there are no optional inputs  []
+    %
+    % OUTPUTS
+    %   logical_output          - boolean for if the inputs are valid
+    %
+    % DEPENDENCIES
+    %   []                      - there are no dependencies     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 05 - May      - 2019
+    %   last update     - 28 - July     - 2019
     
-    logicalOutput = 1;
+    logical_output = 1;
     
     % check interface location is more than 0
-    if interfaceLocation > 0
-        logicalOutput = 1 * logicalOutput;
+    if interface_location > 0
+        logical_output = 1 * logical_output;
     else
-        logicalOutput = 0 * logicalOutput;
+        logical_output = 0 * logical_output;
     end
     
     % check interface location is less than the maximum number of layers
-    if interfaceLocation < numberLayers
-        logicalOutput = 1 * logicalOutput;
+    if interface_location < n_layers
+        logical_output = 1 * logical_output;
     else
-        logicalOutput = 0 * logicalOutput;
+        logical_output = 0 * logical_output;
     end
     
     % check that it is an integer
-    if floor(interfaceLocation) == interfaceLocation
-        logicalOutput = 1 * logicalOutput;
+    if floor(interface_location) == interface_location
+        logical_output = 1 * logical_output;
     else
-        logicalOutput = 0 * logicalOutput;
+        logical_output = 0 * logical_output;
     end
  
 end
