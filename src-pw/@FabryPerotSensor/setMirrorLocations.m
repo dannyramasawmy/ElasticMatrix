@@ -60,7 +60,7 @@ function obj = setMirrorLocations(obj, interface_locations)
         
     autoAssignFlag = 0;
     % assign mirror interfaces
-    if bool_var == [1 1]
+    if sum(bool_var) == 2
         % check inputs are in ascending order and assign
             obj.mirror_locations = ...
                 sort([interface_locations(1), interface_locations(2)]);
@@ -71,7 +71,8 @@ function obj = setMirrorLocations(obj, interface_locations)
     
     if autoAssignFlag == 1
         % auto assign mirror interfaces
-        warning('Incorrect inputs, the mirror locations will be automatically assigned.')
+        warning(['Incorrect inputs, the mirror locations ',...
+            'will be automatically assigned.'])
         
         % check number of layers is more than three - assign first and last
         % interfaces

@@ -23,7 +23,7 @@ function [directivity] = getDirectivity(obj, varargin)
     %   - 'linear'        - normalized to normal incidence response 
     %                       obj.directivity
     %   - 'decibel'       - decibel scaling of 'linear'
-    %   - 'normalise'     - normalise to maximum value of normal incidence
+    %   - 'normalise'     - normalize to maximum value of normal incidence
     %   - 'normal'        - normal incidence response
     %
     % OUTPUTS

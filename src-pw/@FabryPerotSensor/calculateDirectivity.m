@@ -1,24 +1,46 @@
 function [obj] = calculateDirectivity(obj)
-    %	CALCULATEDIRECTIVITY - one line description
+    %CALCULATEDIRECTIVITY Calculate the directivity of Fabry-Perot sensors.
     %
     % DESCRIPTION
-    %   A short description of the functionTemplate goes here.
+    %   CALCULATEDIRECTIVITY calculates the frequency-dependent directivity
+    %   of Fabry-Perot ultrasound sensors. This function uses the
+    %   .calculate method of the ElasticMatrix class to calculate the
+    %   displacements at the interfaces between layered media. The
+    %   calculation is over a range of angles and frequencies which must be
+    %   defined prior to using this method. The difference in displacement
+    %   between the top and bottom mirror of the Fabry-Perot sensor is
+    %   proportional to the acoustic sensitivity. See [1,2] for more
+    %   detail.
+    %
+    %   [1] Cox, Benjamin T., and Paul C. Beard. "The frequency-dependent
+    %       directivity of a planar Fabry-Perot polymer film ultrasound
+    %       sensor." IEEE transactions on ultrasonics, ferroelectrics, and
+    %       frequency control, (2007).
+    %
+    %   [2] Ramasawmy, Danny R., et al. "Analysis of the Directivity of
+    %       Glass Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions
+    %       on ultrasonics, ferroelectrics, and frequency control, (2019).
     %
     % USEAGE
-    %   outputs = functionTemplate(input, another_input)
-    %   outputs = functionTemplate(input, another_input, optional_input)
+    %   obj.calculate;
     %
     % INPUTS
-    %   input           - the first input   [units]
+    %   obj.frequency           - frequency range, (vector)       [Hz]
+    %   obj.angle               - angle range, (vector)           [degrees]
+    %   obj.mirror_locations    - locations of the FP mirrors
+    %   obj.spot_diameter       - diameter of interrogation spot  [m]
+    %   obj.spot_type           - spot profile
+    %
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []                  - there are no optional inputs  []
     %
     % OUTPUTS
-    %   outputs         - the outputs       [units]
+    %   obj.directivity     - the directivity property of FabryPerotSensor
+    %                         is populated
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []                  - there are no dependencies     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
@@ -47,17 +69,65 @@ function [obj] = calculateDirectivity(obj)
     % this function calculates the directivity
     disp('... Calculating directivity ...')
     
+    % calculate the mirror displacements
     obj.calculate;
     
-    % difference in vertical displacement of the mirrors
-    directivity = ...
-        obj.z_displacement(obj.mirror_locations(1)).upper - ...
-        obj.z_displacement(obj.mirror_locations(2)).upper;
+    % check inputs
+    inputCheck(obj);
     
-    % FINEME : FUTURE ADDITIONS
-    % warning('### ADD OPTICAL BIREFRINGENCE ###')
-    % warning('## ADD SPOT SIZE')
-    % warning('## ADD SPOT TYPE')
+    % =====================================================================
+    %   BEAM WEIGHTING
+    % =====================================================================
+    
+    % get the maximum phase velocity
+    phase_velocity = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
+        obj.medium(1).density);
+    
+    % angles in radians
+    theta = obj.angle * pi /180;
+    % circular frequency
+    omega = 2* pi * obj.frequency;
+    
+    % phase velocity
+    cp = phase_velocity ./ sin(theta);
+    
+    % kx wavenumber
+    k_x = transpose(omega) ./ cp ;
+    
+    % spot radius
+    beam_radius = obj.spot_diameter / 2;
+    
+    % which option to choose
+    switch obj.spot_type
+        
+        case 'gaussian'
+            % gaussian weighting, beam radius is 1 standard deviation
+            sig = beam_radius/6 /2;
+            
+            % gaussian profile
+            psybar = exp(-pi * (k_x.^2)*(sig.^2)./2) ;
+            
+        case 'collimated'
+            % top-hat beam profile
+            psybar = (2 * besselj(1,k_x.*beam_radius) ) ./...
+                (k_x.*beam_radius );
+            
+        otherwise
+            % in any other case
+            psybar = ones(size( k_x ));
+    end
+    
+    % =====================================================================
+    %   CALCULATE DIRECTIVITY
+    % =====================================================================
+    
+    % DEBUG
+    % # ADD OPTICAL BIREFRINGENCE ###')
+    
+    % difference in vertical displacement of the mirrors
+    directivity = psybar .* (...
+        obj.z_displacement(obj.mirror_locations(1)).upper - ...
+        obj.z_displacement(obj.mirror_locations(2)).upper);
     
     % assign to temporary variable for fast plotting
     obj.directivity = directivity;
@@ -65,3 +135,43 @@ function [obj] = calculateDirectivity(obj)
     disp('... Finished calculating ...')
     
 end
+
+function obj = inputCheck(obj)
+    %INPUTCHECK Checks the inputs for the current function.
+    %
+    % DESCRIPTION
+    %   INPUTCHECK(obj) checks the inputs for the function
+    %   calculateDirectivity(...). If any of the inputs are not valid, the
+    %   function will break and print errors to screen.
+    %
+    % USAGE
+    %   inputChecks(obj)
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 28 - July - 2019
+    %   last update     - 29 - July - 2019
+    
+    % error message
+    if isempty(obj.mirror_locations)
+        error('Please set mirror locations: obj.setMirrorLocations(...).')
+    end
+    
+    % not essential - assume none
+    if isempty(obj.spot_type)
+        % set property
+        obj.setSpotType('none')
+        % warning
+        warning('No spot-type set: obj.setSpotType(...).')
+    end
+    
+    % set to 1 (it will do nothing)
+    if isempty(obj.spot_diameter)
+        % set property
+        obj.setSpotDiameter(1);
+        % warning
+        warning('No spot-diameter set: obj.setSpotDiameter(...).')
+    end
+end
+
