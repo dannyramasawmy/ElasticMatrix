@@ -1,4 +1,4 @@
-function [figureHandle, obj] = plotInterfaceParameters( obj )
+function [figure_handle, obj] = plotInterfaceParameters( obj )
     %PLOTINTERFACEPARAMETERS Plots the parameters at the interface.
     %
     % DESCRIPTION
@@ -78,7 +78,7 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
         
         % create a figure handle structure
         figureString = ['interface_',num2str(idx)];
-        figureHandle.(figureString) = figure;
+        figure_handle.(figureString) = figure;
         
         % get uz
         uz_up = obj.z_displacement(idx).upper;

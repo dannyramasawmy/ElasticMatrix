@@ -1,4 +1,4 @@
-function [figureHandle, obj] = plotDispersionCurves( obj )
+function [figure_handle, obj] = plotDispersionCurves( obj )
     %% plotDispersionCurves v1 date:  2019-01-15
     %
     %   Author
@@ -30,27 +30,27 @@ function [figureHandle, obj] = plotDispersionCurves( obj )
     
     
     % open figures
-    figureHandle.fig1 = figure;
-    figureHandle.fig2 = figure;
+    figure_handle.fig1 = figure;
+    figure_handle.fig2 = figure;
     
     % plot each mode individually
     for modeDx = 1:nCurves
         
         % choose first figure
-        figure(figureHandle.fig1)
+        figure(figure_handle.fig1)
         hold on
         plot(obj.dispersion_curves(modeDx).y /1e3, obj.dispersion_curves(modeDx).x /1e6, plotStyle)
         hold off
         
         % choose second figure
-        figure(figureHandle.fig2)
+        figure(figure_handle.fig2)
         hold on
         plot(obj.dispersion_curves(modeDx).x /1e6, obj.dispersion_curves(modeDx).c /1e3, plotStyle)
         hold off
     end
     
     % choose first figure
-    figure(figureHandle.fig1)
+    figure(figure_handle.fig1)
     % labels
     ylim([0.1 max(obj.frequency)/1e6])
     % xlim([0 10])
@@ -60,7 +60,7 @@ function [figureHandle, obj] = plotDispersionCurves( obj )
     
     
     % choose second figure
-    figure(figureHandle.fig2)
+    figure(figure_handle.fig2)
     % labels
     xlim([0.1 max(obj.frequency)/1e6])
     ylim([0 10])
