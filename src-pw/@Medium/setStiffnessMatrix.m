@@ -10,17 +10,17 @@ function obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix)
     %   obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix);
     %
     % INPUTS
-    %   layer_index      - the index of the layer, (double)         []
-    %   stiffness_matrix - the 6 X 6 stiffness matrix to be set,    [Pa]
+    %   layer_index      - The index of the layer, (double).        []
+    %   stiffness_matrix - The 6 X 6 stiffness matrix to be set.    [Pa]
     %
     % OPTIONAL INPUTS
-    %   []                     - there are no optional inputs []
+    %   []               - There are no optional inputs.            []
     %
     % OUTPUTS
-    %   obj.stiffness_matrix    - 6 X 6 stiffness matrix            [Pa]
+    %   obj.stiffness_matrix    - 6 X 6 stiffness matrix.           [Pa]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.                []
     %
     % ABOUT
     %   author          - Danny Ramasawmy

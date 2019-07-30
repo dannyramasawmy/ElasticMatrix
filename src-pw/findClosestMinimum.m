@@ -22,27 +22,27 @@ function x_min = findClosestMinimum(funHand, x0, increment, maximum_range)
     %   x_min = findClosestMinimum(@funHand, x0, increment, maximum_range)
     %
     % INPUTS
-    %   funHand(x)      - a function handle that must accept a vector and
+    %   funHand(x)      - A function handle that must accept a vector and
     %                     return a vector of the same length.   []
-    %   x0              - starting point, double,               []
-    %   increment       - a perturbation to evaluate the
-    %                     funHand[(x0-e, x0, x0+e])             []
-    %   maximum_range   - limit when evaluating funHand         []
+    %   x0              - Starting point, double.               []
+    %   increment       - A perturbation to evaluate the
+    %                     funHand[(x0-e, x0, x0+e]).            []
+    %   maximum_range   - Limit when evaluating funHand.        []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs          []
+    %   []              - There are no optional inputs.         []
     %
     % OUTPUTS
-    %   x_min           - minimum x-value of funHand            []
+    %   x_min           - Minimum x-value of funHand.           []
     %
     % DEPENDENCIES
-    %   fminbnd         - find the minimum of a bounded function
+    %   fminbnd         - Find the minimum of a bounded function.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - March    - 2019
-    %   last update     - 25 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

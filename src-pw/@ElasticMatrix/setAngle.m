@@ -10,22 +10,22 @@ function obj = setAngle(obj, angle_range)
     %   obj.setAngle(angle_range);        
     %
     % INPUTS
-    %   angle_range     - vector of angles              [degrees]
+    %   angle_range     - Vector of angles.             [degrees]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.angle       - sets the angle property       [degrees]
+    %   obj.angle       - Sets the angle property.      [degrees]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

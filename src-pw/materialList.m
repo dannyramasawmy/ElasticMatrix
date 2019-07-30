@@ -7,14 +7,13 @@ function all_materials = materialList()
 %   format seen below. The relevant properties are c (compressional speed)
 %   [ms^-1], cs (shear speed) [ms^-1] and rho (density) [kgm^-3]. For
 %   anisotropic materials store the 6X6 stiffness matrix (stiffness_matrix).
-%   However, in the current implementation of ElasticMAtrix only C(1,1),
+%   However, in the current implementation of ElasticMatrix only C(1,1),
 %   C(1,3), C(3,3), C(4,4) and C(5,5) are used as these correspond to x_1
 %   and x_3 coordinate axes. 
 %
-%   Possible states are:
-%   'Unknown', 'Vacuum', 'Gas', 'Liquid', 'Isotropic', 'Anisotropic' These
-%   states are taken into account when plotting slowness profiles, and in
-%   future will be taken into account in the partial wave code execution.
+%   Possible states are: 'Unknown', 'Vacuum', 'Gas', 'Liquid', 'Isotropic',
+%   'Anisotropic' These states are taken into account when plotting
+%   slowness profiles, and are used as flags in other parts of the code.
 %
 %   To add any of Gas, Vacuum, Liquid, Isotropic materials:
 %       allMaterialStruct.NAME.c                     =  ...      ;
@@ -26,28 +25,28 @@ function all_materials = materialList()
 %   To add orthotropic, cubic, transverse isotropic or isotropic materials:
 %       allMaterialStruct.NAME.rho                   =  ...      ;
 %       allMaterialStruct.NAME.state                 =  'Anisotropic' ;
-%       allMaterialStruct.NAME.stiffness_matrix       =  [6 x 6 matrix];
+%       allMaterialStruct.NAME.stiffness_matrix      =  [6 x 6 matrix];
 %
 % USEAGE
 %   materialList;
 %
 % INPUTS
-%   []                  - there are no inputs []
+%   []               - There are no inputs.          []
 %
 % OPTIONAL INPUTS
-%   []                  - there are no optional inputs []
+%   []               - There are no optional inputs.  []
 %
 % OUTPUTS
-%   all_materials       - a structure containing all of the materials []
+%   all_materials   - A structure containing all of the materials. []
 %
 % DEPENDENCIES
-%   []              - there are no dependencies     []
+%   []              - There are no dependencies.     []
 %
 % ABOUT
 %   author          - Danny Ramasawmy
 %   contact         - dannyramasawmy+elasticmatrix@gmail.com
 %   date            - 01 - January  - 2019
-%   last update     - 19 - July     - 2019
+%   last update     - 30 - July     - 2019
 %
 % This file is part of the ElasticMatrix toolbox.
 % Copyright (c) 2019 Danny Ramasawmy.

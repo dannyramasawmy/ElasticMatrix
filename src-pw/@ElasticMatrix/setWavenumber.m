@@ -11,22 +11,22 @@ function obj = setWavenumber(obj, wavenumber_range)
     %   obj.setWavenumber(wavenumber_range);        
     %
     % INPUTS
-    %   wavenumber_range    - vector of wavenumbers         [1/m]
+    %   wavenumber_range    - Vector of wavenumbers.        [1/m]
     %
     % OPTIONAL INPUTS
-    %   []                  - there are no optional inputs  []
+    %   []                  - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.wavenumber      - sets the wavenumber property   [1/m]
+    %   obj.wavenumber      - Sets the wavenumber property.  [1/m]
     %
     % DEPENDENCIES
-    %   []                  - there are no dependencies     []
+    %   []                  - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

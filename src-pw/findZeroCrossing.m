@@ -12,22 +12,22 @@ function [ idx_crossing ] = findZeroCrossing( signal )
     %   [ idx_crossing ] = findZeroCrossing( signal )
     %
     % INPUTS
-    %   signal          - 1D vector, double, real          []
+    %   signal          - 1D vector, double, real.          []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs      []
+    %   []              - There are no optional inputs.     []
     %
     % OUTPUTS
-    %   idx_crossing    - indices of the crossing points    []
+    %   idx_crossing    - Indices of the crossing points.   []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies         []
+    %   []              - There are no dependencies.        []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 25 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -73,12 +73,12 @@ function inputCheck(signal)
     %INPUECHECK Checks the inputs for the current function.
     %
     % DESCRIPTION
-    %   INPUTCHECK(frequency_range) checks the inputs for the function
-    %   setFrequency(...). If any of the inputs are not valid, the
+    %   INPUTCHECK(signal) checks the inputs for the function
+    %   findZeroCrossing(...). If any of the inputs are not valid, the
     %   function will break and print errors to screen.
     %
     % USAGE
-    %   inputChecks(frequency_range);
+    %   inputChecks(signal);
     %
     % ABOUT
     %   author          - Danny Ramasawmy

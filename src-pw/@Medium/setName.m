@@ -9,23 +9,23 @@ function obj = setName(obj, layer_index, layer_name)
     %   obj = setName(layer_index, layer_name);
     %
     % INPUTS
-    %   layer_index     - the index of the layer, (double)   []
-    %   layer_name      - the name to be set, (string)       []
+    %   layer_index     - The index of the layer, (double).  []
+    %   layer_name      - The name to be set, (string).      []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs       []
+    %   []              - There are no optional inputs.      []
     %
     % OUTPUTS
-    %   obj.name         - the name property of the object   []
+    %   obj.name        - The name property of the object.  []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies          []
+    %   []              - There are no dependencies.         []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

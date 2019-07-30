@@ -11,25 +11,25 @@ function [ closest, idx, difference ] = findClosest(x_list,x)
     %   [closest, index, difference] = fincClosest(x_list, x);
     %
     % INPUTS
-    %   x_list          - an arbitrary sized vector, double     []
-    %   x               - a single value, double                []
+    %   x_list          - An arbitrary sized vector, double.    []
+    %   x               - A single value, double.               []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs          []
+    %   []              - There are no optional inputs.         []
     %
     % OUTPUTS
-    %   closest         - the closest value in x_list to input x
-    %   idx             - the index of the closest value in x_list
-    %   difference      - the difference between the closest value and x
+    %   closest         - The closest value in x_list to input x.
+    %   idx             - The index of the closest value in x_list.
+    %   difference      - The difference between the closest value and x.
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 29 - March    - 2017
-    %   last update     - 20 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

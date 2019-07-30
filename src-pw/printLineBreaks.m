@@ -8,22 +8,22 @@ function printLineBreaks()
     %   printLineBreaks;
     %
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []              - There are no inputs.          []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   []              - there are no outputs          []
+    %   []              - There are no outputs.         []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 01 - November - 2016
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

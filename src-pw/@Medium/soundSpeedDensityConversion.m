@@ -13,18 +13,18 @@ function [stiffness_matrix] = soundSpeedDensityConversion(c, cs, density)
     %   [stiffness_matrix] = soundSpeedDensityConversion(c, cs, rho)
     %
     % INPUTS
-    %   c               - compressional sound-speed, double  [m/s]
-    %   cs              - shear sound-speed, double          [m/s]
-    %   density         - density, double                    [kg/m^3]
+    %   c               - Compressional sound-speed, double. [m/s]
+    %   cs              - Shear sound-speed, double.         [m/s]
+    %   density         - Density, double.                   [kg/m^3]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs       []
+    %   []              - There are no optional inputs.      []
     %
     % OUTPUTS
-    %   stiffness_matrix - 6 X 6 (isotropic) stiffness matrix [units]
+    %   stiffness_matrix - 6 X 6 (isotropic) stiffness matrix.[units]
     %
     % DEPENDENCIES
-    %   Medium.lameConversion(lambda, mu)
+    %   Medium.lameConversion(lambda, mu);
     %
     % ABOUT
     %   author          - Danny Ramasawmy

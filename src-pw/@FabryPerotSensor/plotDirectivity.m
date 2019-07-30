@@ -11,28 +11,28 @@ function figure_handle = plotDirectivity(obj, varargin)
     %   figure_handle = plotDirectivity(obj, 'raw', 'real')
     %   
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []                - There are no inputs.          []
     %
     % OPTIONAL INPUTS
     %   Multiple inputs are accepted, these must be strings:
-    %   - 'phase'         - phase of obj.directivity
-    %   - 'linear'        - normalized to normal incidence response 
-    %                       obj.directivity
-    %   - 'decibel'       - decibel scaling of 'linear'
-    %   - 'normalise'     - normalized to maximum value of normal incidence
-    %   - 'normal'        - normal incidence response
+    %   - 'phase'         - Phase of obj.directivity.
+    %   - 'linear'        - Normalized to normal incidence response 
+    %                       obj.directivity.
+    %   - 'decibel'       - Decibel scaling of 'linear'.
+    %   - 'normalise'     - Normalized to maximum value of normal incidence.
+    %   - 'normal'        - Normal incidence response.
     %
     % OUTPUTS
-    %   figure_handle(idx).fig - figure handles to directivity figures.
+    %   figure_handle(idx).fig - Figure handles to directivity figures.
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -97,24 +97,24 @@ function plotFigure(obj, current_handle, plot_type)
     %   plotFigure(obj, current_handle, plot_type)
     %
     % INPUTS
-    %   obj             - FabryPerotSensor object       []
-    %   current_handle  - figure handle
-    %   plot_type       - a string, see plotDirectiviy
+    %   obj             - FabryPerotSensor object.      []
+    %   current_handle  - Figure handle.
+    %   plot_type       - A string, see plotDirectiviy.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   []              - there are no outputs          []
+    %   []              - There are no outputs.         []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30 - July     - 2019
     
     % initialize figure
     figure(current_handle);

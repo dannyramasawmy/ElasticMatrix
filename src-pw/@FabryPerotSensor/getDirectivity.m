@@ -11,33 +11,33 @@ function [directivity] = getDirectivity(obj, varargin)
     %   [directivity] = getDirectivity(obj, varargin)
     %   
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []                - There are no inputs.           []
     %
     % OPTIONAL INPUTS
     %   Only one optional input is accepted, this must be a string:
-    %   - 'raw'           - calculated (complex) obj.directivity
-    %   - 'real'          - imaginary part of obj.directivity
-    %   - 'imag'          - real part of obj.directivity
-    %   - 'phase'         - phase of obj.directivity
-    %   - 'abs'           - absolute values of obj.directivity
-    %   - 'linear'        - normalized to normal incidence response 
-    %                       obj.directivity
-    %   - 'decibel'       - decibel scaling of 'linear'
-    %   - 'normalise'     - normalize to maximum value of normal incidence
-    %   - 'normal'        - normal incidence response
+    %   - 'raw'           - Calculated (complex) obj.directivity.
+    %   - 'real'          - Imaginary part of obj.directivity.
+    %   - 'imag'          - Real part of obj.directivity.
+    %   - 'phase'         - Phase of obj.directivity.
+    %   - 'abs'           - Absolute values of obj.directivity.
+    %   - 'linear'        - Normalized to normal incidence response. 
+    %                       obj.directivity.
+    %   - 'decibel'       - Decibel scaling of 'linear'.
+    %   - 'normalise'     - Normalize to maximum value of normal incidence.
+    %   - 'normal'        - Normal incidence response.
     %
     % OUTPUTS
-    %   directivity     - matrix or vector of size length(obj.frequency) X
+    %   directivity     - Matrix or vector of size length(obj.frequency) X
     %                     length(obj.angle).
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

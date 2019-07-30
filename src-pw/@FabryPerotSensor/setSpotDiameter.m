@@ -12,22 +12,22 @@ function obj = setSpotDiameter(obj, spot_diameter)
     %   obj = setSpotSize(obj, spot_diameter);
     %   
     % INPUTS
-    %   spot_diameter   - the laser interrogation spot diameter     [m]
+    %   spot_diameter   - The laser interrogation spot diameter.    [m]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs              []
+    %   []              - there are no optional inputs.             []
     %
     % OUTPUTS
-    %   obj.spot_size  - the diameter of the interrogation spot     [m]
+    %   obj.spot_size  - The diameter of the interrogation spot.    [m]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.                []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

@@ -11,16 +11,16 @@ function obj = setPhasespeed(obj, phasespeed_range)
     %   obj.setPhasespeed(phasespeed_range);        
     %
     % INPUTS
-    %   phasespeed_range    - vector of phasespeeds         [m/s]
+    %   phasespeed_range    - Vector of phasespeeds.        [m/s]
     %
     % OPTIONAL INPUTS
-    %   []                  - there are no optional inputs  []
+    %   []                  - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.phasespeed      - sets the phasespeed property   [s/m]
+    %   obj.phasespeed      - Sets the phasespeed property.  [s/m]
     %
     % DEPENDENCIES
-    %   []                  - there are no dependencies     []
+    %   []                  - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy

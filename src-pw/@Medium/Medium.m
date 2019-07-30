@@ -1,37 +1,168 @@
 classdef Medium < handle
-    %MEDIUM - one line description
+    %MEDIUM Class definition for Medium.
     %
     % DESCRIPTION
-    %   A short description of the functionTemplate goes here.
+    %   MEDIUM defines the geometry and material properties for a
+    %   multi-layered elastic structure [1,2]. The multi-layered structure
+    %   consists of n-rigidly bonded elastic layers with parallel
+    %   interfaces between adjacent layer's. Each layer defines a name,
+    %   thickness and material constants (such as density, stiffness
+    %   coefficients) are defined. The diagram of the multi-layered
+    %   structure can be seen below. The interfaces are perpendicular to
+    %   the (z)-axis and parallel to the (x,y) plane. The first and last
+    %   layers are semi-infinite in (z) whereas the "sandwiched" layers are
+    %   finite in (z). Note for n-layers there are n-1 interfaces.
+    %
+    %   ^ z
+    %   |
+    %   |(Layer 1), material_1, thickness_1, material_properties_1
+    %   |------------------------ interface 1 ----------------------
+    %   |(Layer 2), material_2, thickness_2, material_properties_2
+    %   |------------------------ interface 2 ----------------------
+    %   |                            ...
+    %   |------------------------ interface n-1 --------------------
+    %   |(Layer n), material_n, thickness_n, material_properties_n
+    %   |------------------------------------------------------------> x
+    %
+    %   The material properties include the density [kg/m^3] and the
+    %   stiffness coefficients [Pa]. The stiffness coefficients are in the
+    %   form of a 6X6 stiffness matrix. The materials that have been
+    %   predefined can be seen by typing:
+    %       Medium.availableMaterials;
+    %   New materials can be added to the list and defined by typing:
+    %       edit materialList.
+    %   More information as to the accepted format can be seen in the
+    %   description of this function.
+    %
+    %   References:
+    %   [1] Ramasawmy, Danny R., et al. "ElasticMatrix: A MATLAB Toolbox
+    %       for Anisotropic Elastic Wave Propagation in Layered Media.",
+    %       (2019).
+    %
+    %   [4] Nayfeh, Adnan H. "The general problem of elastic wave
+    %       propagation in multi-layered anisotropic media." The Journal of
+    %       the Acoustical Society of America (1991).
+    %
     %
     % USEAGE
-    %   outputs = functionTemplate(input, another_input)
-    %   outputs = functionTemplate(input, another_input, optional_input)
+    %   medium_object = Medium;
+    %   medium_object = Medium( 'material_1', thickness_1,...
+    %       'material_3', thickness_2,...,'material_n', thickness_n);
+    %
     %
     % INPUTS
-    %   input           - the first input   [units]
+    %   []              - No required inputs.           []
+    %
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   Medium accepts any number of inputs in groups of two in the form:
+    %   material_name, material_thickness,...
+    %   material_name       - A string of the material name from the
+    %                         predefined materials. See materialList(). For
+    %                         materials that have not been defined it may
+    %                         be set as 'blank'.
+    %   material_thickness  - The thickness of the layer.       [m]
+    %
     %
     % OUTPUTS
-    %   outputs         - the outputs       [units]
+    %   medium_object       - A Medium object.                  []
     %
-    % DEPENDENCIES
-    %   handle class    - inherits the handle class in MALTAB
     %
     % PROPERTIES
+    % (GetAccess = public, SetAccess = private)
+    %   .name               - The material name.
+    %   .state              - The material state, (liquid/isotropic...).
+    %   .thickness          - The thickness of the material.    [m]
+    %   .density            - The density of the material.      [kg/m^3]
+    %   .stiffness_matrix   - The stiffness matrix of the material. [Pa]
+    %   .slowness           - The slowness profiles of the materials.
+    %       .slowness.kx         - Horizontal component (vector).
+    %       .slowness.kz_qL1     - (quasi-)L  vertical component -ve.
+    %       .slowness.kz_qL2     - (quasi-)L  vertical component +ve.
+    %       .slowness.kz_qSV1    - (quasi-)SV vertical component -ve.
+    %       .slowness.kz_qSV2    - (quasi-)SV vertical component +ve.
+    %       .slowness.kz_qSH     - (quasi-)SH vertical component +ve.
     %
     %
     % METHODS
+    %   NON-STATIC
+    %   
+    %   obj = obj.disp;
+    %       Displays the properties of Medium.
+    %       - There are no inputs.
     %
+    %   obj = obj.setName(layer_index, layer_name);
+    %       Sets the .name property.
+    %       - layer_index       - The index of the layer.
+    %       - layer_name        - A string of the new name.
+    %
+    %   obj = obj.setThickness(layer_index, layer_value);
+    %       Sets the .thickness property.
+    %       - layer_index       - The index of the layer.
+    %       - layer_value       - The thickness of the layer. [m]
+    %
+    %   obj = obj.setDensity(layer_index, layer_density);
+    %       Sets the .density property.
+    %       - layer_index       - The index of the layer.
+    %       - layer_density     - The density of the layer. [kg/m^3]
+    %
+    %   obj = obj.setStiffnessMatrix(layer_index, stiffness_matrix);
+    %       Sets the .stiffness_matrix property.
+    %       - layer_index       - The index of the layer.
+    %       - stiffness_matrix  - Stiffness matrix, [6 X 6]. [Pa]
+    %
+    %   obj = obj.calculateSlowness;
+    %       Calculates the slowness profiles for each material.
+    %       - There are no inputs.
+    %
+    %   [ figure_handle, obj] = obj.plotSlowness;
+    %       Plots the slowness curves.
+    %       - figure_handle     - The figure handles for each slowness 
+    %                             plot.
+    %
+    %   STATIC
+    %   
+    %   [] = Medium.availableMaterials();
+    %       Prints a list of all available materials to the command window.
+    %       - There are no inputs or outputs.       
+    %
+    %   medium_object = Medium.getAcousticProperties(material_name);
+    %       Uses the materialList() function to return the properties for a
+    %       selected material.
+    %       material_name       - A string of the material name.
+    %       medium_object       - Returns a Medium object.
+    %
+    %   stiffness_matrix = Medium.lameConversion(lambda, mu);
+    %       Converts the material Lame parameters to a [6 X 6] stiffness
+    %       matrix.
+    %       lambda              - The first lame parameter.     [Pa]
+    %       mu                  - The second lame parameter.    [Pa]
+    %       stiffness_matrix    - [6X6] stiffness matrix.       [Pa]
+    %
+    %   stiffness_matrix = Medium.soundSpeedDensityConversion(...
+    %             compressional_speed, shear_speed, density);
+    %       Converts compressional sound-speed, shear-speed and density to
+    %       a [6 X 6] stiffness matrix.
+    %       compressional_speed     - Compressional sound-speed.   [m/s]
+    %       shear_speed             - Shear sound-speed.           [m/s]
+    %       density                 - Density.                     [kg/m^3]
+    %       stiffness_matrix        - [6X6] stiffness matrix.      [Pa]
+    %
+    %   For information on the methods type:
+    %       help Medium.<method_name>
+    %
+    %
+    % DEPENDENCIES
+    %   handle          - Inherits the handle class in MALTAB.
+    %   materialList    - Predefined materials are located in this
+    %                     function.
     %
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -55,7 +186,7 @@ classdef Medium < handle
     % properties
     properties (GetAccess = public, SetAccess = private)
         name
-        state 
+        state
         thickness
         density
         stiffness_matrix
@@ -65,21 +196,12 @@ classdef Medium < handle
     
     methods
         function obj = Medium(varargin)
-            %   Description
-            %       Takes multiple material inputs and returns a multidimensional
-            %       class (i.e it can be indexed like a structure).
-            % Example:
-            %   To generate a layered medium for a aluminium plate in water
-            %   myMedium = Medium('water',Inf, 'aluminium',0.001, 'water',Inf)
-            %
-            
             % if there are multiple input arguments
             if nargin ~= 0
                 
                 % check if the inputs are even in length
                 if mod(nargin,2)
-                    error(['Incorrect number of inputs, type a material ',...
-                        'name followed by its thickness (''glass'',0.01,...).']);
+                    error('Incorrect number of inputs.');
                 end
                 
                 % create an object array (vector)
@@ -88,16 +210,17 @@ classdef Medium < handle
                 
                 % assign fields
                 for idx = 1:2:nargin
-                    obj((idx+1)/2) = Medium.getAcousticProperties(varargin{idx});
+                    obj((idx+1)/2) = ...
+                        Medium.getAcousticProperties(varargin{idx});
                     obj((idx+1)/2).thickness = varargin{idx + 1};
                 end
                 
-                % auto set first layer thickness to Inf if not defined at the start
+                % auto set 1st layer thickness to Inf
                 if obj(1).thickness ~= Inf
                     obj.setThickness(1, Inf);
                 end
                 
-                % auto set last layer thickness to Inf if not defined at the start
+                % auto set n-th layer thickness to Inf
                 number_layers = length(obj);
                 if obj(number_layers).thickness ~= Inf
                     obj.setThickness(number_layers, Inf);
@@ -118,18 +241,16 @@ classdef Medium < handle
         % display
         obj = disp(obj);
         % set the name
-        obj = setName(obj, layerIndex, layerName);
+        obj = setName(obj, layer_index, layer_name);
         % set the thickness
-        obj = setThickness(obj, layerIndex, layerValue);
+        obj = setThickness(obj, layer_index, layer_value);
         % set the Density
-        obj = setDensity(obj, layerIndex, layerDensity);
+        obj = setDensity(obj, layer_index, layer_density);
         % set the stiffness matrix
-        obj = setStiffnessMatrix(obj, layerIndex, cMatrix);
+        obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix);
         
-        % calculate slowness profiles
+        % calculate and plot slowness profiles
         obj = calculateSlowness( obj );
-        
-        % plotting slowness
         [ figure_handle, obj] = plotSlowness( obj );
         
     end
@@ -141,11 +262,12 @@ classdef Medium < handle
         % show the available materials
         availableMaterials();
         % get the acoustic properties
-        medium_object    = getAcousticProperties(materialName);
+        medium_object    = getAcousticProperties(material_name);
         % change lame coefficients to stiffness matrix
         stiffness_matrix = lameConversion(lambda, mu);
-        % change sound speeds and density into a stiffness matrix
-        stiffness_matrix = soundSpeedDensityConversion(compressionalSpeed, shearSpeed, density);
+        % convert sound speeds and density into a stiffness matrix
+        stiffness_matrix = soundSpeedDensityConversion(...
+            compressional_speed, shear_speed, density);
         
     end
     

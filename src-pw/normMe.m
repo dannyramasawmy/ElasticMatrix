@@ -10,22 +10,22 @@ function [normalised_matrix] = normMe(input_matrix)
     %   normalised_matrix = normMe(input_matrix);
     %
     % INPUTS
-    %   input_matrix    - a matrix with an arbitrary size and dimension []
+    %   input_matrix    - A matrix with an arbitrary size and dimension. []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   outputs         - the normalized matrix         []
+    %   outputs         - The normalized matrix.        []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 26 - October  - 2016
-    %   last update     - 19 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

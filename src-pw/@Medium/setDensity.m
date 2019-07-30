@@ -12,23 +12,23 @@ function obj = setDensity(obj, layer_index, layer_density)
     %       [layer_density_1, layer_density_2, layer_density_3]);
     %   
     % INPUTS
-    %   layer_index     - the index of the layer, (vector)   []
-    %   layer_density   - the density to be set, (vector)    [kg/m^3]
+    %   layer_index     - The index of the layer, (vector).   []
+    %   layer_density   - The density to be set, (vector).    [kg/m^3]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs.       []
     %
     % OUTPUTS
-    %   obj.density     - the density of the object     [kg/m^3]
+    %   obj.density     - the density of the object.          [kg/m^3]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.          []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 20 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -59,7 +59,7 @@ function obj = setDensity(obj, layer_index, layer_density)
 end
 
 function inputCheck(layer_index, layer_density)
-    %INPUECHECK Checks the inputs for the current function.
+    %INPUTCHECK Checks the inputs for the current function.
     %
     % DESCRIPTION
     %   INPUTCHECK(layer_index, layer_density) checks the inputs for the

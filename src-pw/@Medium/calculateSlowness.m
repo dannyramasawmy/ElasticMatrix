@@ -16,31 +16,31 @@ function obj = calculateSlowness(obj)
     %   obj             - Medium object.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj             - returns the input object      []
+    %   obj             - Returns the input object.     []
     %
     %   The .slowness property is a structure of wave-vector components
     %   normalized by an arbitrary frequency. Effectively they are k/omega
     %   with units of [s/m].
     %
-    %   obj.slowness            - property of Medium, (structure)
-    %   obj.slowness.kx         - horizontal component (vector)
-    %   obj.slowness.kz_qL1     - (quasi-)L  vertical component -ve
-    %   obj.slowness.kz_qL2     - (quasi-)L  vertical component +ve
-    %   obj.slowness.kz_qSV1    - (quasi-)SV vertical component -ve
-    %   obj.slowness.kz_qSV2    - (quasi-)SV vertical component +ve
-    %   obj.slowness.kz_qSH     - (quasi-)SH vertical component +ve
+    %   obj.slowness            - Property of Medium, (structure).
+    %   obj.slowness.kx         - Horizontal component, (vector).
+    %   obj.slowness.kz_qL1     - (quasi-)L  vertical component -ve.
+    %   obj.slowness.kz_qL2     - (quasi-)L  vertical component +ve.
+    %   obj.slowness.kz_qSV1    - (quasi-)SV vertical component -ve.
+    %   obj.slowness.kz_qSV2    - (quasi-)SV vertical component +ve.
+    %   obj.slowness.kz_qSH     - (quasi-)SH vertical component +ve.
     %
     % DEPENDENCIES
-    %   calculateAlphaCoefficients(...) - Christoffel equation
+    %   calculateAlphaCoefficients(...) - Christoffel equation.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 19 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

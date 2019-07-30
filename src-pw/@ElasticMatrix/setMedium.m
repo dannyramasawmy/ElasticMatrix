@@ -13,22 +13,22 @@ function obj = setMedium(obj, new_medium)
     %   obj.setMedium(new_medium);
     %
     % INPUTS
-    %   new_medium      - a Medium object                       []
+    %   new_medium      - A Medium object.                      []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs          []
+    %   []              - There are no optional inputs.         []
     %
     % OUTPUTS
-    %   obj.medium      - the Medium property of ElasticMatrix  []
+    %   obj.medium      - The Medium property of ElasticMatrix. []
     %
     % DEPENDENCIES
-    %   obj = Medium(...)  - requires a Medium object           []
+    %   obj = Medium(...)  - Requires a Medium object.          []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

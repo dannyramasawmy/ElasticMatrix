@@ -11,22 +11,22 @@ function obj = save(obj, varargin)
     %   obj.save(new_filename);
     %
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []              - There are no inputs.          []
     %
     % OPTIONAL INPUTS
-    %   new_filename    - filename to assign the ElasticMatrix object
+    %   new_filename    - Filename to assign the ElasticMatrix object.
     %
     % OUTPUTS
-    %   .mat            - saves a .mat file to disk     []
+    %   .mat            - Saves a .mat file to disk.    []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

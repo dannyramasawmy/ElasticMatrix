@@ -10,22 +10,22 @@ function [] = availableMaterials()
     %   Medium.availableMaterials;
     %
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []              - There are no inputs.          []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   []              - there are no outputs          []
+    %   []              - There are no outputs.         []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   materialList    - Gets material names using this function.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 19 - January - 2019
-    %   last update     - 19 - July     - 2019
+    %   last update     - 30 - July    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

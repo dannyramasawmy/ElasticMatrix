@@ -18,26 +18,26 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(...
     %       angle_range, medium_object);
     %
     % INPUTS
-    %   angle_range     - a range of input angles               [degrees]
-    %   medium_object   - a medium object with two isotropic layers
+    %   angle_range     - A range of input angles.              [degrees]
+    %   medium_object   - A medium object with two isotropic layers.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs              []
+    %   []              - There are no optional inputs.             []
     %
     % OUTPUTS
-    %   RL              - reflected compressional coefficient       []
-    %   RS              - reflected shear coefficient               []
-    %   TL              - transmitted compressional coefficient     []
-    %   TS              - transmitted shear coefficient             []
+    %   RL              - Reflected compressional coefficient.      []
+    %   RS              - Reflected shear coefficient.              []
+    %   TL              - Transmitted compressional coefficient.    []
+    %   TS              - Transmitted shear coefficient.            []
     %
     % DEPENDENCIES
-    %   Medium class    - requires a Medium class object
+    %   Medium class    - Requires a Medium class object.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - July     - 2019
-    %   last update     - 25 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

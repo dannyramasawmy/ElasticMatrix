@@ -13,7 +13,7 @@ function obj = setSpotType(obj, spot_type)
     %   obj = setSpotType(obj, spot_type);
     %
     % INPUTS
-    %   spot_type       - a string which can either be:    []
+    %   spot_type       - A string which can either be:    []
     %                     - 'gaussian'
     %                     - 'collimated'
     %                     - 'none'
@@ -23,19 +23,19 @@ function obj = setSpotType(obj, spot_type)
     %                     strings.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs     []
+    %   []              - There are no optional inputs.    []
     %
     % OUTPUTS
-    %   obj.spot_type   - the spot-type                    []
+    %   obj.spot_type   - The spot-type.                   []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies         []
+    %   []              - There are no dependencies.       []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

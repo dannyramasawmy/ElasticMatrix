@@ -1,5 +1,5 @@
 classdef FabryPerotSensor < ElasticMatrix
-    %FABRYPEROTSENSOR Models the acoustic response of a Fabry-Perot sensor.
+    %FABRYPEROTSENSOR Class definition for FabryPerotSensor.
     %
     % DESCRIPTION
     %   FABRYPEROTSENSOR models the acoustic response of a Fabry-Perot
@@ -68,14 +68,18 @@ classdef FabryPerotSensor < ElasticMatrix
     % USEAGE
     %   sensor = FabryPerotSensor( medium_object );
     %
+    %
     % INPUTS
-    %   medium_object   - the class is initialized using a Medium object
+    %   medium_object   - The class is initialized using a Medium object.
+    %
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []              - There are no optional inputs. []
+    %
     %
     % OUTPUTS
-    %   sensor          - returns a FabryPerotClass object
+    %   sensor          - Returns a FabryPerotSensor object.
+    %
     %
     % PROPERTIES
     % Please see ElasticMatrix to see all other methods.
@@ -84,30 +88,31 @@ classdef FabryPerotSensor < ElasticMatrix
     %   .mirror_locations - (refer to figure above) the interface locations
     %                       of where the mirrors are. A vector:
     %                       [itfc_loc_1, itfc_loc_2].
-    %   .spot_diameter    - interrogation spot diameter      [m]
-    %   .spot_type        - interrogation spot type, which can either be:   
+    %   .spot_diameter    - Interrogation spot diameter.     [m]
+    %   .spot_type        - Interrogation spot type, which can either be:   
     %                       - 'gaussian'
     %                       - 'collimated'
     %                       - 'none'
     %   
     %
     % (SetAccess = private, GetAccess = private) 
-    %   .directivity    - the directional response of the Fabry-Perot
+    %   .directivity    - The directional response of the Fabry-Perot
     %                     sensor. This is a matrix of complex data of size
     %                     [length_frequency_range x length_angle_range].
     %
+    %
     % METHODS
     % Default constructor - initialize the FabryPerotSensor Class:
-    %   sensor = FabryperotSensor( medium_object )
+    %   sensor = FabryperotSensor( medium_object );
     %   
     %   obj = obj.setMirrorLocations([itfc_1, itfc_2])
     %       Sets the .mirror_locations property.
-    %       - itfc_1        - the interface at the first mirror
-    %       - itfc_2        - the interface at the second mirror
+    %       - itfc_1        - The interface at the first mirror.
+    %       - itfc_2        - The interface at the second mirror.
     %
     %   obj = obj.setSpotDiameter( diameter )
     %       Sets the .spot_diameter property.
-    %       - diameter      - the spot diameter     [m]
+    %       - diameter      - The spot diameter.     [m]
     %
     %   obj = obj.setSpotType( string )
     %       Sets the .spot_type property.
@@ -120,43 +125,49 @@ classdef FabryPerotSensor < ElasticMatrix
     %       Calculates the directional response / acoustic sensitivity of
     %       the FabryperotSensor. Before using this the .setFrequency,
     %       .setAngle and .setMirrorLocations must be used.
-    %       - there are no inputs to this method
+    %       - There are no inputs to this method.
     %
     %
     %   [directivity, obj] = obj.getDirectivity(type)
     %       Returns the directional response with different types of
     %       processing/normalization.
     %       type:
-    %       - 'raw'          - calculated (complex) obj.directivity
-    %       - 'real'         - imaginary part of obj.directivity
-    %       - 'imag'         - real part of obj.directivity
-    %       - 'phase'        - phase of obj.directivity
-    %       - 'abs'          - absolute values of obj.directivity
-    %       - 'linear'       - normalized to normal incidence response 
-    %       - 'decibel'      - decibel scaling of 'linear'
-    %       - 'normalise'    - normalize to maximum of normal incidence
-    %       - 'normal'       - normal incidence response
+    %       - 'raw'          - Calculated (complex) obj.directivity.
+    %       - 'real'         - Imaginary part of obj.directivity.
+    %       - 'imag'         - Real part of obj.directivity.
+    %       - 'phase'        - Phase of obj.directivity.
+    %       - 'abs'          - Absolute values of obj.directivity.
+    %       - 'linear'       - Normalized to normal incidence response. 
+    %       - 'decibel'      - Decibel scaling of 'linear'.
+    %       - 'normalise'    - Normalize to maximum of normal incidence.
+    %       - 'normal'       - Normal incidence response.
     %
     %
     %   [fig_handles, obj] = obj.plotDirectivity
     %   [fig_handles, obj] = obj.plotDirectivity(plot_type, plot_type,...)
     %       Plot the directional response of the Fabry-perot sensor.
     %       plot_type:
-    %       - 'phase'        - phase of obj.directivity
-    %       - 'linear'       - normalized to normal incidence response                        
-    %       - 'decibel'      - decibel scaling of 'linear'
-    %       - 'normalise'    - normalized to maximum  of normal incidence
-    %       - 'normal'       - normal incidence response
-    %       fig_handles      - figure handles 
+    %       - 'phase'        - Phase of obj.directivity.
+    %       - 'linear'       - Normalized to normal incidence response.                        
+    %       - 'decibel'      - Decibel scaling of 'linear'.
+    %       - 'normalise'    - Normalized to maximum  of normal incidence.
+    %       - 'normal'       - Normal incidence response.
+    %       fig_handles      - Figure handles. 
     %
     %   obj = obj.disp
-    %       Display the object.
-    %       - there are no inputs to this method
+    %       Display the properties of object.
+    %       - There are no inputs to this method.
+    %
+    %   For information on the methods type:
+    %       help FabryPerotSensor.<method_name>
+    %
     %
     % DEPENDENCIES
-    %   Medium          - this class is initialized with a Medium object
-    %   ElasticMatrix   - FabryPerotSensor inherits the ElasticMatric class
-    %   handle          - FabryPerotSensor uses the MATLAB handle class
+    %   Medium          - This class is initialized with a Medium object.
+    %   ElasticMatrix   - FabryPerotSensor inherits an ElasticMatric
+    %                     object.
+    %   handle          - FabryPerotSensor uses the MATLAB handle class.
+    %
     %
     % ABOUT
     %   author          - Danny Ramasawmy

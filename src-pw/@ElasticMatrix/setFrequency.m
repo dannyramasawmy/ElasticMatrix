@@ -10,22 +10,22 @@ function obj = setFrequency(obj, frequency_range)
     %   obj.setFrequency(frequency_range);        
     %
     % INPUTS
-    %   frequency_range     - vector of frequencies (Hz)    [1/s]
+    %   frequency_range     - Vector of frequencies (Hz).   [1/s]
     %
     % OPTIONAL INPUTS
-    %   []                  - there are no optional inputs  []
+    %   []                  - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.frequency       - sets the frequency property   [1/s]
+    %   obj.frequency       - Sets the frequency property.  [1/s]
     %
     % DEPENDENCIES
-    %   []                  - there are no dependencies     []
+    %   []                  - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

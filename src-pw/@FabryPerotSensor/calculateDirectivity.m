@@ -25,22 +25,22 @@ function [obj] = calculateDirectivity(obj)
     %   obj.calculate;
     %
     % INPUTS
-    %   obj.frequency           - frequency range, (vector)       [Hz]
-    %   obj.angle               - angle range, (vector)           [degrees]
-    %   obj.mirror_locations    - locations of the FP mirrors
-    %   obj.spot_diameter       - diameter of interrogation spot  [m]
-    %   obj.spot_type           - spot profile
+    %   obj.frequency           - Frequency range. (vector)       [Hz]
+    %   obj.angle               - Angle range. (vector)           [degrees]
+    %   obj.mirror_locations    - Locations of the FP mirrors.
+    %   obj.spot_diameter       - Diameter of interrogation spot. [m]
+    %   obj.spot_type           - Spot profile
     %
     %
     % OPTIONAL INPUTS
-    %   []                  - there are no optional inputs  []
+    %   []                  - There are no optional inputs.  []
     %
     % OUTPUTS
-    %   obj.directivity     - the directivity property of FabryPerotSensor
-    %                         is populated
+    %   obj.directivity     - The directivity property of FabryPerotSensor
+    %                         is populated.
     %
     % DEPENDENCIES
-    %   []                  - there are no dependencies     []
+    %   []                  - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy

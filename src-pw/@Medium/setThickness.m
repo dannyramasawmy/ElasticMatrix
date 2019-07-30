@@ -13,23 +13,23 @@ function obj = setThickness(obj, layer_index, layer_thickness)
     %       [layer_thickness_1, layer_thickness_2, layer_thickness_3]);
     %
     % INPUTS
-    %   layer_index     - the index of the layer, (vector)   []
-    %   layer_thickness - the thickness to be set, (vector)  [m]
+    %   layer_index     - The index of the layer, (vector).  []
+    %   layer_thickness - The thickness to be set, (vector). [m]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []              - There are no optional inputs.      []
     %
     % OUTPUTS
-    %   obj.thickness   - the thickness of the object layer  [m]
+    %   obj.thickness   - The thickness of the object layer. [m]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.         []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 21 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

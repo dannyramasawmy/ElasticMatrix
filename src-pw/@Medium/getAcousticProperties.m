@@ -10,17 +10,17 @@ function [ medium_layer ] = getAcousticProperties( material )
     %   medium_object = Medium.getAcousticProperties('materialName');
     %
     % INPUTS 
-    %   material        - a string corresponding to a predefined material
+    %   material        - A string corresponding to a predefined material.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.name                - name of the material
-    %   obj.state               - state of the material (Gas/Isotropic,...)
-    %   obj.thickness           - thickness of the layer    [m]
-    %   obj.density             - density                   [kg/m^3]
-    %   obj.stiffness_matrix    - 6 X 6 stiffness matrix    [Pa]
+    %   obj.name                - Name of the material.
+    %   obj.state               - State of the material (Gas/Isotropic,...).
+    %   obj.thickness           - Thickness of the layer.    [m]
+    %   obj.density             - Density.                  [kg/m^3]
+    %   obj.stiffness_matrix    - 6 X 6 stiffness matrix.   [Pa]
     %
     % DEPENDENCIES
     %   materialList() defines all the predefined materials

@@ -1,32 +1,67 @@
-function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
+function [figure_handle, obj] = plotField(obj, fields, varargin)
     %PLOTFIELD Plots the displacement and stress field parameters.
     %
     % DESCRIPTION
     %   PLOTFIELD(...) plots the displacement and stress field parameters
     %   for a given range of values. There are multiple types of
-    %   figure-styles that can be plotted. These are described below.
+    %   figure-styles that can be plotted which are described below. Before
+    %   using this function use [field] = .calculateField to get a
+    %   structure which contains the displacement and stress values. This
+    %   function will only plot the structure that is returned from
+    %   .calculateField.
     %
     % USEAGE
-    %   [figure_handle] = plotField(fieldValues, plot_style);
-    %   [figure_handle] = plotField(fieldValues, figure_handle);
+    %   [figure_handle] = plotField(field_struct, plot_style);
+    %   [figure_handle] = plotField(field_struct, figure_handle);
     %
     % INPUTS
-    %   field_values    - is a cell with two vectors    [units]
+    %   fields                  - Structure with the calculated fields.
+    %   fields.z_vector         - 1D vector of z-range.         [m]
+    %   fields.x_vector         - 1D vector of x-range.         [m]
+    %   fields.x_displacement   - 2D matrix of x-displacements. [m]
+    %   fields.z_displacement   - 2D matrix of z-displacements. [m]
+    %   fields.sigma_zz         - 2D matrix of normal stress.   [Pa]
+    %   fields.sigma_xz         - 2D matrix of shear stress.    [Pa]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   plot_style              - Plot style to use, (string).   []
+    %                           - All displacement in. [m]
+    %                           - All stress in [Pa]
+    %       'displacement1D'    - x and z displacement along x = 0, z =
+    %                             z_vector.
+    %       'displacement2D'    - x and z displacement over the grid
+    %                             defined by z_vector and x_vector
+    %       'stress1D'          - normal and shear stress along x = 0, z =
+    %                             z_vector.
+    %       'stress2D'          - Normal and shear stress over the grid
+    %                             defined by z_vector and x_vector.
+    %       'vector'            - 2D vector field over the grid defined by
+    %                             x_vector and z_vector, displacement.
+    %       'mesh'              - 2D mesh field over the grid defined by
+    %                             x_vector and z_vector.
+    %       'surf'              - 3D surface plot of normal stress
+    %                             over the grid defined by z_vector and
+    %                             x_vector.
+    %       'all'               - Plots all of the above.
+    %
+    %   figure_handle           - This is the figure handle returned by the
+    %                             function .plotField. Using it as the
+    %                             input plots the same plot_style using the
+    %                             same figure handle. Use this for asking
+    %                             movies and to minimize the number of new
+    %                             figures being created.
     %
     % OUTPUTS
-    %   outputs         - the outputs       [units]
+    %   outputs         - The outputs.       [units]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -45,54 +80,31 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % You should have received a copy of the GNU Lesser General Public
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
-    %
-    % inputs:
-    %   (fieldValues )
-    %   varargin{1} can be a structure of figure handles
-    %   or
-    %   varargin{1,2,...,n} can be plot types
-    %   '1DDisplacement'
-    %   '2DDisplacement'
-    %   '1DStress'
-    %   '2DStress'
-    %   'Vector'
-    %   'Mesh'
-    %   'Surf'
-    %   'All'
-    %
-    % Example:
-    %    [figH1] = model.plotField(field, 'Mesh','Vector');
-    %   will plot two figures. The figure handle structure will have fields
-    %   figH1.mesh, figH1.vector.
-    %   If the field is updated, this figure handle can be reused to
-    %   prevent multiple figure objects being created. This function will
-    %   automatically detect which handles correspond to which figure, this
-    %   may be useful when producing a movie of the stress or displacement.
-    %   model.plotField(updatedField, figH1);
     
     % =====================================================================
     %   SORT INPUTS
     % =====================================================================
     % check if varargin is a figure handle, if it is then use the
     % a cell with all the figure types
-    allFigureTypes = {...
-        '1DDisplacement','2DDisplacement','1DStress','2DStress'...
-        'Vector','Mesh','Surf'};
+    all_figure_types = {...
+        'displacement1D','displacement2D','stress1D','stress2D'...
+        'vector','mesh','surf'};
+    
     
     % flags
-    flagHandle = 0;
-    flagSurf = 0;
-    flagMesh = 0;
-    flagVector = 0;
-    flagStress1D = 0;
-    flagDisplacement1D = 0;
-    flagStress2D = 0;
-    flagDisplacement2D = 0;
+    flag_handle = 0;
+    flag_surf = 0;
+    flag_mesh = 0;
+    flag_vector = 0;
+    flag_stress1D = 0;
+    flag_displacement1D = 0;
+    flag_stress2D = 0;
+    flag_displacement2D = 0;
     
     % error check input field is correct
-    if isa(fieldValues, 'double')
-        if isnan(fieldValues)
-            figureHandle = 0;
+    if isa(fields, 'double')
+        if isnan(fields)
+            figure_handle = 0;
             warning('Field is NaN check .calcualteField');
             return;
         end
@@ -101,93 +113,95 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % sort the inputs
     if isempty(varargin)
         % if no inputs plot everything
-        plottingList = {'All'};
+        plotting_list = {'all'};
         
     elseif isstruct(varargin{1})
         % if the input is a structure, sort
-        plotNames = fieldnames(varargin{1});
-        figureHandleList = {'displacement1D', 'displacement2D', ...
+        plot_names = fieldnames(varargin{1});
+        figure_handle_list = {'displacement1D', 'displacement2D', ...
             'stress1D', 'stress2D', 'vector', 'mesh','surf'};
         
         % loop and compare
-        for figureDx = 1:length(plotNames)
-            % copy over the plotting lise
-            plottingList{figureDx} = allFigureTypes{strcmp(figureHandleList, plotNames{figureDx})};
+        for figure_idx = 1:length(plot_names)
+            % copy over the plotting list
+            plotting_list{figure_idx} = ...
+                all_figure_types{...
+                strcmp(figure_handle_list, plot_names{figure_idx}) };
             % copy over the handle
-            figureHandle = varargin{1};
-            flagHandle = 1;
+            figure_handle = varargin{1};
+            flag_handle = 1;
         end
         
     else
         % if input is a list of figure types, plot the specific figures
-        plottingList = varargin;
+        plotting_list = varargin;
     end
     
     % if the all flag is used plot all
-    if sum(strcmp(plottingList,'All')) > 0
-        plottingList = allFigureTypes;
+    if sum(strcmp(plotting_list,'all')) > 0
+        plotting_list = all_figure_types;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'Surf')) > 0
-        if flagHandle ~= 1
-            figureHandle.surf = figure;
+    if sum(strcmp(plotting_list,'surf')) > 0
+        if flag_handle ~= 1
+            figure_handle.surf = figure;
         end
-        flagSurf = 1;
+        flag_surf = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'Mesh')) > 0
-        if flagHandle ~= 1
-            figureHandle.mesh = figure;
+    if sum(strcmp(plotting_list,'mesh')) > 0
+        if flag_handle ~= 1
+            figure_handle.mesh = figure;
         end
-        flagMesh = 1;
+        flag_mesh = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'Vector')) > 0
-        if flagHandle ~= 1
-            figureHandle.vector = figure;
+    if sum(strcmp(plotting_list,'vector')) > 0
+        if flag_handle ~= 1
+            figure_handle.vector = figure;
         end
-        flagVector = 1;
+        flag_vector = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'1DStress')) > 0
-        if flagHandle ~= 1
-            figureHandle.stress1D = figure;
+    if sum(strcmp(plotting_list,'stress1D')) > 0
+        if flag_handle ~= 1
+            figure_handle.stress1D = figure;
         end
-        flagStress1D = 1;
+        flag_stress1D = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'1DDisplacement')) > 0
-        if flagHandle ~= 1
-            figureHandle.displacement1D = figure;
+    if sum(strcmp(plotting_list,'displacement1D')) > 0
+        if flag_handle ~= 1
+            figure_handle.displacement1D = figure;
         end
-        flagDisplacement1D = 1;
+        flag_displacement1D = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'2DStress')) > 0
-        if flagHandle ~= 1
-            figureHandle.stress2D = figure;
+    if sum(strcmp(plotting_list,'stress2D')) > 0
+        if flag_handle ~= 1
+            figure_handle.stress2D = figure;
         end
-        flagStress2D = 1;
+        flag_stress2D = 1;
     end
     
     % open figure handle to mesh plot if desired
-    if sum(strcmp(plottingList,'2DDisplacement')) > 0
-        if flagHandle ~= 1
-            figureHandle.displacement2D = figure;
+    if sum(strcmp(plotting_list,'displacement2D')) > 0
+        if flag_handle ~= 1
+            figure_handle.displacement2D = figure;
         end
-        flagDisplacement2D = 1;
+        flag_displacement2D = 1;
     end
     
     % just incase no variables matched
-    if ~exist('figureHandle')
+    if ~exist('figure_handle')
         warning('Incorrect plot type, use help(''plotField'') to find correct inputs')
-        figureHandle = 0;
+        figure_handle = 0;
         return;
     end
     % =====================================================================
@@ -195,115 +209,131 @@ function [figureHandle, obj] = plotField(obj, fieldValues, varargin)
     % =====================================================================
     
     % generate mesh coordinates
-    [Z, X] = meshgrid(fieldValues.z_vector, fieldValues.x_vector);
+    [Z, X] = meshgrid(fields.z_vector, fields.x_vector);
     
     % plot mesh
-    if flagSurf == 1
-        [figureHandle] = plotSurf(Z,X,fieldValues,figureHandle);
+    if flag_surf == 1
+        [figure_handle] = plotSurf(Z,X,fields,figure_handle);
     end
     
     % plot mesh
-    if flagMesh == 1
-        figureHandle = plotMesh(Z,X,fieldValues,figureHandle);
+    if flag_mesh == 1
+        figure_handle = plotMesh(Z,X,fields,figure_handle);
     end
     
     % plot vector
-    if flagVector == 1
-        figureHandle = plotVector(Z,X,fieldValues, figureHandle);
+    if flag_vector == 1
+        figure_handle = plotVector(Z,X,fields, figure_handle);
     end
     
     % position location for 1D plot (slice along x = 0)
-    xSamplePosition = round(length(fieldValues.x_vector)/2);
+    x_sample_position = round(length(fields.x_vector)/2);
     
     % plot 1D stress
-    if flagStress1D == 1
-        figureHandle = plot1DStress(fieldValues, figureHandle, xSamplePosition);
+    if flag_stress1D == 1
+        figure_handle = plot1DStress(fields, figure_handle, x_sample_position);
     end
     
     % plot 1D displacement
-    if flagDisplacement1D == 1
-        figureHandle = plot1DDisplacement(fieldValues, figureHandle, xSamplePosition);
+    if flag_displacement1D == 1
+        figure_handle = plot1DDisplacement(fields, figure_handle, x_sample_position);
     end
     
     % plot 2D stress
-    if flagStress2D == 1
-        figureHandle = plot2DStress(fieldValues, figureHandle);
+    if flag_stress2D == 1
+        figure_handle = plot2DStress(fields, figure_handle);
     end
     
     % plot 2D displacements
-    if flagDisplacement2D == 1
-        figureHandle = plot2DDisplacement(fieldValues, figureHandle);
+    if flag_displacement2D == 1
+        figure_handle = plot2DDisplacement(fields, figure_handle);
     end
     % =====================================================================
     %   OVERLAY INTERFACES
     % =====================================================================
     
     % add the interfaces between each layer
-    figureHandle = addInterfaces(figureHandle, fieldValues.x_vector, obj.medium);
+    figure_handle = addInterfaces(figure_handle, fields.x_vector, obj.medium);
     
     
 end
 
-function [figureHandle] = addInterfaces(figureHandle, x_vector, medium)
-    % =====================================================================
-    %   ADD LAYER INTERFACE
-    % =====================================================================
+function [figure_handle] = addInterfaces(figure_handle, x_vector, medium)
+    %ADDINTERFACES Adds red interface lines to the other plots.
+    %
+    % DESCRIPTION
+    %   ADDINTERFACES adds lines to the different plot-styles in
+    %   .plotField. These lines correspond to the coordinates between
+    %   interfaces.
+    %
+    % USAGE
+    %   [figure_handle] = addInterfaces(figure_handle, x_vector, medium);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
+    
     
     % for each interface
-    interfaceLocations = [0];
+    interface_locations = [0];
     
     if length(medium) > 2
         % interface locations
-        for layerDx = 2:(length(medium)-1)
-            interfaceLocations(layerDx) = ...
-                interfaceLocations(layerDx-1) - medium(layerDx).thickness;
+        for layer_idx = 2:(length(medium)-1)
+            interface_locations(layer_idx) = ...
+                interface_locations(layer_idx-1) - medium(layer_idx).thickness;
         end
     end
     
     % get the field names required
-    figureFields = fieldnames(figureHandle);
+    figure_fields = fieldnames(figure_handle);
     
     % loop over each available figure
-    for figureDx = 1:length(figureFields)
-        % each plot requires a slighlty different interface plot
-        switch figureFields{figureDx}
+    for figure_idx = 1:length(figure_fields)
+        % each plot requires a slightly different interface plot
+        switch figure_fields{figure_idx}
             
             case {'mesh', 'vector'}
                 % get figure
-                figure(figureHandle.(figureFields{figureDx}))
+                figure(figure_handle.(figure_fields{figure_idx}))
                 % loop over each interface location and plot a horizontal
                 % line
-                for idx = 1:length(interfaceLocations)
+                for idx = 1:length(interface_locations)
                     hold on
                     plot([x_vector(1),x_vector(end)], ...
-                        [interfaceLocations(idx),interfaceLocations(idx)],'r')
+                        [interface_locations(idx),interface_locations(idx)],'r')
                     hold off
                 end
                 
             case {'stress1D','displacement1D'}
                 % get figure
-                figure(figureHandle.(figureFields{figureDx}))
+                figure(figure_handle.(figure_fields{figure_idx}))
                 % loop over each interface location and plot a vertical
                 % line
-                for idx = 1:length(interfaceLocations)
+                for idx = 1:length(interface_locations)
                     hold on
-                    plot([interfaceLocations(idx),interfaceLocations(idx)],...
+                    plot([interface_locations(idx),interface_locations(idx)],...
                         [-1,1],'r')
                     hold off
                 end
                 
             case {'stress2D', 'displacement2D' }
                 % get figure
-                figure(figureHandle.(figureFields{figureDx}))
+                figure(figure_handle.(figure_fields{figure_idx}))
                 
-                for plotDx = 1:2
-                    subplot(1,2,plotDx)
+                for plot_idx = 1:2
+                    subplot(1,2,plot_idx)
                     % loop over each interface location and plot a horizontal
                     % line
-                    for idx = 1:length(interfaceLocations)
+                    for idx = 1:length(interface_locations)
                         hold on
                         plot([x_vector(1),x_vector(end)], ...
-                            [interfaceLocations(idx),interfaceLocations(idx)],'k')
+                            [interface_locations(idx),interface_locations(idx)],'k')
                         hold off
                     end
                 end
@@ -314,28 +344,44 @@ function [figureHandle] = addInterfaces(figureHandle, x_vector, medium)
     end
 end
 
-function [figureHandle] = plot2DDisplacement(fieldValues, figureHandle)
-    % =====================================================================
-    %   PLOT 2D DISPLACEMENTS
-    % =====================================================================
+function [figure_handle] = plot2DDisplacement(field_values, figure_handle)
+    %PLOT2DDISPLACEMENT Plots ux and uz displacement fields.
+    %
+    % DESCRIPTION
+    %   PLOT2DDISPLACEMENT plots the ux and uz displacement field.
+    %
+    % USAGE
+    %   [figure_handle] = plot2DDisplacement(field_values,figure_handle);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
+    
     % plot the z and x displacements
-    figure(figureHandle.displacement2D);
+    figure(figure_handle.displacement2D);
     
     % z displacement
     subplot(1,2,1)
     % plot the z displacement
-    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.z_displacement(:,:))' );
+    imagesc(field_values.x_vector, field_values.z_vector, ...
+        real(field_values.z_displacement(:,:))' );
     title('Real Displacement u_z ');
     
     % x displacment
     subplot(1,2,2)
     % plot the x displacement
-    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.x_displacement(:,:))' );
+    imagesc(field_values.x_vector, field_values.z_vector, ...
+        real(field_values.x_displacement(:,:))' );
     title('Real Displacement u_x');
     
     % add labels
-    for plotDx = 1:2
-        subplot(1,2,plotDx)
+    for plot_idx = 1:2
+        subplot(1,2,plot_idx)
         % labels
         ylabel('Z [m]');
         xlabel('X [m]');
@@ -347,28 +393,43 @@ function [figureHandle] = plot2DDisplacement(fieldValues, figureHandle)
     
 end
 
-function [figureHandle] = plot2DStress(fieldValues, figureHandle)
-    % =====================================================================
-    %   PLOT 2D STRESS
-    % =====================================================================
+function [figure_handle] = plot2DStress(field_values, figure_handle)
+    %PLOT2DSTRESS Plots normal and shear stress fields.
+    %
+    % DESCRIPTION
+    %   PLOT2DSTRESS plots the normal and shear stress fields.
+    %
+    % USAGE
+    %   [figure_handle] = plot2DStress(field_values,figure_handle);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    
     % plot the z and x stress
-    figure(figureHandle.stress2D);
+    figure(figure_handle.stress2D);
     
     % z displacement
     subplot(1,2,1)
     % plot the z displacement
-    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.sigma_zz(:,:))' );
+    imagesc(field_values.x_vector, field_values.z_vector, ...
+        real(field_values.sigma_zz(:,:))' );
     title('Real Stress \sigma_z_z');
     
     % x displacment
     subplot(1,2,2)
     % plot the x displacement
-    imagesc(fieldValues.x_vector, fieldValues.z_vector, real(fieldValues.sigma_xz(:,:))' );
+    imagesc(field_values.x_vector, field_values.z_vector, ...
+        real(field_values.sigma_xz(:,:))' );
     title('Real Stress \sigma_x_z');
     
     % add labels
-    for plotDx = 1:2
-        subplot(1,2,plotDx)
+    for plot_idx = 1:2
+        subplot(1,2,plot_idx)
         % labels
         ylabel('Z [m]');
         xlabel('X [m]');
@@ -378,84 +439,134 @@ function [figureHandle] = plot2DStress(fieldValues, figureHandle)
     end
 end
 
-function [figureHandle] = plot1DDisplacement(fieldValues, figureHandle, xSamplePosition)
-    % =====================================================================
-    %   PLOT 1D DISPLACMENTS
-    % =====================================================================
-    figure(figureHandle.displacement1D);
+function [figure_handle] = plot1DDisplacement(field_values, figure_handle, ...
+        x_sample_position)
+    %PLOT1DDISPLACEMENT Plots ux and uz displacement fields.
+    %
+    % DESCRIPTION
+    %   PLOT1DDISPLACEMENT plots the ux and uz displacement field along the
+    %   coordinates x = x_sample_position, z = z_vector.
+    %
+    % USAGE
+    %   [figure_handle] = plot1DDisplacement(field_values,figure_handle,...
+    %       x_sample_position);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
+    
+    figure(figure_handle.displacement1D);
     
     % calculate the normalised displacement
-    oneDimZ = normMe(real(...
-        fieldValues.z_displacement(xSamplePosition,:)...
+    one_dim_z = normMe(real(...
+        field_values.z_displacement(x_sample_position,:)...
         ));
-    oneDimx = normMe(real(...
-        fieldValues.x_displacement(xSamplePosition,:)...
+    one_dim_x = normMe(real(...
+        field_values.x_displacement(x_sample_position,:)...
         ));
     
     % plot 1D displacement
-    figure(figureHandle.displacement1D);
+    figure(figure_handle.displacement1D);
     % plot z displacement
-    plot(fieldValues.z_vector,oneDimZ,'k')
+    plot(field_values.z_vector,one_dim_z,'k')
     % plot x displacement
     hold on
-    plot(fieldValues.z_vector,oneDimx,'k--')
+    plot(field_values.z_vector,one_dim_x,'k--')
     hold off
     % labels
     title('Displacement 1D');
     xlabel('Depth [\mum]');
     ylabel('Normalised Displacement');
     ylim([-1 1])
-    xlim([fieldValues.z_vector(1) fieldValues.z_vector(end)])
+    xlim([field_values.z_vector(1) field_values.z_vector(end)])
     legend('u_z','u_x')
     
 end
 
-function [figureHandle] = plot1DStress(fieldValues, figureHandle, xSamplePosition)
-    % =====================================================================
-    %   PLOT 1D STRESS
-    % =====================================================================
+function [figure_handle] = plot1DStress(field_values, figure_handle, ...
+        x_sample_position)
+    %PLOT1DSTRESS Plots normal and shear stress fields.
+    %
+    % DESCRIPTION
+    %   PLOT1DSTRESS plots the normal and shear stress field along the
+    %   coordinates x = x_sample_position, z = z_vector.
+    %
+    % USAGE
+    %   [figure_handle] = plot1DStress(field_values,figure_handle,...
+    %       x_sample_position);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
     
     % plot 1D stress
-    figure(figureHandle.stress1D);
+    figure(figure_handle.stress1D);
     
     % calculate the normalised displacement
     one_dim_sigma_zz = normMe(real(...
-        fieldValues.sigma_zz(xSamplePosition,:)...
+        field_values.sigma_zz(x_sample_position,:)...
         ));
-    oneDimSigmaXZ = normMe(real(...
-        fieldValues.sigma_xz(xSamplePosition,:)...
+    one_dim_sigma_xz = normMe(real(...
+        field_values.sigma_xz(x_sample_position,:)...
         ));
     
     % plot z displacement
-    plot(fieldValues.z_vector,one_dim_sigma_zz,'k')
+    plot(field_values.z_vector,one_dim_sigma_zz,'k')
     % plot x displacement
     hold on
-    plot(fieldValues.z_vector,oneDimSigmaXZ,'k--')
+    plot(field_values.z_vector,one_dim_sigma_xz,'k--')
     hold off
     % labels
     title('Stress 1D');
     xlabel('Depth [\mum]');
     ylabel('Normalised Stress');
     ylim([-1 1])
-    xlim([fieldValues.z_vector(1) fieldValues.z_vector(end)])
+    xlim([field_values.z_vector(1) field_values.z_vector(end)])
     legend('\sigma_z_z','\sigma_x_z')
     
     
 end
 
-function [figureHandle] = plotVector(Z,X,fieldValues, figureHandle)
-    % =====================================================================
-    %   PLOT VECTOR
-    % =====================================================================
-    figure(figureHandle.vector);
+function [figure_handle] = plotVector(Z,X,field_values, figure_handle)
+    %PLOTVECTOR Plots ux and uz displacement as a vector field.
+    %
+    % DESCRIPTION
+    %   PLOTVECTOR plots the ux and uz displacement as a vector
+    %   field.
+    %
+    % USAGE
+    %   [figure_handle] = plotVector(Z,Xfield_values,figure_handle);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
+    
+    figure(figure_handle.vector);
     hold off
     %                 subplot(1,2,1)
     % down sample, as there are too many points
     sam = 1;
     
-    %                 % make the u and v vectors for quiver; normalise arrows
-    v = real(fieldValues.x_displacement(1:sam:end,1:sam:end)) / max(abs(fieldValues.x_displacement(:)));
-    u = real(fieldValues.z_displacement(1:sam:end,1:sam:end)) / max(abs(fieldValues.z_displacement(:)));
+    % make the u and v vectors for quiver; normalise arrows
+    v = real(field_values.x_displacement(1:sam:end,1:sam:end)) / ...
+        max(abs(field_values.x_displacement(:)));
+    u = real(field_values.z_displacement(1:sam:end,1:sam:end)) / ...
+        max(abs(field_values.z_displacement(:)));
     
     % need to down-sample mesh grid as well
     Z2 = Z(1:sam:end,1:sam:end);
@@ -466,74 +577,110 @@ function [figureHandle] = plotVector(Z,X,fieldValues, figureHandle)
     % label the graph
     ylabel('z [m]')
     xlabel('x [m]')
-    title('Vector Field of Normalised Displacement')
+    title('Vector Field of Normalized Displacement')
     
     % plot border gap between the borders
     pBG = 0.00005;
     
     % reduce axis size
-    ylim([ min(fieldValues.z_vector)-pBG, max(fieldValues.z_vector)+pBG])
-    xlim([ min(fieldValues.x_vector)-pBG, max(fieldValues.x_vector)+pBG])
+    ylim([ min(field_values.z_vector)-pBG, max(field_values.z_vector)+pBG])
+    xlim([ min(field_values.x_vector)-pBG, max(field_values.x_vector)+pBG])
 end
 
-function [figureHandle] = plotMesh(Z,X,fieldValues,figureHandle)
-    % =====================================================================
-    %   PLOT MESH
-    % =====================================================================
+function [figure_handle] = plotMesh(Z,X,field_values,figure_handle)
+    %PLOTMESH Plots ux and uz displacement as a vector field.
+    %
+    % DESCRIPTION
+    %   PLOTMESH plots the ux and uz displacement as a mesh field.
+    %
+    % USAGE
+    %   [figure_handle] = plotMesh(Z, X, field_values, figure_handle);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
     
-    % scaling factor (add an exaggerated displacment to each coordinate in
+    % scaling factor (add an exaggerated displacement to each coordinate in
     % the Z,X mesh)
-    %     fact  = 1.5e3;
+    
     % some auto scaling
-    fact =  3.5520e-05 / sqrt(max(real(fieldValues.z_displacement(:)).^2)+ max(real(fieldValues.x_displacement(:)).^2));
-    %     fact = 10;
+    fact =  3.5520e-05 / ...
+        sqrt(max(real(field_values.z_displacement(:)).^2) + ...
+        max(real(field_values.x_displacement(:)).^2));
     
     % sampling interval
     samp = 1;
     
     % create horizontal lines
-    horizX = X(1:samp:end,1:samp:end) + fact * real(fieldValues.x_displacement(1:samp:end,1:samp:end));
-    horizY = Z(1:samp:end,1:samp:end) + fact * real(fieldValues.z_displacement(1:samp:end,1:samp:end));
+    horiz_x = X(1:samp:end,1:samp:end) + ...
+        fact * real(field_values.x_displacement(1:samp:end,1:samp:end));
+    horiz_y = Z(1:samp:end,1:samp:end) + ...
+        fact * real(field_values.z_displacement(1:samp:end,1:samp:end));
     
     % create vertical lines
-    vertX = X(1:samp:end,1:samp:end)' + fact * real(fieldValues.x_displacement(1:samp:end,1:samp:end))';
-    vertY = Z(1:samp:end,1:samp:end)' + fact * real(fieldValues.z_displacement(1:samp:end,1:samp:end))';
+    vert_x = X(1:samp:end,1:samp:end)' + ...
+        fact * real(field_values.x_displacement(1:samp:end,1:samp:end))';
+    vert_y = Z(1:samp:end,1:samp:end)' + ...
+        fact * real(field_values.z_displacement(1:samp:end,1:samp:end))';
     
     % open figure
-    figure(figureHandle.mesh);
+    figure(figure_handle.mesh);
     
     
     % plot horizontal lines
-    plot( horizX, horizY, 'k')
+    plot( horiz_x, horiz_y, 'k')
     hold on
-    plot( vertX,  vertY,  'k')
+    plot( vert_x,  vert_y,  'k')
     hold off
     % labels
     title('Mesh Displacement Plot')
     plotBorderGap = 0.00005;
-    ylim( [fieldValues.z_vector(1) - plotBorderGap, fieldValues.z_vector(end) + plotBorderGap])
-    xlim( [fieldValues.x_vector(1) - plotBorderGap, fieldValues.x_vector(end) + plotBorderGap])
     box on
     xlabel('X [m]')
     ylabel('Z [m]')
+    % plot limits
+    ylim( [field_values.z_vector(1) - plotBorderGap, ...
+        field_values.z_vector(end) + plotBorderGap])
+    xlim( [field_values.x_vector(1) - plotBorderGap, ...
+        field_values.x_vector(end) + plotBorderGap])
     % force update
     drawnow;
     
 end
 
-function [figureHandle] = plotSurf(Z,X,fieldValues,figureHandle)
-    % =====================================================================
-    %   PLOT MESH
-    % =====================================================================
+function [figure_handle] = plotSurf(Z,X,field_values,figure_handle)
+    %PLOTSURF Plots normal and shear stress fields with surf.
+    %
+    % DESCRIPTION
+    %   PLOTSURF plots the normal and shear stress fields as a surface
+    %   plot.
+    %
+    % USAGE
+    %   [figure_handle] = plotSurf(field_values,figure_handle);
+    %
+    % INPUTS / OUTPUTS
+    %   See .plotField header.
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 23 - July     - 2019
+    
     % open figure
-    figure(figureHandle.surf);
+    figure(figure_handle.surf);
+    
+    % surf plot with absolute displacement
+    % surf(X,Z, sqrt(real(field_values.z_displacement).^2 + ...
+    %    real(field_values.x_displacement).^2 ) )
     
     % surf plot
-    surf(X,Z, sqrt(real(fieldValues.z_displacement).^2 + real(fieldValues.x_displacement).^2 ) )
-    
-    % surf plot
-    surf(X,Z, real(fieldValues.sigma_zz) )
-    
+    surf(X,Z, real(field_values.sigma_zz) )
     
     % labels
     view(-35,70)

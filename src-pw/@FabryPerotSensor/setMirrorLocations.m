@@ -13,24 +13,24 @@ function obj = setMirrorLocations(obj, interface_locations)
     %   obj.setMirrorLocations(obj, interface_locations);
     %   
     % INPUTS
-    %   interface_locations     - a vector of size [2 X 1], with the inputs
+    %   interface_locations     - A vector of size [2 X 1], with the inputs
     %                             as follows [interface_index_1,
-    %                             interface_index_2]
+    %                             interface_index_2].
     %
     % OPTIONAL INPUTS
-    %   []                      - there are no optional inputs  []
+    %   []                      - There are no optional inputs. []
     %
     % OUTPUTS
-    %   obj.mirror_locations     - the interface locations      []
+    %   obj.mirror_locations    - The interface locations.      []
     %
     % DEPENDENCIES
-    %   []                      - there are no dependencies     []
+    %   []                      - There are no dependencies.    []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 30- July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -98,17 +98,17 @@ function [logical_output] = checkInterfaceInput(interface_location, n_layers)
     %       interface_location, n_layers)
     %   
     % INPUTS
-    %   interface_location      - a [2 X 1] vector
-    %   n_layers                - number of layers in obj.medium
+    %   interface_location      - A [2 X 1] vector.
+    %   n_layers                - Number of layers in obj.medium.
     %
     % OPTIONAL INPUTS
-    %   []                      - there are no optional inputs  []
+    %   []                      - There are no optional inputs. []
     %
     % OUTPUTS
-    %   logical_output          - boolean for if the inputs are valid
+    %   logical_output          - Boolean for if the inputs are valid.
     %
     % DEPENDENCIES
-    %   []                      - there are no dependencies     []
+    %   []                      - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy

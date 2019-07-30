@@ -10,13 +10,13 @@ function obj = disp(obj)
     %   disp(obj);
     %
     % INPUTS
-    %   obj             - Medium object                 []
+    %   obj             - Medium object.                []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   []              - the outputs                   []
+    %   []              - The outputs.                  []
     %
     % DEPENDENCIES
     %   printLineBreaks - plotting === across the screen
@@ -25,7 +25,7 @@ function obj = disp(obj)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 19 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

@@ -25,6 +25,8 @@ classdef ElasticMatrix < handle
     %
     % METHODS
     %
+    %   For information on the methods type:
+    %       help ElasticMatrix.<method_name>
     %
     % ABOUT
     %   author          - Danny Ramasawmy

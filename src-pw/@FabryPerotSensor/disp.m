@@ -11,18 +11,18 @@ function obj = disp(obj)
     %   disp(obj);
     %
     % INPUTS
-    %   obj             - FabryPerotSensor object       []
+    %   obj             - FabryPerotSensor object.      []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   []              - the outputs                   []
+    %   []              - The outputs.                  []
     %
     % DEPENDENCIES
-    %   printLineBreaks;    - prints === across the command window;
-    %   Medium.disp;        - displays the Medium object
-    %   ElasticMatrix;      - inherited class 
+    %   printLineBreaks;    - Prints === across the command window.
+    %   Medium.disp;        - Displays the Medium object.
+    %   ElasticMatrix;      - Inherited class. 
     %
     % ABOUT
     %   author          - Danny Ramasawmy

@@ -1,37 +1,89 @@
-function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitudes temp] = ...
-        calculateMatrixModel( medium, frequencyVec, angleVec, returnFieldVariable, varargin )
-    %% Solve_Matrix_Model - v1.0 Date: 2018-
+function [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+        calculateMatrixModel(medium, frequency_vec, angle_vec, return_field_var)
+    %CALCULATEMATRIXMODEL Partial-wave method in frequency-angle.
     %
-    % Author    :   Danny Ramasawmy
-    %               rmapdrr@ucl.ac.uk
-    %               dannyramasawmy@gmail.com
-    % Date      :   2019 - 01 - 17 -  created
+    % DESCRIPTION
+    %   CALCULATEMATRIXMODEL is an implementation of the partial-wave model
+    %   in frequency-angle. See documentation/REFERENCES.txt for more
+    %   detail on the underlying model. This function firstly does some
+    %   pre-calcualations for parameters such as the number of layers and
+    %   the total commulative thickness. After this, there is a frequency
+    %   and angle for loop. For every combination of angle and frequency:
+    %   1) the wave-vectors and polarisations for every partial wave in
+    %   each layer are calculated, 2) the field matrix is calculated, 3)
+    %   the system matrix is constructed, 4) the determinant of the
+    %   system-matrix is found, 5) the partial-wave-amplitudes are
+    %   calculated, 6) the interface displacement and stresses are
+    %   calculated.
     %
+    %   NOTE: This function will be merged with calculateMatrixModelKf.
     %
-    % Description
-    %   Solves the partial wave model.
-    %       1 = x direction
-    %       3 = z direction
+    % USEAGE
+    %   [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+    %       calculateMatrixModel(...
+    %       medium, frequency_vec, angle_vec, return_field_var);
     %
-    %       INPUTS:
-    %           medium - medium class
+    % INPUTS
+    %   medium              - An object from the Medium class.  []
+    %   frequency_vec       - A vector of frequencies.          [Hz]
+    %   angle_vec           - A vector of angles.               [degrees]
+    %   return_field_var    - A boolean on whether to return the
+    %                         field-variables.
     %
-    %       OUTPUTS
-    %           displacements at each interface
+    % OPTIONAL INPUTS
+    %   []              - There are no optional inputs.         []
     %
-    % ERROR     :   2019 - 01 - 17
-    %           :   FIND ME - need to check the first layer information
-    %           :   2019 - 01 - 31 - some error in the reflection and
-    %           transmisison coefficients
+    % OUTPUTS
+    %   metrics                     - Determinant map of the system matrix
+    %                                 of size frequency_vec X angle_vec.
+    %   field_vars.                 - The field variables, i.e., stress and
+    %                                 displacement, returned as a structure.
+    %     - field_vars(idx).upper   - idx, refers to the layer, upper and
+    %     - field_vars(idx).lower     lower refer to what side of the
+    %                                 interface the field variable has been
+    %                                 calculated at.
+    %   partial_wave_amplitudes     - The partial_wave_amplitudes is of
+    %                                 size n_freqs X n_angles X
+    %                                 n_amplitudes. These have been
+    %                                 normalsied by the amplitude of the
+    %                                 incident wave.
+    %   unnorm_amplitudes           - The partial-wave-amplitudes but
+    %                                 not-normalised.
     %
+    % DEPENDENCIES
+    %   []              - There are no dependencies.            []
     %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 17 - January  - 2019
+    %   last update     - 30 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
+    
     % =====================================================================
-    %   ALTERNATIVE FUNCTIONS
+    %   ALTERNATIVE FUNCTION
     % =====================================================================
     
     % the dispersion calculation will not return the field variables
-    if returnFieldVariable ~= 1
-        fieldVariables = 0;
+    if return_field_var ~= 1
+        field_vars = 0;
     end
     
     % =====================================================================
@@ -39,45 +91,72 @@ function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitu
     % =====================================================================
     
     % final phase velocity
-    phaseVel = sqrt(medium(1).stiffness_matrix(1,1) / medium(1).density);
+    phase_velocity = sqrt(medium(1).stiffness_matrix(1,1) /...
+        medium(1).density);
     
     % the number of layers
-    numLayers = length(medium);
+    num_layers = length(medium);
     
     % the number of interfaces
-    numInterfaces = numLayers - 1;
+    num_interfaces = num_layers - 1;
     
     % INTERFACE LOCATIONS =================================================
     
     % get the position of each interface, 0 is at the bottom halfspace interface
-    cumulativeThickness = 0e-6;
-    itfcPosition(numLayers-1) = cumulativeThickness;
+    cumulative_thickness = 0e-6;
+    itfc_position(num_layers-1) = cumulative_thickness;
     % loop over layers in the medium and extract thickness
-    for int_dx = numLayers-1:-1:2
+    for int_dx = num_layers-1:-1:2
         % sum thicknesses apart from the 1 & N layers  (halfspaces)
-        cumulativeThickness = cumulativeThickness + medium(int_dx).thickness;
+        cumulative_thickness = cumulative_thickness + medium(int_dx).thickness;
         % interface position
-        itfcPosition(int_dx-1) = cumulativeThickness;
+        itfc_position(int_dx-1) = cumulative_thickness;
     end
     % set first boundary to be 0
-    itfcPosition = itfcPosition - max(itfcPosition);
+    itfc_position = itfc_position - max(itfc_position);
     
+    % =====================================================================
+    %   INTIALISE
+    % =====================================================================
+    % initalise outputs
+    mat_prop(num_layers).alpha = [];
+    mat_prop(num_layers).stiffness_matrix = [];
+    mat_prop(num_layers).p_vec = [];
+    
+    
+    % initalise field matrices
+    field_matrices(num_layers).upper = [];
+    field_matrices(num_layers).lower = [];
+    itfc_phase(num_layers).up = [];
+    itfc_phase(num_layers).dw = [];
+    
+    
+    another_length = num_interfaces*4;
+    unnorm_amplitudes = ...
+        zeros(length(frequency_vec), length(angle_vec),another_length ) ;
+    % partial wave amplitudes
+    partial_wave_amplitudes = ...
+        zeros(length(frequency_vec), length(angle_vec),another_length ) ;
+    
+    metrics = zeros(length(frequency_vec), length(angle_vec));
+    
+            
     % =====================================================================
     %   ANGLE - FREQUENCY LOOP
     % =====================================================================
     
-    for freqIdx = 1:length(frequencyVec)
+    for freq_idx = 1:length(frequency_vec)
         % loop oover the different angles
-        for angleIdx = 1:length(angleVec)
+        for angle_idx = 1:length(angle_vec)
             
             % basis of phase speed from first layer
             % angle and phase velocity
-            angle = angleVec(angleIdx);
+            angle = angle_vec(angle_idx);
             theta = angle * pi /180;
             
-            cp = phaseVel / sin(theta);
+            cp = phase_velocity / sin(theta);
             % frequency
-            omega = 2* pi * frequencyVec(freqIdx);
+            omega = 2* pi * frequency_vec(freq_idx);
             k = omega / cp ;
             
             % =============================================================
@@ -85,58 +164,54 @@ function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitu
             % =============================================================
             
             % loop over the medium layers and extract the important properties
-            %   alpha - partial wave amplitudes
-            %   stiffness matrix - stiffness matrix for each material
-            %   p_vec - polarisation of each partial wave
+            %   alpha               - partial wave amplitudes
+            %   stiffness_matrix    - stiffness matrix for each material
+            %   p_vec               - polarization of each partial wave
+            
             for layIdx = 1:length(medium)
-                [ matProp(layIdx).alpha, matProp(layIdx).stiffness_matrix, matProp(layIdx).pVec ] = ...
-                    calculateAlphaCoefficients(...
+                [ mat_prop(layIdx).alpha, mat_prop(layIdx).stiffness_matrix,...
+                    mat_prop(layIdx).pVec ] = calculateAlphaCoefficients(...
                     medium(layIdx).stiffness_matrix, cp, medium(layIdx).density );
             end
-            
-            
             
             % =================================================================
             %   CALCULATE FIELD MATRICIES AND BUILD GLOBAL MATRIX
             % =================================================================
             
-            % initalise global matrix #### FIND ME ### check if liquid or soild
-            %
-            globalMatrixLength = numInterfaces * 4 - 1;
-            sys_mat = zeros(globalMatrixLength);
-            knowns = zeros(globalMatrixLength,1);
             
             % calculate field matrices for each layer with the relative
             % interface positions
-            for ifcIdx = 1:numInterfaces
+            for ifc_idx = 1:num_interfaces
                 % which material layer
-                idx_up = ifcIdx;
-                idx_lw = ifcIdx + 1;
+                idx_up = ifc_idx;
+                idx_lw = ifc_idx + 1;
                 
                 % upper field matrix of interface
-                [fieldMatrices(ifcIdx).upper, itfcPhase(ifcIdx).up  ]   = ...
+                [field_matrices(ifc_idx).upper, itfc_phase(ifc_idx).up  ]   = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_up).alpha, k, itfcPosition(ifcIdx), matProp(idx_up).stiffness_matrix, matProp(idx_up).pVec );
+                    mat_prop(idx_up).alpha, k, itfc_position(ifc_idx), ...
+                    mat_prop(idx_up).stiffness_matrix, mat_prop(idx_up).pVec );
                 
                 % lower field matrix of interface
-                [fieldMatrices(ifcIdx).lower, itfcPhase(ifcIdx).dw ]    = ...
+                [field_matrices(ifc_idx).lower, itfc_phase(ifc_idx).dw ]    = ...
                     calculateFieldMatrixAnisotropic(...
-                    matProp(idx_lw).alpha, k, itfcPosition(ifcIdx), matProp(idx_lw).stiffness_matrix, matProp(idx_lw).pVec );
+                    mat_prop(idx_lw).alpha, k, itfc_position(ifc_idx), ...
+                    mat_prop(idx_lw).stiffness_matrix, mat_prop(idx_lw).pVec );
             end
             
             % scaling factor for the field matrices as the stress equations
             % are significantly larger, this is sometimes 1
-            scaleFm = omega^2 * medium(2).density;
+            scale_fac = omega^2 * medium(1).density;
             
             
             % initalise the global matrix
-            globalMatrix = zeros(numInterfaces*4, numLayers*4);
+            global_matrix = zeros(num_interfaces*4, num_layers*4);
             
             % build system matrix - loop over the number of interfaces
-            for ifcIdx = 1:numInterfaces
+            for ifc_idx = 1:num_interfaces
                 
                 % relative indexs for where the field matricies are placed
-                indFactor = ((ifcIdx - 1) * 4 );
+                indFactor = ((ifc_idx - 1) * 4 );
                 indUp1 = indFactor + 1;
                 indUp2 = indFactor + 4;
                 
@@ -144,15 +219,15 @@ function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitu
                 indLw2 = indFactor + 8;
                 
                 % upper side of each interface
-                globalMatrix(indUp1:indUp2, indUp1:indUp2) = ...
-                    fieldMatrices(ifcIdx).upper;
+                global_matrix(indUp1:indUp2, indUp1:indUp2) = ...
+                    field_matrices(ifc_idx).upper;
                 % lower side of the interface
-                globalMatrix(indUp1:indUp2, indLw1:indLw2) = ...
-                    -fieldMatrices(ifcIdx).lower;
+                global_matrix(indUp1:indUp2, indLw1:indLw2) = ...
+                    -field_matrices(ifc_idx).lower;
                 
                 % scale the stress rows
-                globalMatrix([indUp1+2,indUp2],:) = ...
-                    globalMatrix([indUp1+2,indUp2],:) ./ scaleFm;
+                global_matrix([indUp1+2,indUp2],:) = ...
+                    global_matrix([indUp1+2,indUp2],:) ./ scale_fac;
                 
             end
             
@@ -168,75 +243,56 @@ function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitu
             % where b is the knowns of the equation
             % x is the amplitude vector of the partial waves
             % and A is the global matrix
-            knowns = -globalMatrix(:,[2, 4, end-3 ,end-1]) * ...
+            knowns = -global_matrix(:,[2, 4, end-3 ,end-1]) * ...
                 [0; B_1; 0; 0];
             % build system matrix
-            sys_mat = globalMatrix(:,[1,3,5:end-4,end-2,end]);
+            sys_mat = global_matrix(:,[1,3,5:end-4,end-2,end]);
             
             % inverse system of equations
             output = sys_mat \ knowns;
             
-            unnormalised_amplitudes(freqIdx, angleIdx, :) = output;
+            unnorm_amplitudes(freq_idx, angle_idx, :) = output;
             % partial wave amplitudes
-            partial_wave_amplitudes(freqIdx, angleIdx, :) = ...
+            partial_wave_amplitudes(freq_idx, angle_idx, :) = ...
                 zeros(size(output));
             
-            % DEBUG direct comparison for  F - S - S
-            %{
-                        knowns2 = -global_matrix([1,3:end],[4]) * B_1;
-            
-            sys_mat2 = global_matrix([1,3:end],[3,5:end-4,end-2,end]);
-            
-            % inverse system of equations
-            output2 = sys_mat2 \ knowns2;
-            %}
-            
-            % DEBUG metrics for dispersion analysis
-            %{
-            % output metrics for dispersion analysis
-            %             metrics.detr( freq_idx, angle_idx )     = det(  LHS);
-            %             metrics.cond( freq_idx, angle_idx )     = cond( LHS);
-            %             metrics.sysM( freq_idx, angle_idx ).S   = LHS       ;
-            %             metrics.rank( freq_idx, angle_idx )     = rank( LHS);
-            %}
-            %             metrics( freq_idx, angle_idx ) = -abs(cond(sys_mat));
-            metrics( freqIdx, angleIdx )     = (det(  sys_mat));
+            metrics( freq_idx, angle_idx )     = (det(  sys_mat));
             
             % FIND ME DEBUG
             % loop over each layer
-            for layerIdx = 1:numLayers
+            for layerIdx = 1:num_layers
                 switch layerIdx
                     
                     case 1
                         % first layer / reflection coefficient
-                        partial_wave_amplitudes(freqIdx, angleIdx, 1) = ...
-                            output(1) / B_1 / matProp(layerIdx).alpha(1);
-                        partial_wave_amplitudes(freqIdx, angleIdx, 2) = ...
+                        partial_wave_amplitudes(freq_idx, angle_idx, 1) = ...
+                            output(1) / B_1 / mat_prop(layerIdx).alpha(1);
+                        partial_wave_amplitudes(freq_idx, angle_idx, 2) = ...
                             output(2) / B_1 ;
                         
                         
                         
-                    case numLayers
+                    case num_layers
                         output_idx = 4*(layerIdx - 2)+ [3,4];
                         % last layer/ transmission coefficient
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(2)) = ...
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(1)) = ...
+                            output(output_idx(1)) / B_1 / mat_prop(layerIdx).alpha(1);
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(2)) = ...
                             output(output_idx(2)) / B_1 ;
                         
                     otherwise
                         % intermediate coefficients
                         output_idx = 4*(layerIdx - 2)+ [3,4,5,6];
                         % shear outputs
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(1)) = ...
-                            output(output_idx(1)) / B_1 / matProp(layerIdx).alpha(1);
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(2)) = ...
-                            output(output_idx(2)) / B_1 / matProp(layerIdx).alpha(1);
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(1)) = ...
+                            output(output_idx(1)) / B_1 / mat_prop(layerIdx).alpha(1);
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(2)) = ...
+                            output(output_idx(2)) / B_1 / mat_prop(layerIdx).alpha(1);
                         
                         % compressional outputs
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(3)) = ...
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(3)) = ...
                             output(output_idx(3)) / B_1 ;
-                        partial_wave_amplitudes(freqIdx, angleIdx, output_idx(4)) = ...
+                        partial_wave_amplitudes(freq_idx, angle_idx, output_idx(4)) = ...
                             output(output_idx(4)) / B_1 ;
                         
                 end
@@ -277,51 +333,51 @@ function [metrics, fieldVariables, partial_wave_amplitudes, unnormalised_amplitu
             %   CALCULATE OUTPUT DISPLACEMENTS - FULL ELASTIC MATRIX
             % =============================================================
             
-            if returnFieldVariable == 1
+            if return_field_var == 1
                 % loop over th enumber of interfaces and calcualte the dispalcement
-                if numInterfaces == 1
+                if num_interfaces == 1
                     % for a single interface
                     idx = 1;
                     
                     % all field variables uppers
-                    fieldVariables(idx).upper(freqIdx, angleIdx, 1:4) = ...
-                        fieldMatrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
+                    field_vars(idx).upper(freq_idx, angle_idx, 1:4) = ...
+                        field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
                     
                     % all field variables lower
-                    fieldVariables(idx).lower(freqIdx, angleIdx, 1:4) = ...
-                        fieldMatrices(idx).lower(:,[2 4]) * output(3:4);
+                    field_vars(idx).lower(freq_idx, angle_idx, 1:4) = ...
+                        field_matrices(idx).lower(:,[2 4]) * output(3:4);
                 else
                     % for more than one interface
-                    for idx = 1:numInterfaces
+                    for idx = 1:num_interfaces
                         choice = (idx - 2)*4 + 3;
                         
                         switch idx
                             case 1
                                 % all field variables uppers
-                                fieldVariables(idx).upper(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
+                                field_vars(idx).upper(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).upper(:,[1 3 4]) * [output(1:2) ; B_1 ];
                                 
                                 % all field variables lower
-                                fieldVariables(idx).lower(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).lower(:,:) * output(3:6);
+                                field_vars(idx).lower(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).lower(:,:) * output(3:6);
                                 
-                            case numInterfaces
+                            case num_interfaces
                                 % all field variables upper
-                                fieldVariables(idx).upper(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).upper(:,:) * output(choice:choice+3);
+                                field_vars(idx).upper(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).upper(:,:) * output(choice:choice+3);
                                 
                                 % all field variables lower
-                                fieldVariables(idx).lower(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).lower(:,[2,4]) * output(choice+4:end);
+                                field_vars(idx).lower(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).lower(:,[2,4]) * output(choice+4:end);
                                 
                             otherwise
                                 % all field variables upper
-                                fieldVariables(idx).upper(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).upper(:,:) * output(choice:choice+3);
+                                field_vars(idx).upper(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).upper(:,:) * output(choice:choice+3);
                                 
                                 % all field variables lower
-                                fieldVariables(idx).lower(freqIdx, angleIdx, 1:4) = ...
-                                    fieldMatrices(idx).lower(:,:) * output(choice+4:choice+7);
+                                field_vars(idx).lower(freq_idx, angle_idx, 1:4) = ...
+                                    field_matrices(idx).lower(:,:) * output(choice+4:choice+7);
                         end
                     end
                 end % if num_of_interface

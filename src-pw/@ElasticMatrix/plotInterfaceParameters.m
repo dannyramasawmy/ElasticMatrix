@@ -17,10 +17,10 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
     %   obj.plotInterfaceParameters;
     %
     % INPUTS
-    %   obj.x_displacement      - displacement in x direction [m]
-    %   obj.z_displacement      - displacement in z direction [m]
-    %   obj.stress_zz           - normal stress
-    %   obj.stress_xz           - shear stress
+    %   obj.x_displacement      - Displacement in x direction. [m]
+    %   obj.z_displacement      - Displacement in z direction. [m]
+    %   obj.stress_zz           - Normal stress.
+    %   obj.stress_xz           - Shear stress.
     %
     %   Each of the above properties is a structure with .lower or .upper.
     %   For example: obj.z_displacement(interface_idx).upper and
@@ -30,19 +30,19 @@ function [figureHandle, obj] = plotInterfaceParameters( obj )
     %   between each layer. See documentation/REFERENCES.txt.
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs.  []
     %
     % OUTPUTS
-    %   figure_handle   - the figure_handle is returned []
+    %   figure_handle   - The figure_handle is returned. []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

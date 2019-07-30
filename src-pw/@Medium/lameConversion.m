@@ -14,23 +14,23 @@ function [stiffness_matrix]  = lameConversion(lambda, mu)
     %   stiffness_matrix = Medium.lameConversion(lambda, mu);
     %
     % INPUTS
-    %   lambda          - the first Lame coefficient    [units]
-    %   mu              - the second Lame coefficient   [units]
+    %   lambda          - The first Lame coefficient.   [Pa]
+    %   mu              - The second Lame coefficient.  [Pa]
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   stiffness_matrix - 6 X 6 stiffness matrix       [Pa]
+    %   stiffness_matrix - 6 X 6 stiffness matrix.      [Pa]
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 20 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

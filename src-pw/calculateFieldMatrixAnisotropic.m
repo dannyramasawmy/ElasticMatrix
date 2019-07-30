@@ -15,20 +15,20 @@ function [ field_matrix, phase_interface ] = calculateFieldMatrixAnisotropic(...
     %       alpha, k, interface_position, stf_material, p_vector )
     %
     % INPUTS
-    %   alpha           - the ratio of vertical to horizontal wavenumber 
-    %                     that is returned from calculateAlphaCoefficients 
-    %   k               - horizontal wavenumber         [1/m]
-    %   itfc_position   - interface positions between material layers [m]
-    %   stf_material    - the materials 6X6 stiffness matrix          [Pa]
-    %   p_vector        - polarization vector returned from 
-    %                     calculateAlphaCoefficients                  []
+    %   alpha           - The ratio of vertical to horizontal wavenumber 
+    %                     that is returned from calculateAlphaCoefficients. 
+    %   k               - Horizontal wavenumber.                      [1/m]
+    %   itfc_position   - Interface positions between material layers.[m]
+    %   stf_material    - The materials 6X6 stiffness matrix.         [Pa]
+    %   p_vector        - Polarization vector returned from 
+    %                     calculateAlphaCoefficients.                 []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs []
+    %   []              - There are no optional inputs                []
     %
     % OUTPUTS
-    %   field_matrix    - 4X4 field matrix                            []
-    %   phase_interface - the phase at the interface                  []
+    %   field_matrix    - [4X4] field matrix.                         []
+    %   phase_interface - The phase at the interface.                  []
     %
     % DEPENDENCIES
     %   calculateAlphaCoefficients() - requires outputs from this function
@@ -37,7 +37,7 @@ function [ field_matrix, phase_interface ] = calculateFieldMatrixAnisotropic(...
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 10 - January  - 2019
-    %   last update     - 25 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

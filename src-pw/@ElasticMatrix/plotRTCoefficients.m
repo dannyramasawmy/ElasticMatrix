@@ -30,22 +30,22 @@ function [figure_handle, obj] = plotRTCoefficients(obj)
     %   obj.plotRTCoefficients;
     %
     % INPUTS
-    %   []              - there are no inputs           []
+    %   []              - There are no inputs.           []
     %
     % OPTIONAL INPUTS
-    %   []              - there are no optional inputs  []
+    %   []              - There are no optional inputs.  []
     %
     % OUTPUTS
-    %   figure_handle   - the figure_handle is returned []
+    %   figure_handle   - The figure_handle is returned. []
     %
     % DEPENDENCIES
-    %   []              - there are no dependencies     []
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 22 - July     - 2019
+    %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
