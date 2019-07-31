@@ -19,7 +19,7 @@ cls;
 % Firstly the geometry of the Fabry-Perot sensor needs to be defined 
 mySensorGeometry = Medium('water',Inf, 'glass',175.9e-6, 'air',Inf);
 
-% the sensor geometry can be used to initalise the Fabry-perot class
+% the sensor geometry can be used to initialize the Fabry-perot class
 sensor = FabryPerotSensor( mySensorGeometry );
 
 % =========================================================================
@@ -28,11 +28,11 @@ sensor = FabryPerotSensor( mySensorGeometry );
 % as the FabryPerotSensor inherits the ElasticMatrix, all of the functions
 % available to ElasticMatrix are also available to FabryPerotSensor
 % set the range of angles and frequencies
-sensor.setAngle( linspace(0, 45, 200) );
-sensor.setFrequency( linspace(0.1e6, 50e6, 200) );
+sensor.setAngle( linspace(0, 45, 75) );
+sensor.setFrequency( linspace(0.1e6, 50e6, 100) );
 
 % set the interrogating beam spot diameter of the Fabry-Perot sensor
-sensor.setSpotSize( 10e-6 );
+sensor.setSpotDiameter( 10e-6 );
 
 % set the interrogating laser beam profile of the Fabry-Perot sensor, this
 % can be either 'collimated' or 'gaussian'
@@ -58,7 +58,7 @@ sensor.calculateDirectivity;
 % to plot the sensors frequency response 
 [figureHandle(2)] = sensor.plotDirectivity('normal');
 
-% to plot the directivity normalised to 1
+% to plot the directivity normalized to 1
 [figureHandle(3)] = sensor.plotDirectivity('normalise');
 
 % to plot the directivity on a linear scale
@@ -84,13 +84,13 @@ sfg;
     %       - imag          - real part of obj.directivity
     %       - phase         - phase of obj.directivity
     %       - abs           - obj.directivity
-    %       - linear        - normalised to normal incidence respose obj.directivity
+    %       - linear        - normalized to normal incidence response obj.directivity
     %       - decibel       - decibel of previous
-    %       - normalise     - normalised to maximum value of normal incidence
+    %       - normalise     - normalized to maximum value of normal incidence
     %       - normal        - normal incidence response
     
 
-% to get the data normalised between 0 and 1
+% to get the data normalized between 0 and 1
 myDirData = sensor.getDirectivity('normalise');
 
 % =========================================================================
@@ -102,8 +102,8 @@ sensor.calculateDispersionCurvesCoarse;
 
 % plot the dispersion curve data
 hold on
-plot(-sensor.dispersion_curves.y, sensor.dispersion_curves.x/1e6,'k.')
-plot(sensor.dispersion_curves.y, sensor.dispersion_curves.x/1e6,'k.')
+plot(-sensor.dispersion_curves.k, sensor.dispersion_curves.f/1e6,'k.')
+plot(sensor.dispersion_curves.k, sensor.dispersion_curves.f/1e6,'k.')
 hold off
 
 

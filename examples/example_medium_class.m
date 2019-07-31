@@ -7,7 +7,7 @@
 %
 %   This script will run through the different functionalities of the
 %   Medium class. A Medium object contains the geometry information for the
-%   multilayered structure as well as the material properties.
+%   multi-layered structure as well as the material properties.
 %
 % =========================================================================
 %   INTIALISE THE MEDIUM
@@ -21,10 +21,10 @@ Medium.availableMaterials;
 % To add new materials, type <edit materialList.m > and follow the format
 % that is given there. 
 % Taking some of the materials from the printed list, the Medium class can
-% now be initialised with the class constructor. This
+% now be initialized with the class constructor. This
 % takes input arguments of the material, followed by its thickness in [m].
 
-% initalise a 4 - layered medium
+% initialize a 4 - layered medium
 myMediumObject = Medium('water',Inf, 'glass',0.001, 'aluminium',0.001, 'air', Inf);
 % print the medium to the command window
 printLineBreaks
@@ -39,7 +39,7 @@ printLineBreaks;
 % Note, the length(myMediumObject) is 4 ...
 disp(['myMediumObject has a length of : ',num2str(length(myMediumObject))])
 % ... The object can be indexed, where each index corresponds to the order
-% of the layers when initalised. An individual layer can be viewed by
+% of the layers when initialized. An individual layer can be viewed by
 % choosing the appropriate index, for example to display the second layer..
 disp('The properties of the second layer, >> myMediumObject(2)  ')
 myMediumObject(2).disp;
@@ -72,9 +72,9 @@ myMediumObject.disp;
 % =========================================================================
 
 % The stiffness coefficients of each layer are directly related to its
-% soundspeeed (isotropic case). The Medium class uses the stiffness matrix
+% sound-speed (isotropic case). The Medium class uses the stiffness matrix
 % for its calculations. However, for an isotropic case usually only
-% soundspeeds or Lame constants are known. The Medium class provides two
+% sound-speeds or Lame constants are known. The Medium class provides two
 % static functions to generate the related stiffness matrix.
 
 % if only the compressional sound speed, shear speed and density are known
@@ -91,10 +91,10 @@ mu = 2.8900e+10;
 % get the stiffness coefficient matrix
 materialStiffnessMatrix = myMediumObject.lameConversion(lambda, mu);
 
-% The coeffients can then be used to update one of the material layers, for
+% The coefficients can then be used to update one of the material layers, for
 % example to update the stiffness coefficients of layer 2
 myMediumObject.setStiffnessMatrix(2, materialStiffnessMatrix);
-% dont forget to update the density too
+% remember to update the density 
 myMediumObject.setDensity(2, density);
 
 

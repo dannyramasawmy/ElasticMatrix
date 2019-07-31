@@ -17,19 +17,19 @@
 %   MODEL
 % =========================================================================
 % firstly run the model over a range or single pair of angle(s) and 
-% frequencie(s). Ensure that the angle-frequency pair you wish to plot the
+% frequencies(s). Ensure that the angle-frequency pair you wish to plot the
 % fields for are included within the calculations. 
 
-% initalise the medium
+% initialize the medium
 medium = Medium(...
     'water',Inf, 'aluminium',0.001, 'water',Inf);
 
-% initalise ElasticMatrix class
+% initialize ElasticMatrix class
 model = ElasticMatrix(medium);
 % set some properties
 model.setFrequency(linspace(0.1e6, 10e6, 100));
 model.setAngle(linspace(0,89,100));
-% run model to calcualte the partial wave coefficients, these are used to
+% run model to calculate the partial wave coefficients, these are used to
 % plot the field values
 model.calculate;
 
@@ -54,7 +54,7 @@ Xhf = linspace( -1.5e-3, 1.5e-3, samplePoints);
 %   PLOTTING WITH DIFFERENT TIME INCREMENTS (FOR MAKING MOVIES)
 % =========================================================================
 
-% uncomment lines below to initalise and open video writer class
+% uncomment lines below to initialize and open video writer class
 % vS = VideoWriter('TestAlPlateSmode.mp4','MPEG-4'); % ## UNCOMMENT TO WRITE MOVIE # 
 % vA = VideoWriter('TestAlPlateAmode.mp4','MPEG-4'); % ## UNCOMMENT TO WRITE MOVIE # 
 % open(vS) % ## UNCOMMENT TO WRITE MOVIE ## 
@@ -62,7 +62,7 @@ Xhf = linspace( -1.5e-3, 1.5e-3, samplePoints);
 
 
 % create time array
-tvec =  linspace(0e-6, 0.5e-6, 100);
+tvec =  linspace(0e-6, 0.5e-6, 200);
 
 for tdx = 1:length(tvec)
     
@@ -74,8 +74,8 @@ for tdx = 1:length(tvec)
     if tdx == 1
         % any plotting argument is acceptable, i.e. 'surf' see:
         % help plotField
-        [figH1] = model.plotField(fieldS, 'Mesh');
-        [figH2] = model.plotField(fieldA, 'Mesh');
+        [figH1] = model.plotField(fieldS, 'mesh');
+        [figH2] = model.plotField(fieldA, 'mesh');
     else
         
         % for the REMAINNG LOOPS give the plot-field the figure handle to
@@ -84,15 +84,15 @@ for tdx = 1:length(tvec)
         model.plotField(fieldS, figH1);
         
         % force plot
-        % frameS = getframe(gcf); % ## UNCOMMENT TO WRITE MOVIE ##  
-        % writeVideo(vS, frameS); % ## UNCOMMENT TO WRITE MOVIE ##
+%         frameS = getframe(gcf); % ## UNCOMMENT TO WRITE MOVIE ##  
+%         writeVideo(vS, frameS); % ## UNCOMMENT TO WRITE MOVIE ##
         
         % plot the anti symmetric mode
         model.plotField(fieldA, figH2);
         
         % force plot
-        % frameA = getframe(gcf); % ## UNCOMMENT TO WRITE MOVIE ##
-        % writeVideo(vA, frameA); % ## UNCOMMENT TO WRITE MOVIE ##
+%         frameA = getframe(gcf); % ## UNCOMMENT TO WRITE MOVIE ##
+%         writeVideo(vA, frameA); % ## UNCOMMENT TO WRITE MOVIE ##
         
     end     
 end

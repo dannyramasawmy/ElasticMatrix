@@ -7,7 +7,7 @@
 %
 %   This script will demonstrate how to calculate slowness profiles using
 %   the Medium class. Please refer to the example_medium_class.m script if
-%   unfamilar with the class attibutes and methods.
+%   unfamiliar with the class attributes and methods.
 
 %% PLOT SLOWNESS CURVES
 % =========================================================================

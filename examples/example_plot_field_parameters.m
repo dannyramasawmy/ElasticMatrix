@@ -13,19 +13,19 @@
 %   MODEL
 % =========================================================================
 % firstly run the model over a range or single pair of angle(s) and 
-% frequencie(s). Ensure that the angle-frequency pair you wish to plot the
+% frequencies(s). Ensure that the angle-frequency pair you wish to plot the
 % fields for are included within the calculations. 
 
-% initalise the medium
+% initialize the medium
 medium = Medium(...
     'water',Inf, 'aluminium',0.001, 'water',Inf);
 
-% initalise ElasticMatrix class
+% initialize ElasticMatrix class
 model = ElasticMatrix(medium);
 % set some properties
 model.setFrequency(linspace(0.1e6, 10e6, 100));
 model.setAngle(linspace(0,89,100));
-% run model to calcualte the partial wave coefficients, these are used to
+% run model to calculate the partial wave coefficients, these are used to
 % plot the field values
 model.calculate;
 
@@ -78,19 +78,19 @@ disp('[figHand] = model.plotField(outputField, vararginPlottingInputs );')
 disp('Note: Z = 0 is the interface between the first and second layer')
 
 % to plot the normal and transverse displacement along the line x=0 z=Z_hf
-[figHand] = model.plotField(outputField, '1DDisplacement');
+[figHand] = model.plotField(outputField, 'displacement1D');
 
 % to plot the normal and transverse displacement along the line x=0 z=Z_hf
-[figHand] = model.plotField(outputField, '1DStress');
+[figHand] = model.plotField(outputField, 'stress1D');
 
 % to plot the 2D fields for displacement and stress
-[figHand] = model.plotField(outputField, '2DDisplacement', '2DStress');
+[figHand] = model.plotField(outputField, 'displacement2D', 'stress2D');
 
 % to plot a mesh and surf plot of the displacement
-[figHand] = model.plotField(outputField, 'Mesh', 'Surf');
+[figHand] = model.plotField(outputField, 'mesh', 'surf');
 
 % to plot everything
-[figHand] = model.plotField(outputField, 'All');
+[figHand] = model.plotField(outputField, 'all');
 
 % =========================================================================
 %   USING A FIGURE HANDLE STUCTURE AS THE INPUT ARGUMENT
@@ -100,7 +100,7 @@ disp('Note: Z = 0 is the interface between the first and second layer')
 % The .plotField method can take an input argument of a figure handle in
 % this case
 
-% calcualte the field at a certain time
+% calculate the field at a certain time
 timeIndex = 0e-6;
 [outputField] = model.calculateField(...
     chosenFrequency, chosenAngle, {Zhf, Xhf}, timeIndex);
@@ -108,7 +108,7 @@ timeIndex = 0e-6;
 % plot the figure with the input argument for the first step - this creates
 % two new figures where the handles are assigned to
 % newFigureHandle.mesh and newFigureHandle.surf
-newFigureHandle = model.plotField( outputField, 'Mesh', 'Surf');
+newFigureHandle = model.plotField( outputField, 'mesh', 'surf');
 
 % create the new / updated field
 timeIndex = 0.1e-6;
@@ -119,9 +119,6 @@ timeIndex = 0.1e-6;
 % give the figure handle from the previous plotting step - this will update
 % the two figures and not create two new figures
 newFigureHandle = model.plotField( updatedField, newFigureHandle);
-
-disp('Note: for CubicInAs part of the qSV curve is represented in the qL curve')
-
 
 
 

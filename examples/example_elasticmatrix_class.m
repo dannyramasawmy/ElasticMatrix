@@ -6,7 +6,7 @@
 % Date      :   2019-01-25  -   created
 %
 %   This script will run through the different functionalities of the
-%   ElasticMatrix class. An ElasticMatrix object is initalised by a Medium
+%   ElasticMatrix class. An ElasticMatrix object is initialized by a Medium
 %   object (see: example_medium_class for more details). 
 
 
@@ -20,10 +20,10 @@ cls;
 % Firstly a Medium object needs to be created. For more details see the
 % example script : example_medium_class
 
-% initalise the medium
+% initialise the medium
 myMedium = Medium('water',Inf,'aluminium',0.001,'water',Inf);
 
-% ElasticMatrix can now be initalised, the ElasticMatrix class takes the
+% ElasticMatrix can now be initialized, the ElasticMatrix class takes the
 % Medium object as an input argument.
 myModel = ElasticMatrix( myMedium );
 
@@ -39,10 +39,10 @@ myModel.setMedium( myMedium );
 % =========================================================================
 %   SETTING CALCULATION PARAMETERS
 % =========================================================================
-% The paramaters to calculate over are the frequency, angle, wavenumber and
-% phasespeed. Only two need to be set, if more than two are set the code
+% The parameters to calculate over are the frequency, angle, wavenumber and
+% phase-speed. Only two need to be set, if more than two are set the code
 % will calculate over only two in the order frequency -> angle ->
-% phasespeed -> wavenumber .
+% phase-speed -> wavenumber .
 
 % set a range of angles in [deg]
 myModel.setAngle( linspace(0,45,100) );
@@ -61,9 +61,9 @@ myModel.setPhasespeed( linspace(50, 1000, 101) )
 % =========================================================================
 
 % to run the matrix method for the case of an incident compressional wave
-% in the first layer use .calcualte, as mentioned previously, this will
+% in the first layer use .calculate, as mentioned previously, this will
 % first sort the inputs and calculate using the first two parameters in the
-% order frequency -> angle -> phasespeed -> wavenumber
+% order frequency -> angle -> phase-speed -> wavenumber
 myModel.calculate;
 myModel.disp;
 % there are other methods that can be run:

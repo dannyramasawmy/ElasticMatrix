@@ -13,9 +13,9 @@
 %
 % An arc source can be created by summing different frequency plane waves
 % at different angles. This script will demonstrate an ultrasound pulse in
-% water refecting from a water-PVDF interfaces
+% water reflecting from a water-PVDF interfaces
 %
-% This script utilises the parallel computing toolbox
+% This script utilities the parallel computing toolbox
 %
 % ========================================================================
 %   INITALISE MODELS AND SET PARAMETERS
@@ -33,7 +33,7 @@ end
 % medium
 myMedium = Medium('water',0,'PVDF',1);
 
-% initalise elastic matrix
+% initialize elastic matrix
 myModel = ElasticMatrix(myMedium);
 
 % set parameters
@@ -56,11 +56,11 @@ X_hf = linspace(-300e-6,    300e-6,     samples);
 % time vector for movie
 time = linspace(-15e-8, 10e-8,50);
 
-% loop over time + freqeuncy + angle
+% loop over time + frequency + angle
 tic
 parfor tdx = 1:length(time)
     
-    % initalise combined fields
+    % initialize combined fields
     combStressZZ = zeros(length(X_hf), length(Z_hf));
     combStressXZ = zeros(length(X_hf), length(Z_hf));
     

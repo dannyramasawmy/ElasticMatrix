@@ -5,7 +5,7 @@
 %   rmapdrr@ucl.ac.uk
 %
 %   Descriptions:
-%       Plots the parameters (stress/displacemnt) at every interface of the
+%       Plots the parameters (stress/displacement) at every interface of the
 %   multi-layered medium.
 %
 % =========================================================================

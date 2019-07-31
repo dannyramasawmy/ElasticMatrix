@@ -10,7 +10,7 @@
 %   This script demonstrates how to plot dispersion curves using the
 %   ElasticMatrix code and compares it with the output from Disperse [1].
 %   The algorithm implemented is similar to that in [2] however does not 
-%   calcualte the dispersion cuvres in the imaginary domain.
+%   calculate the dispersion curves in the imaginary domain.
 %
 %   [1]B. Pavlakovic, M. Lowe, D. Alleyne, P. Cawley, Disperse: a general
 %       purpose program for creating dispersion curves, in: Review of 
@@ -24,17 +24,17 @@
 % =========================================================================
 %   INITALISE ELASTIC MATRIX CLASS 
 % =========================================================================
-% Firstly the ElasticMatrix object should be initialised using a Medium
+% Firstly the ElasticMatrix object should be initialized using a Medium
 % object
 cls;
 % check what materials already exist with the available materials function
 % Medium.Available_Materials;
 
-% calcualte the medium geometry titanium
+% calculate the medium geometry titanium
 plateMedium = Medium('vacuum',0,'titanium',0.001,'vacuum',1);
 % plateMedium = Medium('vacuum',0,'PVDF',0.001,'vacuum',1);
 
-% initalise the model
+% initialize the model
 model = ElasticMatrix(plateMedium);
 
 % =========================================================================
@@ -50,7 +50,7 @@ model.setPhasespeed(linspace(60, 2000, 1500));
 %   CALCULATE THE DISPERSION CURVES
 % =========================================================================
 
-% calcualte dispersion curves, the code will plot a map of the condition
+% calculate dispersion curves, the code will plot a map of the condition
 % number and show the dispersion curves tracing, this indicates if any of
 % them are not tracing the correct path.
 model.calculateDispersionCurves;

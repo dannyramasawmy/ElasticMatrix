@@ -23,7 +23,7 @@ angleRange = linspace(0.1, 89, 500);
 % define medium
 myMedium = Medium('PVDF2',Inf,'aluminium2',Inf);
 
-% initalise elastic matrix
+% initialize elastic matrix
 myModel = ElasticMatrix(myMedium);
 % set parameters
 myModel.setAngle(angleRange);
@@ -34,7 +34,7 @@ myModel.setFrequency(1e6);
 myModel.calculate;
 
 % this method plots the reflection coefficients
-myModel.plotRCoefficients;
+myModel.plotRTCoefficients;
 
 % calculate reflection and transmission coefficient using the analytical
 % functions from [1] and [2]
@@ -69,7 +69,7 @@ disp(['Mean error TS : ', num2str(mean(errorTS))])
 % define medium
 myMedium = Medium('water',Inf,'aluminium2',Inf);
 
-% initalise elastic matrix
+% initialize elastic matrix
 myModel = ElasticMatrix(myMedium);
 % set parameters
 myModel.setAngle(angleRange);
@@ -80,7 +80,7 @@ myModel.setFrequency(1e6);
 myModel.calculate;
 
 % this function plots the reflection coefficients
-myModel.plotRCoefficients;
+myModel.plotRTCoefficients;
 
 % calculate reflection and transmission coefficient using the analytical
 % functions from [1] and [2]
