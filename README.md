@@ -7,11 +7,11 @@ The ElasticMatrix software implements the partial-wave method [1,3,4] to model e
 
 ### Capabilities
 Some of the code functionality:
-- plotting slowness profiles
-- plotting reflection and transmission coefficients
-- calculating the dispersion curves for simple plate structures (this has a few bugs currently)
-- plotting the, displacement and stress fields
-- calculating the directivity of Fabry-Perot Ultrasound sensors, see [1]
+- Plotting slowness profiles.
+- Plotting reflection and transmission coefficients.
+- Calculating the dispersion curves for simple plate structures (this has a few bugs currently).
+- Plotting the, displacement and stress fields.
+- Calculating the directivity of Fabry-Perot ultrasound sensors, see [1].
 
 ### References
 Reference list:
@@ -56,25 +56,25 @@ Reference list:
 - All functions in src-pw (Except calculateDispersionCurves) have been re-factored to the BUG coding standard.
 
 2019-07-18
-- reorder folders, delete some data and papers from documentation (replaced with a reference list)
+- Reorder folders, delete some data and papers from documentation (replaced with a reference list).
 
 2019-07-16
-- sorting of calculation parameters when calling .calculate needs 2 of 4, frequency + angle/phase-speed/wavenumber
-- examples updated
+- Sorting of calculation parameters when calling .calculate needs 2 of 4, frequency + angle/phase-speed/wavenumber.
+- Examples updated.
 
 2019-07-12
-- Dispersion curve algorithm is much faster
-- examples folder is almost complete
+- Dispersion curve algorithm is much faster.
+- Examples folder is almost complete.
 
 2019-07-04
-- Dispersion curve tracing still needs updating
-- Automatic sorting of calculation parameters (angles, frequencies, wave-numbers, phase-speed) needs updating
-- examples folder is still being populated
+- Dispersion curve tracing still needs updating.
+- Automatic sorting of calculation parameters (angles, frequencies, wave-numbers, phase-speed) needs updating.
+- Examples folder is still being populated.
 
 2019-06-26: 
-- All methods are implemented 
-- dispersion curve tracing needs to be made more robust, use the coarse method for now
-- examples folder is being populated
+- All methods are implemented.
+- Dispersion curve tracing needs to be made more robust, use the coarse method for now.
+- Examples folder is being populated.
 
 2019-05-11:
 - Initial commit, there are a few bugs in the dispersion curve functionality.
