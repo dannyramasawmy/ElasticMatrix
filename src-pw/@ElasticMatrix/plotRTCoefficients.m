@@ -18,13 +18,16 @@ function [figure_handle, obj] = plotRTCoefficients(obj)
     %   The partial_wave_amplitudes property of ElasticMatrix contain the
     %   reflection and transmission coefficients. The
     %   partial_wave_amplitudes property has dimensions:
-    %     - p_w_a = N_FREQ X N_ANGLE X N_AMPLITUDES [complex]
+    %     - p_w_a = n_freq X n_angle X n_amplitudes [complex]
     %   The third (AMPLITUDES) dimension is dependent on the number of
     %   layers used in the model.
-    %     - AMPLITUDES(1)       = shear reflection
-    %     - AMPLITUDES(2)       = compressional reflection
-    %     - AMPLITUDES(end - 1) = shear transmission
-    %     - AMPLITUDES(end)     = compressional transmission
+    %   The partial wave amplitude order:
+    %    
+    %   - amplitudes(1)     - Upwards qSV in 1st layer (reflected). 
+    %   - amplitudes(2)     - Upward qL in 1st layer (reflected). 
+    %   - amplitudes(end)   - Downward qSV in last layer (transmitted). 
+    %   - amplitudes(end-1) - Downward qL in last layer (transmitted).
+    %
     %
     % USEAGE
     %   obj.plotRTCoefficients;
@@ -45,7 +48,7 @@ function [figure_handle, obj] = plotRTCoefficients(obj)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   last update     - 31 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.

@@ -129,24 +129,44 @@ classdef Medium < handle
     %   medium_object = Medium.getAcousticProperties(material_name);
     %       Uses the materialList() function to return the properties for a
     %       selected material.
-    %       material_name       - A string of the material name.
-    %       medium_object       - Returns a Medium object.
+    %       - material_name       - A string of the material name.
+    %       - medium_object       - Returns a Medium object.
     %
     %   stiffness_matrix = Medium.lameConversion(lambda, mu);
     %       Converts the material Lame parameters to a [6 X 6] stiffness
     %       matrix.
-    %       lambda              - The first lame parameter.     [Pa]
-    %       mu                  - The second lame parameter.    [Pa]
-    %       stiffness_matrix    - [6X6] stiffness matrix.       [Pa]
+    %       - lambda              - The first lame parameter.     [Pa]
+    %       - mu                  - The second lame parameter.    [Pa]
+    %       - stiffness_matrix    - [6X6] stiffness matrix.       [Pa]
     %
     %   stiffness_matrix = Medium.soundSpeedDensityConversion(...
     %             compressional_speed, shear_speed, density);
     %       Converts compressional sound-speed, shear-speed and density to
     %       a [6 X 6] stiffness matrix.
-    %       compressional_speed     - Compressional sound-speed.   [m/s]
-    %       shear_speed             - Shear sound-speed.           [m/s]
-    %       density                 - Density.                     [kg/m^3]
-    %       stiffness_matrix        - [6X6] stiffness matrix.      [Pa]
+    %       - compressional_speed   - Compressional sound-speed.   [m/s]
+    %       - shear_speed           - Shear sound-speed.           [m/s]
+    %       - density               - Density.                     [kg/m^3]
+    %       - stiffness_matrix      - [6X6] stiffness matrix.      [Pa]
+    %
+    %    [ alpha_coefficients, stiffness_matrix, polarisation, sh_coeffs ] = ...
+    %       calculateAlphaCoefficients(...
+    %       stiffness_matrix, phase_velocity, density );
+    %       Calculates wave-vectors and polarizations.
+    %       - stiffness_matrix      - Material stiffness matrix.   [Pa]
+    %       - phase_velocity        - Phase velocity.              [m/s]
+    %       - density               - The material density.        [kg/m^3]
+    %       - alpha_coefficients    - The ratio of vertical to horizontal
+    %                                 wave-numbers. There are 4 alpha
+    %                                 coefficients returned corresponding
+    %                                 to upward and downward traveling
+    %                                 q(L), q(SV) waves.
+    %       - stiffness_matrix      - Either the [6x6] stiffness matrix 
+    %                                 [Pa] or the lame coefficients in the
+    %                                 form [lambda, mu].
+    %       - polarisation          - Polarization vector for each
+    %                                 alpha_coefficient.            []
+    %       - sh_coeffs             - shear horizontal alpha coefficients. 
+    %
     %
     %   For information on the methods type:
     %       help Medium.<method_name>
@@ -162,7 +182,7 @@ classdef Medium < handle
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   last update     - 31 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -268,7 +288,15 @@ classdef Medium < handle
         % convert sound speeds and density into a stiffness matrix
         stiffness_matrix = soundSpeedDensityConversion(...
             compressional_speed, shear_speed, density);
-        
+    end
+    
+    % hidden static methods
+    methods (Static, Hidden = true)
+
+        % calculate alpha coefficients
+        [ alpha_coefficients, stiffness_matrix, polarisation, sh_coeffs ] = ...
+        calculateAlphaCoefficients( stiffness_matrix, phase_velocity, density );
+    
     end
     
     

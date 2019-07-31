@@ -78,6 +78,11 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     
     disp('... calculating displacement and stress fields ...')
     
+    % FIND ME DEBUG
+    % obj.setFrequency(frequency_choice);
+    % obj.setAngle(angle_choice);
+    % obj.calculate;
+    
     % find the closest amplitudes
     [~, aidx] = findClosest(obj.angle, angle_choice);
     [~, fidx] = findClosest(obj.frequency, frequency_choice);
@@ -211,7 +216,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     % calculate properties
     for layIdx = 1:num_layers
         [ mat_prop(layIdx).alpha, mat_prop(layIdx).stiffness_matrix, ...
-            mat_prop(layIdx).p_vec ] = calculateAlphaCoefficients(...
+            mat_prop(layIdx).p_vec ] = Medium.calculateAlphaCoefficients(...
             obj.medium(layIdx).stiffness_matrix, cp, obj.medium(layIdx).density );
     end
     

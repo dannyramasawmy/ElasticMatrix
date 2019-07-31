@@ -1,8 +1,74 @@
 classdef ElasticMatrix < handle
-    %FUNCTIONTEMPLATE - one line description
+    %ELASTICMATRIC Class definition for ElasticMatrix.
     %
     % DESCRIPTION
-    %   Description coming soon...
+    %   ELASTICMATRIX uses the partial wave method to solve the problem of
+    %   acoustic and elastic wave propagation in multi-layered media for
+    %   isotropic and transverse-isotropic materials where the wave
+    %   propagation occurs in a material plane of symmetry. Methods are
+    %   provided for calculating and plotting dispersion curves,
+    %   displacement and stress fields, reflection and transmission
+    %   coefficients. 
+    %
+    %   The partial wave method represents the stress and displacement
+    %   fields within a material as a sum of partial waves. For an
+    %   isotropic material, each partial wave describes an upward or
+    %   downward traveling compressional or shear wave. For anisotropic
+    %   materials these are quasi-compressional and quasi-shear waves.
+    %   The stresses and displacements must be continuous at the interfaces
+    %   between rigidly-bonded adjacent layers. By invoking these boundary
+    %   conditions at every interface, the partial wave amplitudes and
+    %   field properties of the first layer can be related to the last in
+    %   the form of a ‘global’ matrix. The resulting matrix equation can be
+    %   used in two different ways. Firstly, the roots of the equation can
+    %   be found which give the modal solutions or dispersion curves.
+    %   Secondly, a subset of partial-wave amplitudes can be defined and
+    %   the remaining amplitudes solved for. This can be used to
+    %   calculate the displacement and stress fields within the
+    %   multi-layered structure when a plane wave is incident. For more
+    %   details about the methods see [1,2,3].
+    %
+    %   ElasticMatrix is initialized by a Medium object (see Medium), which
+    %   provides the material properties and geometry for each layer in the
+    %   multi-layered structure. 
+    %
+    %   ^ z
+    %   |
+    %   |(Layer 1), material_1, thickness_1, material_properties_1
+    %   |------------------------ interface 1 ----------------------
+    %   |(Layer 2), material_2, thickness_2, material_properties_2
+    %   |------------------------ interface 2 ----------------------
+    %   |                            ...
+    %   |------------------------ interface n-1 --------------------
+    %   |(Layer n), material_n, thickness_n, material_properties_n
+    %   |------------------------------------------------------------> x
+    %   
+    %   In general there are two ways of using this class, either (1) to
+    %   calculate dispersion curves, or (2) to model the problem of an
+    %   incident wave on the multi-layered structure. Firstly at least two
+    %   of the properties: .frequency, .angle, .phasespeed and .wavenumber
+    %   must be set. (1) Then the .calculateDispersionCurves can be used to
+    %   calculate the dispersion curves across the desired range. This
+    %   function will only populate the .dispersion_curves property.
+    %   (2) Alternatively .calculate can be used to model the problem of a
+    %   wave incident on the multi-layered structure. Using .calculate will
+    %   calculate the stresses and displacements at the interfaces as well
+    %   as the partial wave amplitudes. Information such as the stress and
+    %   displacement fields and reflection and transmission coefficients
+    %   can plotted after using this method. 
+    %
+    %   References:
+    %   [1] Ramasawmy, Danny R., et al. "ElasticMatrix: A MATLAB Toolbox 
+    %       for Anisotropic Elastic Wave Propagation in Layered Media.",
+    %       (2019).
+    %
+    %   [2] Lowe, Michael JS. "Matrix techniques for modeling ultrasonic 
+    %       waves in multilayered media." IEEE transactions on ultrasonics,
+    %       ferroelectrics, and frequency control, (1995).
+    %
+    %   [3] Nayfeh, Adnan H. "The general problem of elastic wave 
+    %       propagation in multilayered anisotropic media." The Journal of
+    %       the Acoustical Society of America (1991).
     %
     %
     % USEAGE
@@ -15,11 +81,11 @@ classdef ElasticMatrix < handle
     %
     %
     % OPTIONAL INPUTS
-    %   []              - There are no optional inputs. 
+    %   []              - There are no optional inputs.
     %
     %
     % OUTPUTS
-    %   model           - An ElasticMatrix object.      
+    %   model           - An ElasticMatrix object.
     %
     %
     % PROPERTIES
@@ -81,11 +147,11 @@ classdef ElasticMatrix < handle
     %       angles, phase-speeds and wave-numbers.
     %       There are no inputs or outputs, however, these properties are
     %       set:
-    %       - .partial_wave_amplitudes    
-    %       - .x_displacement             
-    %       - .z_displacement             
-    %       - .sigma_zz                   
-    %       - .sigma_xz                   
+    %       - .partial_wave_amplitudes
+    %       - .x_displacement
+    %       - .z_displacement
+    %       - .sigma_zz
+    %       - .sigma_xz
     %
     %   obj = obj.calculateDispersionCurvesCoarse;
     %       Calculates the dispersion curves using the coarse method.
@@ -113,11 +179,13 @@ classdef ElasticMatrix < handle
     %           - field.sigma_xz        - 2D matrix of shear stress.   [Pa]
     %
     %   [figure_handle, obj] = obj.plotDispersionCurves;
-    %       FIND ME
+    %       Plots dispersion curves.
+    %       - figure_handle   - Figure handle structure, with a new field
+    %                           for each plot.
     %
     %   [figure_handle, obj] = obj.plotInterfaceParameters;
     %       Plots the displacement and stress at the interfaces.
-    %       - figure_handle   - Figure handle structure, with a new field 
+    %       - figure_handle   - Figure handle structure, with a new field
     %                           for each interface.
     %
     %   [figure_handle, obj] = obj.plotField(field, varargin);
@@ -128,20 +196,20 @@ classdef ElasticMatrix < handle
     %           - field.x_displacement  - 2D matrix of x-displacements.[m]
     %           - field.z_displacement  - 2D matrix of z-displacements.[m]
     %           - field.sigma_zz        - 2D matrix of normal stress.  [Pa]
-    %           - field.sigma_xz        - 2D matrix of shear stress.   [Pa]  
+    %           - field.sigma_xz        - 2D matrix of shear stress.   [Pa]
     %       - varargin
     %           'displacement1D'    - x and z displacement along x = 0, z =
     %                                 z_vector.
     %           'displacement2D'    - x and z displacement over the grid
     %                                 defined by z_vector and x_vector
-    %           'stress1D'          - normal and shear stress along x = 0, 
+    %           'stress1D'          - normal and shear stress along x = 0,
     %                                 z = z_vector.
     %           'stress2D'          - Normal and shear stress over the grid
     %                                 defined by z_vector and x_vector.
-    %           'vector'            - 2D vector field over the grid defined 
-    %                                 by x_vector and z_vector, 
+    %           'vector'            - 2D vector field over the grid defined
+    %                                 by x_vector and z_vector,
     %                                 displacement.
-    %           'mesh'              - 2D mesh field over the grid defined 
+    %           'mesh'              - 2D mesh field over the grid defined
     %                                 by x_vector and z_vector.
     %           'surf'              - 3D surface plot of normal stress
     %                                 over the grid defined by z_vector and
@@ -172,11 +240,59 @@ classdef ElasticMatrix < handle
     %   obj = obj.save(varargin);
     %       Saves the ElasticMatrix object to disk. This will save any data
     %       associated with the properties.
-    %       - varargin      - Filename to assign the ElasticMatrix object.      
+    %       - varargin      - Filename to assign the ElasticMatrix object.
     %
     %
-    %   STATIC
-    %   - No static methods.
+    %   STATIC (Static, Access = protected, Hidden = true)
+    %       These methods are used by ElasticMatrix and sub-classes but are
+    %       hidden to the user.
+    %      
+    %   [ field_matrix, phase_interface ] = calculateFieldMatrixAnisotropic(...
+    %       alpha, k, itfc_position, stf_material, p_vector )
+    %       Calculates the field matrix.
+    %       - field_matrix      - [4X4] field matrix.                         
+    %       - phase_interface   - The phase at the interface.                  
+    %       - alpha             - The ratio of vertical to horizontal 
+    %                             wavenumber that is returned from
+    %                             calculateAlphaCoefficients.
+    %       - k                 - Horizontal wavenumber.              [1/m]
+    %       - itfc_position     - Interface positions between material 
+    %                             layers.[m]
+    %       - stiffness_matrix  - The materials 6X6 stiffness matrix. [Pa]
+    %       - p_vector          - Polarization vector returned from 
+    %                             calculateAlphaCoefficients.        
+    %
+    % 
+    %   [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+    %       calculateMatrixModel(medium, frequency_vec, angle_vec, return_field_var)
+    %       Calculates the partial wave method in frequency-wavenumber.
+    %       - medium                 - An object from the Medium class.  
+    %       - frequency_vec          - A vector of frequencies.   [Hz]
+    %       - angle_vec              - A vector of angles.        [degrees]
+    %       - return_field_var       - A boolean for returning the
+    %                                  field-variables.
+    %       - metrics                - Determinant map of the system matrix
+    %                                  of size frequency_vec X angle_vec.
+    %       - field_vars.            - The field variables, i.e., stress
+    %                                  and displacement, returned as a
+    %                                  structure.
+    %       - field_vars(idx).upper  - idx, refers to the layer, upper and
+    %       - field_vars(idx).lower    lower refer to what side of the
+    %                                  interface the field variable has
+    %                                  been calculated at.
+    %       - partial_wave_amplitudes- The partial_wave_amplitudes is of
+    %                                  size n_freqs X n_angles X
+    %                                  n_amplitudes. These have been
+    %                                  normalized by the amplitude of the
+    %                                  incident wave.
+    %       - unnorm_amplitudes      - The partial-wave-amplitudes but
+    %                                  without normalization.
+    %
+    %   [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+    %       calculateMatrixModelKf(medium, frequency_vec, wavenumber_vec, return_field_var)
+    %       Calculates the partial wave method in frequency-wavenumber.  
+    %       - Inputs and outputs are the same as above.
+    %
     %
     %   For information on the methods type:
     %       help ElasticMatrix.<method_name>
@@ -221,21 +337,21 @@ classdef ElasticMatrix < handle
         wavenumber                  % wavenumber range
         phasespeed                  % phase_speed range
         
-        % properties set by ElasticMatrix 
+        % properties set by ElasticMatrix
         medium                      % Medium class object
         partial_wave_amplitudes     % partial wave amplitudes
-        %amplitudes                      
+        %amplitudes
         x_displacement              % x-displacement at interface
         z_displacement              % z-displacement at interface
         sigma_zz                    % normal stress at interface
         sigma_xz                    % shear stress at interface
         dispersion_curves           % coordinates of dispersion curve
-       
+        
         temp                        % temporary property
     end
     
     properties (SetAccess = private, GetAccess = private)
-        unnormalised_amplitudes     % unormalised partial wave amplitudes
+        unnormalised_amplitudes     % unnormalized partial wave amplitudes
     end
     
     
@@ -257,7 +373,7 @@ classdef ElasticMatrix < handle
                         
                     else
                         warning(['Please provide a Medium object',...
-                            ' to initalise ElasticMatrix.']);
+                            ' to initialize ElasticMatrix.']);
                         
                         % default medium constructor
                         obj.medium = Medium;
@@ -295,8 +411,25 @@ classdef ElasticMatrix < handle
         obj = disp(obj);
         obj = save(obj, varargin);
         
+    end
+    
+    methods (Static, Access = protected, Hidden = true)
         
+        % calculates the anisotropic field matrix
+        [ field_matrix, phase_interface ] = calculateFieldMatrixAnisotropic(...
+            alpha, k, itfc_position, stiffness_matrix, p_vector )
+        
+        % partial-wave method in frequency-angle
+        [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+            calculateMatrixModel(...
+            medium, frequency_vec, angle_vec, return_field_var)
+        
+        % partial-wave method in frequency-wavenumber
+        [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
+            calculateMatrixModelKf(...
+            medium, frequency_vec, wavenumber_vec, return_field_var)
         
     end
+    
     
 end

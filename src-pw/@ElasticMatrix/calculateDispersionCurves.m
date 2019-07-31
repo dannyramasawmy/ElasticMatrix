@@ -1,4 +1,49 @@
 function obj = calculateDispersionCurves(obj)
+    %FUNCTIONTEMPLATE - one line description
+    %
+    % DESCRIPTION
+    %   A short description of the functionTemplate goes here.
+    %
+    % USEAGE
+    %   outputs = functionTemplate(input, another_input)
+    %   outputs = functionTemplate(input, another_input, optional_input)
+    %
+    % INPUTS
+    %   input           - The first input.   [units]
+    %
+    % OPTIONAL INPUTS
+    %   []              - There are no optional inputs. []
+    %
+    % OUTPUTS
+    %   outputs         - The outputs.       [units]
+    %
+    % DEPENDENCIES
+    %   []              - There are no dependencies.     []
+    %
+    % ABOUT
+    %   author          - Danny Ramasawmy
+    %   contact         - dannyramasawmy+elasticmatrix@gmail.com
+    %   date            - 15 - January  - 2019
+    %   last update     - 31 - July     - 2019
+    %
+    % This file is part of the ElasticMatrix toolbox.
+    % Copyright (c) 2019 Danny Ramasawmy.
+    %
+    % This file is part of ElasticMatrix. ElasticMatrix is free software:
+    % you can redistribute it and/or modify it under the terms of the GNU
+    % Lesser General Public License as published by the Free Software
+    % Foundation, either version 3 of the License, or (at your option) any
+    % later version.
+    %
+    % ElasticMatrix is distributed in the hope that it will be useful, but
+    % WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    % Lesser General Public License for more details.
+    %
+    % You should have received a copy of the GNU Lesser General Public
+    % License along with ElasticMatrix. If not, see
+    % <http://www.gnu.org/licenses/>.
+    
     %% calculateDispersionCurves v1 date:  2019-01-15
     %
     %   Author
@@ -14,7 +59,7 @@ function obj = calculateDispersionCurves(obj)
     %           - robustness to leaky modes
     %           - robustness to user inputs
     %           - calculation in the imaginary space for attenuation
-    %           - group velocity 
+    %           - group velocity
     %
     %   [1] M. Lowe, Matrix techniques for modeling ultrasonic waves in
     %       multilayered media, IEEE Trans. Ultrason. Ferroelect. Freq. Contr.
@@ -46,7 +91,7 @@ function obj = calculateDispersionCurves(obj)
     %   sweep over frequency and sweep over phasespeed
     % =====================================================================
     % create a function handle to loop over the phase speeds
-    h = @(freqs, wavenumber) calculateMatrixModelKf(...
+    h = @(freqs, wavenumber) ElasticMatrix.calculateMatrixModelKf(...
         obj.medium, freqs, wavenumber, 0);
     
     
@@ -165,8 +210,8 @@ function obj = calculateDispersionCurves(obj)
             myModes(modeLoopDx).startingPointsCPHs = CPHs(modeLoopDx-length(Fs));
         end
         
-        myModes(modeLoopDx).x = [];
-        myModes(modeLoopDx).y = [];
+        myModes(modeLoopDx).f = [];
+        myModes(modeLoopDx).k = [];
     end
     
     % increment in the k-wavenumber
@@ -184,7 +229,7 @@ function obj = calculateDispersionCurves(obj)
         %         h = @(dx) determinant_function( dx, y_chosen);
         
         % create a function handle to loop over the phase speeds
-        h = @(df) abs(calculateMatrixModelKf(...
+        h = @(df) abs(ElasticMatrix.calculateMatrixModelKf(...
             obj.medium, df, kChosen, 0));
         
         % varation in telta
@@ -201,7 +246,7 @@ function obj = calculateDispersionCurves(obj)
                 
                 if myModes(peakIdxs).startingPointsCPHs <= kChosen
                     % if the starting CPH is more than the chosen wavenumber
-                    if isempty(myModes(peakIdxs).x)
+                    if isempty(myModes(peakIdxs).f)
                         disMode(peakIdxs) = freqRange(1);
                         
                         % disp('DEBUG : Empty Mode')
@@ -234,21 +279,21 @@ function obj = calculateDispersionCurves(obj)
             end
             
             % check current length of the vector
-            currentCount = length(myModes(peakIdxs).x) + 1;
+            currentCount = length(myModes(peakIdxs).f) + 1;
             
             % find the minimum x_1 point
             %             myModes(peak_idxs).x(current_count) = ...
             %                 fminbnd(h, dis_mode(peak_idxs) - delta_x, dis_mode(peak_idxs) + delta_x);
             %             myModes(peak_idxs).y(current_count) = k_chosen;
             %
-            myModes(peakIdxs).x(currentCount) = ...
+            myModes(peakIdxs).f(currentCount) = ...
                 findClosestMinimum(h, disMode(peakIdxs), 20 ,deltaX );
-            myModes(peakIdxs).y(currentCount) = kChosen;
+            myModes(peakIdxs).k(currentCount) = kChosen;
             
             
             if currentCount < 3
                 % increment the y step and find the next x_vector point
-                disMode(peakIdxs) = myModes(peakIdxs).x(currentCount);
+                disMode(peakIdxs) = myModes(peakIdxs).f(currentCount);
                 
             elseif currentCount > 2 && currentCount < 6
                 %
@@ -256,7 +301,7 @@ function obj = calculateDispersionCurves(obj)
                 
                 % linear interpolation
                 disMode(peakIdxs) = interp1(...
-                    myModes(peakIdxs).y(:) , myModes(peakIdxs).x(:) , ...
+                    myModes(peakIdxs).k(:) , myModes(peakIdxs).f(:) , ...
                     kIncrement(counterIdx + 1),'linear','extrap');
                 
             elseif counterIdx >5
@@ -272,7 +317,7 @@ function obj = calculateDispersionCurves(obj)
                 
                 % cubic interpolation of next point based on previous four points
                 disMode(peakIdxs) = interp1( ...
-                    myModes(peakIdxs).y(interpVector) , myModes(peakIdxs).x(interpVector), ...
+                    myModes(peakIdxs).k(interpVector) , myModes(peakIdxs).f(interpVector), ...
                     kIncrement(counterIdx + 1),'pchip','extrap');
             end
             
@@ -285,8 +330,8 @@ function obj = calculateDispersionCurves(obj)
             hold on
             for tmptmpdx = 1:length(myModes)
                 % find lenghth (plot less)
-                plotIxs = round(linspace(1,numel(myModes(tmptmpdx).y),15));
-                plot( myModes(tmptmpdx).y, myModes(tmptmpdx).x/1e6,'k-')
+                plotIxs = round(linspace(1,numel(myModes(tmptmpdx).k),15));
+                plot( myModes(tmptmpdx).k, myModes(tmptmpdx).f/1e6,'k-')
             end
             
             if counterIdx == 1
@@ -301,7 +346,7 @@ function obj = calculateDispersionCurves(obj)
     
     % get the phase speed
     for idx = 1:length(myModes)
-        myModes(idx).c = (myModes(idx).x*2*pi) ./ myModes(idx).y;
+        myModes(idx).c = (myModes(idx).f*2*pi) ./ myModes(idx).k;
     end
     
     
