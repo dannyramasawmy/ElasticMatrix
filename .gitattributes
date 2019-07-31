@@ -2,4 +2,9 @@
 .gitattributes export-ignore
 # .gitignore export-ignore
 
+# testing folder and files
 testing export-ignore
+
+# template files in documentation
+documentation/example_template_file.m export-ignore
+documentation/functionTemplateFile.m export-ignore
