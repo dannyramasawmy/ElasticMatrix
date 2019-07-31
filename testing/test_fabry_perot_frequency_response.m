@@ -9,9 +9,9 @@
 %
 % Description
 %   This script test the model by running the model for all 6 graphs in
-%   Paul Beards - Tranduction Mechanisms of the Fabry-Perot polymer film
-%   sensing concept for wideband ultrasound dectection. This case is the
-%   normal senario of each of the models.
+%   Paul Beards - Transduction Mechanisms of the Fabry-Perot polymer film
+%   sensing concept for wide-band ultrasound detection. This case is the
+%   normal scenario of each of the models.
 %
 % Reference:
 %   [1] Transduction mechanisms of the Fabry-Perot polymer film sensing
@@ -83,7 +83,7 @@ for idx = 1:6
             measurementData = pmmaBacked23umPET;
     end
     
-    % initalise FabryPerot class    
+    % initialize FabryPerot class    
     temp = FabryPerotSensor(myMedium);
     
     % set the properties

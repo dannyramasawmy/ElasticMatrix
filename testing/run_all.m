@@ -20,8 +20,8 @@ addpath('../examples')
 % =========================================================================
 
 if exist('../testing','dir')
-    % compatabilitiy (MATLAB version)
-    test_compatability;
+    % compatibility (MATLAB version)
+    test_compatibility;
     pause(2);
     
     % comparison script

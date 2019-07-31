@@ -18,7 +18,7 @@ cls;
 % make medium
 myMedium = Medium('PVDF',1e-6);
 
-% initalise elastic matrix
+% initialize elastic matrix
 myModel = ElasticMatrix(myMedium);
 
 % number of points, x^2
