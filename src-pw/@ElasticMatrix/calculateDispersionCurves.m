@@ -1,30 +1,72 @@
 function obj = calculateDispersionCurves(obj)
-    %FUNCTIONTEMPLATE - one line description
+    %CALCULATEDISPERSIONCURVES Calculates the dispersion curves.
     %
     % DESCRIPTION
-    %   A short description of the functionTemplate goes here.
+    %   CALCULATEDISPERSIONCURVES calculates the dispersion curves of the
+    %   layered structure using the method described in [1]. Firstly, one
+    %   parameter, for example frequency, is fixed and the determinant of
+    %   the global-matrix is found over a range of wavenumbers. Close to
+    %   dispersive solutions the determinant of the global-matrix tends to
+    %   zero. Using these as starting points and taking a small limit
+    %   either side, the exact frequency and wavenumber of the dispersive
+    %   solution is found using a bisection algorithm. ElasticMatrix makes
+    %   use of MATLAB's fmincon() function which finds the minimum within a
+    %   fixed range. After the exact frequency-wavenumber pairs are found,
+    %   the fixed value of frequency is increased and the search is
+    %   performed again. The algorithm then switches to using a linear
+    %   interpolation scheme to estimate the location of the third and
+    %   fourth points on the dispersion curve, similarly using a bisection
+    %   algorithm to find the exact frequency-wavenumber pairs. After five
+    %   points have been found, a higher-order polynomial interpolation
+    %   scheme is used to more accurately predict points on the dispersion
+    %   curve. 
+    %
+    %   The algorithm implemented in ElasticMatrix only searches in the
+    %   real space which is a good-estimate for simple plate structures in
+    %   a vacuum or liquid, however, it may be inaccurate for very leaky
+    %   solutions, for example a plate embedded in soil. For the user to
+    %   check if the dispersion curve tracing is working correctly a map of
+    %   the determinant of the system matrix is plotted as the dispersion
+    %   curves are trace. The minima in the determinant map indicate the
+    %   location of dispersion curves, hence the user has a visual check if
+    %   they are tracing correctly.
+    %
+    % References
+    %   [1] M. Lowe, Matrix techniques for modeling ultrasonic waves in
+    %       multilayered media, IEEE Trans. Ultrason. Ferroelect. Freq.
+    %       Contr. 42 (4) (1995) 525-542.
+    %
     %
     % USEAGE
-    %   outputs = functionTemplate(input, another_input)
-    %   outputs = functionTemplate(input, another_input, optional_input)
+    %   obj.calculateDispersionCurves;
     %
     % INPUTS
-    %   input           - The first input.   [units]
+    %   obj.phasespeed  - The range of phasespeeds (only the first and last
+    %                     values are taken into account).   [m/s] 
+    %   obj.frequency   - The range of frequencies (only the first and last
+    %                     values are taken into account).   [m/s]
     %
     % OPTIONAL INPUTS
     %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   outputs         - The outputs.       [units]
+    %   obj.dispersion_curves(idx). - A structure containing the (idx)th 
+    %                                 dispersion curves.
+    %       dispersion_curves.k     - Wavenumber vector.    [1/m]
+    %       dispersion_curves.f     - Frequency vector.     [Hz, 1/s]
+    %       dispersion_curves.c     - Phase-speed vector.   [m/s]
     %
     % DEPENDENCIES
-    %   []              - There are no dependencies.     []
+    %   findClosestMinimum      - Finds a local minimum of a function f(x)
+    %                             from x0 
+    %   findZeroCrossing        - Finds idxs where a 1D signal crosses the
+    %                             x axis.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 31 - July     - 2019
+    %   last update     - 14 - August   - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -44,214 +86,162 @@ function obj = calculateDispersionCurves(obj)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
-    %% calculateDispersionCurves v1 date:  2019-01-15
-    %
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
-    %
-    %   Description
-    %       Calculates the dispersion curves using the method described in
-    %       [1].
-    %
-    %   Errors:
-    %       There are a few issues that need correcting:
-    %           - robustness to leaky modes
-    %           - robustness to user inputs
-    %           - calculation in the imaginary space for attenuation
-    %           - group velocity
-    %
-    %   [1] M. Lowe, Matrix techniques for modeling ultrasonic waves in
-    %       multilayered media, IEEE Trans. Ultrason. Ferroelect. Freq. Contr.
-    %       42 (4) (1995) 525-542.
-    
-    
-    %% ====================================================================
-    %   CHECKS
     % =====================================================================
+    %   GET RANGE OF FREQUENCIES / WAVENUMBERS / PHASESPEEDS
+    % =====================================================================
+    
+    % this function will search for singular matrices, MATLAB will throw
+    % warnings
     warning off
+    
+    % set sample size
+    n_samples = 1500;
     
     % check if phase speed is defined or not
     if isempty(obj.phasespeed)
         % message and define a value
         disp('.phasespeed is not defined, using predefined values')
         % set the phase speed
-        obj.setPhasespeed(linspace(50,2000,1500)); % 50?
+        obj.setPhasespeed(linspace(50,2000,2)); 
     end
     
-    % set sample size
-    nSamples = length(obj.phasespeed);
+    % up-sample frequency range too
+    freq_range = linspace(obj.frequency(1), obj.frequency(end), n_samples);
+    phase_range = linspace(obj.phasespeed(1), obj.phasespeed(end),n_samples);
     
-    % upsample frequency range too
-    freqRange = linspace(obj.frequency(1), obj.frequency(end), nSamples);
-    phasespeedRange = obj.phasespeed;
-    
-    
-    %% ====================================================================
-    %   sweep over frequency and sweep over phasespeed
-    % =====================================================================
-    % create a function handle to loop over the phase speeds
+    % create a function handle to calculate global matrix
     h = @(freqs, wavenumber) ElasticMatrix.calculateMatrixModelKf(...
         obj.medium, freqs, wavenumber, 0);
     
-    
-    % fix frequency - find determinant over the phase speed
-    % fixed frequency point
-    % find maximum phase speed
-    maxPhasespeed = max(obj.phasespeed) * ones(1,nSamples);
+    % vector of frequency / phasespeed ranges
+    % maximum phase speed
+    max_phasespeed = max(obj.phasespeed) * ones(1,n_samples);
     % minimum frequency
-    minFrequency = min(freqRange) * ones(1,nSamples);
+    min_frequency = min(freq_range) * ones(1,n_samples);
     
-    % =====================================================================
     % constant frequency wavenumbers
-    kxWavenumberConstF = (2 * pi * minFrequency) ./ phasespeedRange ;
+    kx_const_f = (2 * pi * min_frequency) ./ phase_range ;    
     % constant cph wavenumber
-    kxWavenumberConstCP = (2 * pi * freqRange(1)) ./ maxPhasespeed ;
+    kx_const_cph = (2 * pi * freq_range(1)) ./ max_phasespeed ;
+               
+    % =====================================================================
+    %   PLOT DETERMINANT MAP
+    % =====================================================================
     
+    % frequency and wavenumber determinant map
+    kx_tmp     = linspace(kx_const_f(end), kx_const_f(1),   150);
+    f_tmp      = linspace(freq_range(1), freq_range(end),   150);
     
-    % phsespeed sweep
-    cphSweep   = h(minFrequency, kxWavenumberConstF);
-    
-    % frequency sweep
-    fSweep     = h(freqRange, kxWavenumberConstCP );
-    
-    %     % add an imaginary component of wavenumber
-    %     k_x_att = 1i * 0.001;
-    %     k_x_wavenumber_constCP_att = k_x_wavenumber_constCP + k_x_att ;
-    %     f_sweep_att     = h(freq_range, k_x_wavenumber_constCP_att );
-    
-    
-    % differentiate to find the gradient turning points
-    dCphSweep = diff( log10(abs(cphSweep))); % for debug
-    dFSweep = diff(   log10(abs(fSweep))); % for debug
-    
-    % attenuation of guided modes (logic can be used later)
-    %{
-%     d_f_sweep_att = diff(   log10(abs(f_sweep_att)));
-    
-    % lets check what happens across frequencies
-    N_of_att_vec = 100;
-    IDX = 1440 ;%, 681,
-    f_coonst = freq_range(IDX) * ones(1,N_of_att_vec) ;
-        k_x_wavenumber_at_a_minima = (2 * pi * freq_range(1)) ./ max_phasespeed(1) ;
-    % just coppy the variable for a second
-    tmp_kx = k_x_wavenumber_at_a_minima;
-    % make the vector of the attenuating term
-    
-    kx_attenuation_factor_vector = tmp_kx + 1i * tmp_kx * linspace(0.001,1,N_of_att_vec);
-    % imaginary part sweep
-    f_sweep_im     = h(f_coonst, kx_attenuation_factor_vector );
-       figure,
-    plot(1:N_of_att_vec,abs(f_sweep_im))
-    %}
-    
-    % find crossing points
-    cphStartingIdxs   = findZeroCrossing(dCphSweep);
-    fStartingIdxs     = findZeroCrossing(dFSweep);
-    
-    
-    % temp frequency and wavenumber range to view the determinant over
-    kxTmp     = linspace(kxWavenumberConstF(end), kxWavenumberConstF(1),  150) ;
-    fTmp       = linspace(freqRange(1), freqRange(end), 150);
-    
-    
-    % just for visualisation purposes =====================================
+    % preallocate
+    det_fK = zeros(length(f_tmp), length(kx_tmp));
     % loop over the frequency index
-    for tmpLoopIdx = 1:length(fTmp)
-        % get an array of frequencies to calcualte over
-        fArrayLoop = fTmp(tmpLoopIdx) * ones(1,length(kxTmp));
-        detfK(tmpLoopIdx, :) = h(fArrayLoop, kxTmp);
+    for tmp_idx = 1:length(f_tmp)
+        % get an array of frequencies to calculate over
+        f_loop = f_tmp(tmp_idx) * ones(1,length(kx_tmp));
+        det_fK(tmp_idx, :) = h(f_loop, kx_tmp);
     end
     
-    figure(10),
-    imagesc(kxTmp, fTmp/1e6, log10(abs(detfK)))
+    % plot determinant map
+    figure_handle = figure;
+    imagesc(kx_tmp, f_tmp/1e6, log10(abs(det_fK)))
+    % labels
     axis xy
-    %     caxis([-15 5])
+    xlabel('Wavenumber [m^-^1]')
+    ylabel('Frequency [MHz]')
+    title('Determinant map - with dispersion curve traces')
+                    
     % =====================================================================
+    %   FIND DISPERSION CURVES STARTING POINTS
+    % =====================================================================
+    % For the lowest frequency, or wavenumber, sweep over th other variable
+    % and find the minimums in the determinant, these are the dispersion
+    % curve starting positions.
+    
+    % calculate the determinant over each vector
+    % phasespeed sweep
+    cph_sweep   = h(min_frequency, kx_const_f);
+    % frequency sweep
+    f_sweep     = h(freq_range, kx_const_cph );
+    
+    % differentiate to find the gradient turning points
+    d_cph_sweep = diff( log10(abs(cph_sweep))); 
+    d_f_sweep   = diff(   log10(abs(f_sweep))); 
+        
+    % find crossing points
+    cph_starting_idxs   = findZeroCrossing(d_cph_sweep);
+    f_starting_idxs     = findZeroCrossing(d_f_sweep);
     
     % f starting points
-    Fs = freqRange(fStartingIdxs);
-    
-    %     figure,
-    %     plot(freqRange, log10(abs(fSweep)),'b')
-    %     hold on
-    % %     plot(freq_range, log10(abs(f_sweep_att)),'r--')
-    %     plot(Fs,-7*ones(1,length(Fs)),'*')
-    %     hold off
-    
-    % starting points for phase speed
-    % create a structure where the index of the structure is the point of
-    % starting
+    Fs = freq_range(f_starting_idxs);
     
     % cph starting points
-    CPHs = kxWavenumberConstF(cphStartingIdxs);
+    CPHs = kx_const_f(cph_starting_idxs);
     
     % length of different starting point vectors
     NFs = length(Fs);
     NCPHs = length(CPHs);
-    
-    a = figure(10);
-    
-    %     set(a,'Position',[-1056 345 560 420]);
-    
-    %     disp('Check - auto image position set')
-    
-    % minimum k_x to start
-    kxMinStart = min(kxTmp);
-    for modeLoopDx = 1:(NFs+NCPHs)
-        % number of modes = assign starting point
-        % for frequency starting points
-        %         mode_loop_dx
-        if modeLoopDx <= NFs
-            myModes(modeLoopDx).startingPointsFs = Fs(modeLoopDx);
-        end
-        % for phase speed starting points
-        if modeLoopDx > NFs
-            myModes(modeLoopDx).startingPointsCPHs = CPHs(modeLoopDx-length(Fs));
+
+    % initialize struct
+    mode_struct = struct;
+    for mode_dx = 1:(NFs+NCPHs)
+        
+        % frequency starting points
+        if mode_dx <= NFs
+            mode_struct(mode_dx).startingPointsFs = Fs(mode_dx);
         end
         
-        myModes(modeLoopDx).f = [];
-        myModes(modeLoopDx).k = [];
+        % phasespeed starting points
+        if mode_dx > NFs
+            mode_struct(mode_dx).startingPointsCPHs = CPHs(mode_dx-length(Fs));
+        end
+        
+        % initialize outputs
+        mode_struct(mode_dx).f = [];
+        mode_struct(mode_dx).k = [];
     end
     
+    % =====================================================================
+    %   TRACE MODES FROM EACH STARTING POINT
+    % =====================================================================
+    % Increment the wavenumber vector, use each of the starting positions
+    % as the starting point for the next position in the dispersion curve.
+    % After enough points have been gathered use a linear then polynomial
+    % extrapolation scheme to more accurately predict the following
+    % dispersion curve points.
+    
     % increment in the k-wavenumber
-    kIncrement = [kxTmp(1):10:kxTmp(end)];
+    k_inc = kx_tmp(1):10:kx_tmp(end);
     
-    % plotting indicies
-    plottingCounter = round(linspace(1,length(kIncrement),100));
+    % plot the curves at certain points
+    plot_counter = round(linspace(1,length(k_inc),100));
     
-    for counterIdx = 1:length(kIncrement)-1
+    % initialize 
+    current_mode = zeros(length(mode_struct),1);
+            
+    % for each k
+    for counter_idx = 1:length(k_inc)-1
         
-        % the chosen y_point
-        kChosen = kIncrement(counterIdx);
-        
-        % use fmincon of something to find the true minima
-        %         h = @(dx) determinant_function( dx, y_chosen);
-        
+        % the chosen kx
+        kx_chosen = k_inc(counter_idx);
+           
         % create a function handle to loop over the phase speeds
         h = @(df) abs(ElasticMatrix.calculateMatrixModelKf(...
-            obj.medium, df, kChosen, 0));
+            obj.medium, df, kx_chosen, 0));
         
-        % varation in telta
-        deltaX = 1e4; % some sensitiviity into this function [0.01] (of frequency)
+        % variation in delta / sensitivity, this parameter can be tuned
+        delta_x = 1e4; 
         
-        % to check if all the modes have completed tracing
-        modeCompletion = zeros(1, length(myModes));
-        
-        % for each peak
-        for peakIdxs = 1:length(myModes)
+
+        % for each dispersion curve
+        for mode_idxs = 1:length(mode_struct)
             
             % check if it has a frequency starting point
-            if peakIdxs > NFs
+            if mode_idxs > NFs
                 
-                if myModes(peakIdxs).startingPointsCPHs <= kChosen
+                if mode_struct(mode_idxs).startingPointsCPHs <= kx_chosen
                     % if the starting CPH is more than the chosen wavenumber
-                    if isempty(myModes(peakIdxs).f)
-                        disMode(peakIdxs) = freqRange(1);
-                        
-                        % disp('DEBUG : Empty Mode')
-                        
-                        
+                    if isempty(mode_struct(mode_idxs).f)
+                        current_mode(mode_idxs) = freq_range(1);               
                     end
                 else
                     continue;
@@ -259,189 +249,96 @@ function obj = calculateDispersionCurves(obj)
                 
             end
             
-            
-            %             current_counter =
             % for the first counter use chosen point
-            if counterIdx == 1
-                disMode(peakIdxs) = myModes(peakIdxs).startingPointsFs;
+            if counter_idx == 1
+                current_mode(mode_idxs) = ...
+                    mode_struct(mode_idxs).startingPointsFs;
             end
             
-            % condition on breaking the forloop
-            if disMode(peakIdxs) > max(fTmp)
-                % to make sure the code does not break
+            % condition on breaking the for-loop
+            if current_mode(mode_idxs) > max(f_tmp)
                 continue;
             end
             
-            % condition on breaking the forloop
-            if disMode(peakIdxs) < min(fTmp)
-                % to make sure the code does not break
+            % condition on breaking the for-loop
+            if current_mode(mode_idxs) < min(f_tmp)
                 continue;
             end
             
             % check current length of the vector
-            currentCount = length(myModes(peakIdxs).f) + 1;
+            current_count = length(mode_struct(mode_idxs).f) + 1;
             
-            % find the minimum x_1 point
-            %             myModes(peak_idxs).x(current_count) = ...
-            %                 fminbnd(h, dis_mode(peak_idxs) - delta_x, dis_mode(peak_idxs) + delta_x);
-            %             myModes(peak_idxs).y(current_count) = k_chosen;
-            %
-            myModes(peakIdxs).f(currentCount) = ...
-                findClosestMinimum(h, disMode(peakIdxs), 20 ,deltaX );
-            myModes(peakIdxs).k(currentCount) = kChosen;
+            % frequency where minimum occurs
+            mode_struct(mode_idxs).f(current_count) = ...
+                findClosestMinimum(h, current_mode(mode_idxs), 20 ,delta_x );
+            % assign kx values
+            mode_struct(mode_idxs).k(current_count) = kx_chosen;
             
+            % =============================================================
+            %   ESTIMATE NEXT POINT POSITION
+            % =============================================================
             
-            if currentCount < 3
-                % increment the y step and find the next x_vector point
-                disMode(peakIdxs) = myModes(peakIdxs).f(currentCount);
-                
-            elseif currentCount > 2 && currentCount < 6
-                %
-                % disp('Linear') % DEBUG
-                
+            % increment the k-step and find the next f point
+            if current_count < 3
+                % for first three dispersion curve points
+                current_mode(mode_idxs) = ...
+                    mode_struct(mode_idxs).f(current_count);
+
+            elseif current_count > 2 && current_count < 6
+                % between 3-5 points
                 % linear interpolation
-                disMode(peakIdxs) = interp1(...
-                    myModes(peakIdxs).k(:) , myModes(peakIdxs).f(:) , ...
-                    kIncrement(counterIdx + 1),'linear','extrap');
+                current_mode(mode_idxs) = interp1(...
+                    mode_struct(mode_idxs).k(:) , mode_struct(mode_idxs).f(:) , ...
+                    k_inc(counter_idx + 1),'linear','extrap');
                 
-            elseif counterIdx >5
-                % disp('Poly') % DEBUG
-                % higher order interpolation
-                %                 mv_st    = counter_idx - 4;
-                %                 mv_en      = counter_idx;
+            elseif counter_idx >5
+                % higher order interpolation for 6 points and above
                 
-                interpVector = 1:currentCount;
-                if currentCount > 10
-                    interpVector = round(linspace(1, currentCount, 10));
+                interp_vector = 1:current_count;
+                if current_count > 10
+                    interp_vector = round(linspace(1, current_count, 10));
                 end
                 
-                % cubic interpolation of next point based on previous four points
-                disMode(peakIdxs) = interp1( ...
-                    myModes(peakIdxs).k(interpVector) , myModes(peakIdxs).f(interpVector), ...
-                    kIncrement(counterIdx + 1),'pchip','extrap');
+                % cubic interpolation
+                current_mode(mode_idxs) = interp1( ...
+                    mode_struct(mode_idxs).k(interp_vector),...
+                    mode_struct(mode_idxs).f(interp_vector), ...
+                    k_inc(counter_idx + 1),'pchip','extrap');
             end
             
         end
         
-        % to speed up the calculation only force drawing the figure 100 times
-        if sum(plottingCounter == counterIdx)
+        % =================================================================
+        %   PLOT DISPERSION CURVES OVER k-f DETERMINANT MAP
+        % ================================================================= 
+        
+        % update figure every 100 kx points
+        if sum(plot_counter == counter_idx)
             % plot of the determinant map
-            figure(10)
+            figure(figure_handle)
             hold on
-            for tmptmpdx = 1:length(myModes)
-                % find lenghth (plot less)
-                plotIxs = round(linspace(1,numel(myModes(tmptmpdx).k),15));
-                plot( myModes(tmptmpdx).k, myModes(tmptmpdx).f/1e6,'k-')
-            end
             
-            if counterIdx == 1
-                xlabel('Wavenumber [m^-^1]')
-                ylabel('Frequency [MHz]')
-                title('Determinant map - with dispersion curve traces')
+            % for each curve
+            for update_dx = 1:length(mode_struct)
+                % update plot with each dispersion curve
+                plot( mode_struct(update_dx).k, ...
+                    mode_struct(update_dx).f/1e6,'k-')
             end
-            drawnow
         end
         
     end
     
-    % get the phase speed
-    for idx = 1:length(myModes)
-        myModes(idx).c = (myModes(idx).f*2*pi) ./ myModes(idx).k;
-    end
-    
-    
-    %     myModes.y
-    obj.dispersion_curves = myModes;
-    
-    % attenuation search % FUTURE
-    % disp('Calculating mode attenuation')
-    
-    
-    return
-    % DEBUG ===============================================================
-    %{
-    % compare the results with the indices
-    cph_starts = 1;
-    
-    % rejection threshold? - to reject critical angles
-    reject_threshold = 0.0; % as in if within 98 percent of the bulk wave speed
-    
-    % indices of the cph_starts to reject( if match bulk wave)
-    reject_vector = ones(length(cph_starts), 1);
-    
-    % calculate bulk wave speeds in the materials
-    % filter starting points to avoid solutions matching bulk-wave speeds
-    for idx = 1:length(obj.medium)
-        % temp effective compressional wave speeds
-        tmp_cl(idx) = sqrt(obj.medium(idx).C_mat(1,1) / obj.medium(idx).Density); % compression
-        
-        % temp shear speeds
-        tmp_cs(idx) = sqrt(obj.medium(idx).C_mat(5,5) / obj.medium(idx).Density); % shear
-        
-        % loop over starting points
-        for jdx = 1:length(reject_vector)
-            
-            % compare to compression bulk wave speed
-            if (abs(tmp_cl(idx) - cph_starts(jdx)) / tmp_cl(idx)) < reject_threshold
-                reject_vector(jdx) = 0;
-            end
-            
-            % compare to shear bulk wave speed
-            if (abs(tmp_cs(idx) - cph_starts(jdx)) / tmp_cs(idx)) < reject_threshold
-                reject_vector(jdx) = 0;
-            end
-        end
-    end
-    
-    % get rid of bulk wave starting points
-    cph_starting_idxs = cph_starting_idxs(reject_vector == 1);
-    
-    cph_starts = cph_starts(reject_vector == 1);
-    cph_starts2 = min_phase_vel ./ sin(angle_range(cph_starting_idxs +1) * pi/180);
-    
-    %% ====================================================================
-    %    STARTING POINTS - FINE SEARCH
     % =====================================================================
-    % two vectors of starting points - cph_starting_idxs and f_starting_idxs
+    %   CONVERT TO PHASESPEED AND ASSIGN OBJECT PROPERTY
+    % =====================================================================
     
-    % keeping frequency - fixed and varying wavenumber ====================
-    % real wavenumber fine search
-    
-    % create a function handle for the fine search
-    h2 = @(freqs, wavenumber) Calculate_Matrix_Model_Kf(...
-        obj.medium, freqs, wavenumber, 0);
-    
-    % fixed frequency
-    f_fixed = f_min;
-    kx_wavenumber_starts = 2 * pi * f_fixed ./ cph_starts;
-    kx_wavenumber_starts2 = 2 * pi * f_fixed ./ cph_starts2;
-    
-    % find the delta_k
-    delta_k =  abs(kx_wavenumber_starts2 - kx_wavenumber_starts);
-    
-    % for each strting point
-    for kx_dxs = 1:length(kx_wavenumber_starts)
-        
-        % check the temporary output
-        k_min(kx_dxs) = Fine_Search_Min_Det(h2, f_fixed, kx_wavenumber_starts(kx_dxs), delta_k(kx_dxs));
-        
+    % convert fK to phasespeed
+    for idx = 1:length(mode_struct)
+        mode_struct(idx).c = (mode_struct(idx).f*2*pi) ./...
+            mode_struct(idx).k;
     end
-
-    % DEBUG code / check the angle conversion is ok
-    % angles_maybe_tmp = asin(min_phase_vel ./ cph_starts) * 180/pi;
     
-    
-    % keeping cph fixed and varying frequency =============================
-    %     wavenumber = a_min;
-    
-    
-    disp('working so far')
-    
-    obj.dispersion_curves = [1 1];
-    
-    
-  
-    
-    warning on
-    %}
+    % assign object property
+    obj.dispersion_curves = mode_struct;
+   
 end
