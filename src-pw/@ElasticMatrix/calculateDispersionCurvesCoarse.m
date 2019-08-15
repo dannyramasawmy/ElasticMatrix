@@ -1,21 +1,46 @@
 function obj = calculateDispersionCurvesCoarse(obj)
-        %FUNCTIONTEMPLATE - one line description
+    %CALCULATEDISPERSIONCURVESCOARSE Finds points on the dispersion curves.
     %
     % DESCRIPTION
-    %   A short description of the functionTemplate goes here.
+    %   CALCULATEDISPERSIONCURVESCOARSE finds points on the the dispersion
+    %   curves of the layered structure. This function should be used if
+    %   .calculateDispersionCurves is not working correctly, for example if
+    %   the tracing algorithm is giving incorrect results. Firstly, one
+    %   parameter, for example frequency, is fixed and the determinant of
+    %   the global-matrix is found over a range of wavenumbers. Close to
+    %   dispersive solutions the determinant of the global-matrix tends to
+    %   zero. Using these as starting points and taking a small limit
+    %   either side, the exact frequency and wavenumber of the dispersive
+    %   solution is found using a bisection algorithm. ElasticMatrix makes
+    %   use of MATLAB's fmincon() function which finds the minimum within a
+    %   fixed range. After the exact frequency-wavenumber pairs are found,
+    %   the fixed value of frequency is increased and the search is
+    %   performed again.
+    %   
+    %   The algorithm implemented in ElasticMatrix only searches in the
+    %   real space which is a good-estimate for simple plate structures in
+    %   a vacuum or liquid, however, it may be inaccurate for very leaky
+    %   solutions, for example a plate embedded in soil.
+    %
     %
     % USEAGE
-    %   outputs = functionTemplate(input, another_input)
-    %   outputs = functionTemplate(input, another_input, optional_input)
+    %   obj.calculateDispersionCurvesCoarse;
     %
     % INPUTS
-    %   input           - The first input.   [units]
+    %   obj.phasespeed  - The range of phasespeeds (only the first and last
+    %                     values are taken into account).   [m/s] 
+    %   obj.frequency   - The range of frequencies (only the first and last
+    %                     values are taken into account).   [m/s]
     %
     % OPTIONAL INPUTS
     %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   outputs         - The outputs.       [units]
+    %   obj.dispersion_curves.      - A structure containing the  
+    %                                 dispersion curve points.
+    %       dispersion_curves.k     - Wavenumber vector.    [1/m]
+    %       dispersion_curves.f     - Frequency vector.     [Hz, 1/s]
+    %       dispersion_curves.c     - Phase-speed vector.   [m/s]
     %
     % DEPENDENCIES
     %   []              - There are no dependencies.     []
@@ -24,7 +49,7 @@ function obj = calculateDispersionCurvesCoarse(obj)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 31 - July     - 2019
+    %   last update     - 15 - August   - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -43,109 +68,89 @@ function obj = calculateDispersionCurvesCoarse(obj)
     % You should have received a copy of the GNU Lesser General Public
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
-    %% calculateDispersionCurves v1 date:  2019-01-15
-    % 
-    %   Author
-    %   Danny Ramasawmy
-    %   rmapdrr@ucl.ac.uk
-    %
-    %   Description
-    %       Calculates the dispersion curves - quick method.
-    disp('...coarse dispersion curve function...')
-    % this function calculates dispersion curves
+    
+    % the matrix will become singular
     warning off
     
-    % get the maximum and minimum values for the angle and frequency range   
-    [maxF, minF] = deal(max(obj.frequency), min(obj.frequency));
-    [maxA, minA] = deal(max(obj.angle),     min(obj.angle));
+    % =====================================================================
+    %   FIND PHASESPEED AND FREQUENCY RANGES
+    % =====================================================================
     
-    % calculate values to sweep over
-    sampleRange = 50;
-    freqSweep  = linspace(minF, maxF, sampleRange * 10);
-    angSweep   = linspace(minA, maxA, sampleRange);
-    myMin = [];
-      
-    %
-    % loop over the angles
-    for angle_dx = 1:length(angSweep)
+    % find maximum and minimum frequency and phasespeed
+    [min_cph, max_cph] = deal(min(obj.phasespeed), max(obj.phasespeed));
+    [min_f, max_f]     = deal(min(obj.frequency), max(obj.frequency));
     
-        % calculate the partial wave method
-        h = @(freq) abs(ElasticMatrix.calculateMatrixModel(...
-            obj.medium, freq, angSweep(angle_dx), 0));
-                
-        % using the condition number metric (peaks are bad)
-        score = h(freqSweep);
+    % convert phasespeed to wavenumber
+    kx_min = (2 * pi * min_f) ./ max_cph ;   
+    kx_max = (2 * pi * min_f) ./ min_cph ;
+    
+    % create a wavenumber and frequency vector  - up-sampled
+    samples = 500;
+    freq_range = linspace(min_f, max_f, samples);
+    kx_range   = linspace(kx_min, kx_max, samples);
+    
+
+    % create a function handle to calculate global matrix determinant
+    h = @(freqs, wavenumber) ElasticMatrix.calculateMatrixModelKf(...
+        obj.medium, freqs, wavenumber, 0);
+    
+    % for a fixed wavenumber calculate the det map over all the frequencies
+    % preallocate
+    det_fK = zeros(length(freq_range), length(kx_range));
+    output_struct.f = [];
+    output_struct.k = [];
+    
+    % =====================================================================
+    %   FIND DISPERSION POINTS
+    % =====================================================================
+    
+    % loop over the frequency index
+    for f_idx = 1:10:length(freq_range)
+        % get an array of frequencies to calculate over
+        f_loop = freq_range(f_idx) * ones(1,length(kx_range));
+        
+        % metric
+        score = h(f_loop, kx_range);
         
         % get the peaks
-        [~, foundPeaks] = findpeaks(-score); 
+        [~, found_peaks] = findpeaks(-log10(abs(score)));
         
-        % loop over the found indicies
-        for idx = 1:length(foundPeaks)
-            % limits to minimise over
-            lim1 = freqSweep(foundPeaks(idx))-1;
-            lim2 = freqSweep(foundPeaks(idx))+1;
-            
-            % set counter
-            counter = length(myMin) +1;
-            
-            % assign the outputs
-            myMin(counter) = fminbnd(h, lim1, lim2);
-            myAngles(counter) = angSweep(angle_dx);
-            
-            
-        end
-    end
-    try
-        disp('Sucess1')
-      output = [myMin', myAngles'];
-    catch
-    end
-    %}
-    
-    freqSweep  = linspace(minF, maxF, sampleRange);
-    angSweep   = linspace(minA, maxA, sampleRange * 10);
-    
-    % loop over the frequencies
-    for freqIdx = 1:length(freqSweep)
-        
-        % calculate the partial wave method
-        h = @(ang) abs(ElasticMatrix.calculateMatrixModel(...
-            obj.medium, freqSweep(freqIdx), ang, 0));
+        % if there are peaks (dispersion solutions)
+        if ~isempty(found_peaks)            
+            % loop over the found indices
+            for idx = 1:length(found_peaks)
+                % limits to minimize over
+                lim1 = kx_range(found_peaks(idx))-1;
+                lim2 = kx_range(found_peaks(idx))+1;
                 
-        % using the condition number metric (peaks are bad)
-        score = h(angSweep);
-        
-        % get the peaks
-        [~, foundPeaks] = findpeaks(-score); 
-        
-        % loop over the found indicies
-        for idx = 1:length(foundPeaks)
-            % limits to minimise over
-            lim1 = angSweep(foundPeaks(idx))-1;
-            lim2 = angSweep(foundPeaks(idx))+1;
-            
-%             disp('part 2')
-            % set counter
-            counter = length(myMin) +1;
-            
-            % assign the outputs
-            myMin(counter) = freqSweep(freqIdx);
-            myAngles(counter) = fminbnd(h, lim1, lim2); 
-            
-            
+                % new handle
+                h2 = @(wavenumber) h(freq_range(f_idx), wavenumber);
+                
+                % assign the outputs
+                output_struct.k = ...
+                    [output_struct.k, fminbnd(h2, lim1, lim2)];
+                output_struct.f = ...
+                    [output_struct.f, freq_range(f_idx)];          
+            end
         end
-    end
-    try
-        disp('Sucess2')
-      output = [myMin', myAngles'];
-    catch
+        
+        det_fK(f_idx, :) = score;
     end
     
-    % assign object
-    obj.dispersion_curves.f = output(:,1);
-    obj.dispersion_curves.k = output(:,2);
-    obj.dispersion_curves.c = output(:,1);
+
+    % =====================================================================
+    %   CONVERT TO PHASESPEED AND ASSIGN OBJECT PROPERTY
+    % =====================================================================
     
+    % convert fK to phasespeed
+    output_struct.c = (output_struct.f*2*pi) ./...
+        output_struct.k;
     
+    % assign object property
+    obj.dispersion_curves = output_struct;
+    
+    % turn warnings back on
     warning on
+    
+     
 end
