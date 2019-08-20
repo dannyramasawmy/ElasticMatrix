@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+
+<toc version="2.0">
+<!-- First tocitem specifies top level in Help browser Contents pane -->
+<!-- This can be a roadmap page, as shown below, or a content page -->
+
+
+    <tocitem target="ElasticMatrix.html">ElasticMatrix Toolbox
+        <!-- Nest tocitems to create hierarchical entries in  Contents-->
+        <!-- To include icons, use the following syntax for tocitems: -->
+        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
+        <!-- Title-of-Section </tocitem> -->
+        <!-- where NAME is one of the following (use capital letters): -->
+        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
+        <!-- DEMOS, RELEASE_NOTES --> 
+        <!-- Icon images used for these entries are also stored in -->
+        <!-- matlabroot/toolbox/matlab/icons -->
+        <!-- A Getting Started Guide usually comes first -->
+         
+        <!-- Medium Class -->
+        <tocitem target="example_medium_class.html">
+            Medium Class
+        </tocitem>
+        <!-- Slowness Profiles -->
+        <tocitem target="example_slowness_profiles.html">
+            Slowness Profiles
+        </tocitem>
+        <!-- ElasticMatrix class -->
+        <tocitem target="example_elasticmatrix_class.html">
+            ElasticMatrix Class
+        </tocitem>
+        <!-- Reflection and Transmission Coefficients -->
+        <tocitem target="example_reflection_and_transmission.html">
+            Reflection and Transmission Coefficients
+        </tocitem>
+        <!-- Dispersion curves -->
+        <tocitem target="example_dispersion_curve_titanium_plate.html">
+            Dispersion Curves - Titanium Plate
+        </tocitem>
+          <!-- Dispersion curves -->
+        <tocitem target="example_dispersion_curve_PVDF_plate.html">
+            Dispersion Curves - PVDF Plate
+        </tocitem>
+        <!-- Plotting interface parameters-->
+        <tocitem target="example_interface_parameters.html">
+            Interface Parameters
+        </tocitem>
+        <!-- Plotting field parameters-->
+        <tocitem target="example_plot_field_parameters.html">
+            Plot Displacement and Stress Fields
+        </tocitem>        
+        <!-- Plotting field parameters - movie -->
+        <tocitem target="example_plot_field_parameters_movie.html">
+            Plot Displacement and Stress Fields - Movie
+        </tocitem>       
+        <!-- Fabry-Perot Directivity -->
+        <tocitem target="example_fabry_perot_directivity.html">
+            Fabry-Perot Directional Response
+        </tocitem>       
+        <!-- Fabry-Perot Normal Incidence Response -->
+
+
+        <!-- Additionional Functions-->
+        <tocitem target="example_extra_functions.html">
+            Extra Functions
+        </tocitem>
+    </tocitem>
+</toc>
