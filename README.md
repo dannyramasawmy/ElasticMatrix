@@ -1,15 +1,19 @@
 # ElasticMatrix
 The ElasticMatrix software implements the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
-- The ./examples folder contains example scripts demonstrating some of the capabilities of the code.
-- The ./documentation folder contains relevant papers for the mathematical background.
-- The ./src-pw folder contains the source code for the partial wave method.
+To view the html documentation in MATLAB:
+help (or press F1) -> Supplemental Software -> ElasticMatrix Toolbox
+
+- ./examples folder contains example scripts demonstrating some of the capabilities of the code.
+- ./examples_mlx folder contains example scripts in the MATLAB live script style.
+- ./documentation folder contains a reference list for the mathematical background.
+- ./src-pw folder contains the source code for the partial wave method.
 
 ### Capabilities
 Some of the code functionality:
 - Plotting slowness profiles.
 - Plotting reflection and transmission coefficients.
-- Calculating the dispersion curves for simple plate structures (this has a few bugs currently).
+- Calculating the dispersion curves for simple plate structures.
 - Plotting the, displacement and stress fields.
 - Calculating the directivity of Fabry-Perot ultrasound sensors, see [1].
 
@@ -50,10 +54,14 @@ Reference list:
     control, (2007).
 
 ### Update log:
+2019-08-20
+- html documentation added for most example scripts.
+- All Functions have been refactored (however, new bug in calcualteDispersionCurveCoarse).
+
 2019-07-31
 - Some functions in src-pw have been made static methods.
 - Header documentation for every function.
-- All functions in src-pw (Except calculateDispersionCurves) have been re-factored to the BUG coding standard.
+- All functions in src-pw (Except calculateDispersionCurves) have been refactored to the BUG coding standard.
 
 2019-07-18
 - Reorder folders, delete some data and papers from documentation (replaced with a reference list).
@@ -79,4 +87,3 @@ Reference list:
 2019-05-11:
 - Initial commit, there are a few bugs in the dispersion curve functionality.
 - The examples folder needs to be updated, there are a few class method implementations which are missing.              
-
