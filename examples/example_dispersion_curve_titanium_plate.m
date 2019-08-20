@@ -1,104 +1,122 @@
-%%  example_dispersion_curve_plate
+%% Example: Dispersion Curves - Aluminium Plate
+% Dispersion curves describe the modal solutions of the multilayer
+% structure and describe a wave-mode which propagates parallel to
+% layer-interfaces independently of a bulk wave. Exciting these modes is
+% essential in ultrasonic inspection. Knowledge of the dispersion curves is
+% useful for determining the most appropriate modes to excite and for
+% optimizing the inspection process.
 %
-% Author    :   Danny Ramasawmy
-%               rmapdrr@ucl.ac.uk
-%               dannyramasawmy@gmail.com
-% Date      :   2019-  -   created
+% The implemented dispersion curve algorithm follows the procedure given in
+% [1], however, this algorithm is not completely robust. It can be prone to
+% missing the roots of dispersion curves and is sometimes unable to
+% identify solutions for very leaky-guided modes. The ElasticMatrix
+% software can calculate dispersion curves for simple layered structures
+% (i.e., a plate in a vacuum or water). However, it is not robust for
+% very-leaky cases, for example a plate embedded in an elastic medium. For
+% these types of cases either Disperse [2], or other techniques based on
+% the spectral-collocation method or semi-analytic finite element method
+% are more appropriate. An example of the dispersion curves for a $1$\,mm
+% titanium plate in a vacuum is shown in here. The dispersion curves are
+% plotted on a graph of frequency vs wavenumber and show the first three
+% symmetric $S$ and anti-symmetric $A$ Lamb modes. The results from
+% Disperse are also plotted and have excellent agreement.
 %
-%
-% Description
-%   This script demonstrates how to plot dispersion curves using the
-%   ElasticMatrix code and compares it with the output from Disperse [1].
-%   The algorithm implemented is similar to that in [2] however does not 
-%   calculate the dispersion curves in the imaginary domain.
-%
-%   [1]B. Pavlakovic, M. Lowe, D. Alleyne, P. Cawley, Disperse: a general
+%   [1] M. Lowe, Matrix techniques for modeling ultrasonic waves in 
+%       multilayered media, IEEE Trans. Ultrason. Ferroelect. Freq. Contr. 
+%       42 (4) (1995) 525-542.
+%   [2] B. Pavlakovic, M. Lowe, D. Alleyne, P. Cawley, Disperse: a general
 %       purpose program for creating dispersion curves, in: Review of 
 %       progress in quantitative nondestructive evaluation, Springer, 1997, 
 %       pp. 185{192.
-%   [2] M. Lowe, Matrix techniques for modeling ultrasonic waves in 
-%       multilayered media, IEEE Trans. Ultrason. Ferroelect. Freq. Contr. 
-%       42 (4) (1995) 525-542.
 
-%
-% =========================================================================
-%   INITALISE ELASTIC MATRIX CLASS 
-% =========================================================================
-% Firstly the ElasticMatrix object should be initialized using a Medium
-% object
-cls;
-% check what materials already exist with the available materials function
-% Medium.Available_Materials;
+%% Initialize ElasticMatrix Class
+% Initialize the ElasticMatrix class with a Medium object.
 
-% calculate the medium geometry titanium
-plateMedium = Medium('vacuum',0,'titanium',0.001,'vacuum',1);
-% plateMedium = Medium('vacuum',0,'PVDF',0.001,'vacuum',1);
+% A titanium plate:
+plate_medium = Medium('vacuum',0,'titanium',0.001,'vacuum',1);
 
-% initialize the model
-model = ElasticMatrix(plateMedium);
+% Initialize the model
+model = ElasticMatrix(plate_medium);
 
-% =========================================================================
-%   SET THE MODEL PARAMETERS
-% =========================================================================
+%% Setting Model Parameters
+% Calculate the range of parameters to calculate the dispersion curves.
+% These are generally a range of phase-speeds and frequencies. Only the
+% first and last values are used.
 
-% set the model parameters
-model.setFrequency(linspace(0.1e6, 5e6, 300));
-% model.setAngle(linspace(0, 45, 200));
-model.setPhasespeed(linspace(60, 2000, 1500)); 
+% Set a range of frequency:
+model.setFrequency(linspace(0.1e6, 5e6, 2));
+% Set a range of phasespeeds:
+model.setPhasespeed(linspace(60, 10000, 2)); 
 
-% =========================================================================
-%   CALCULATE THE DISPERSION CURVES
-% =========================================================================
+%% Calculating Dispersion Curves
+% The dispersion curves are calculated using the .calculateDispersionCurve
+% or .calculateDispersionCurveCoarse method. The .calculateDispersionCurve
+% will attempt to trace the dispersion curves however, this does not always
+% work correctly. If this is the case the .calculateDispersionCurveCoarse
+% method can be used.
 
-% calculate dispersion curves, the code will plot a map of the condition
-% number and show the dispersion curves tracing, this indicates if any of
-% them are not tracing the correct path.
+% Calculate the dispersion curves:
 model.calculateDispersionCurves;
 
-% if the dispersion curves will not trace use the coarse method below, this
-% will search for the minima in the determinant map
-% model.calculateDispersionCurvesCoarse;
+%% Plotting Dispersion Curves
+% The dispersion curves can be plotted using the .plotDispersionCurves
+% method. Note: the algorithm will occasionally identify the critical angle
+% as a dispersion curve.
 
-% each traced mode can be seen:
+[figure_handles] = model.plotDispersionCurves;
 
+% The data from a titanium plate calculation in Disperse is added:
 
-% plot the dispersion curves, note the function will pick up the critical
-% angle as a dispersion curve
-[figureHandles] = model.plotDispersionCurves;
+disperse_data = importdata('disperseTitaniumPlateData.txt');
 
-% save the data
-% model.save('TitaniumDipsersionData')
-
-% =========================================================================
-%   OVERLAY POINTS FROM DISPERSE
-% =========================================================================
-
-disperseData = importdata('../data/disperseTitaniumPlateData.txt');
-
-figure(figureHandles.fig2)
+figure(figure_handles.fig2)
 % plot disperse
 %S0
 hold on
-plot(disperseData.data(:,1),disperseData.data(:,2),'k.')
+plot(disperse_data.data(:,1),disperse_data.data(:,2),'k.')
 %A0
-plot(disperseData.data(:,3),disperseData.data(:,4),'b.')
+plot(disperse_data.data(:,3),disperse_data.data(:,4),'b.')
 %S1
-plot(disperseData.data(:,5),disperseData.data(:,6),'k.')
+plot(disperse_data.data(:,5),disperse_data.data(:,6),'k.')
 %S2
-plot(disperseData.data(:,7),disperseData.data(:,8),'k.')
+plot(disperse_data.data(:,7),disperse_data.data(:,8),'k.')
 % A1
-plot(disperseData.data(:,13),disperseData.data(:,14),'b.')
+plot(disperse_data.data(:,13),disperse_data.data(:,14),'b.')
 %A2
-plot(disperseData.data(:,15),disperseData.data(:,16),'b.')
+plot(disperse_data.data(:,15),disperse_data.data(:,16),'b.')
 hold off
 % labels
 xlim([0.1 5])
 ylim([0 10])
 xlabel('Frequency [MHz]')
 ylabel('Phase Velocity [km/s]')
-% legend('ElasticMatrix','Disperse')
 box on
 title('ElasticMatrix (lines) + Disperse (points)')
+
+%% About
+%
+%   author          - Danny Ramasawmy
+%   contact         - dannyramasawmy+elasticmatrix@gmail.com
+%   date            - 19 - August   - 2019
+%   last update     - 19 - August   - 2019
+%
+% This file is part of the ElasticMatrix toolbox.
+% Copyright (c) 2019 Danny Ramasawmy.
+%
+% This file is part of ElasticMatrix. ElasticMatrix is free software: you
+% can redistribute it and/or modify it under the terms of the GNU Lesser
+% General Public License as published by the Free Software Foundation,
+% either version 3 of the License, or (at your option) any later version.
+%
+% ElasticMatrix is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+% General Public License for more details.
+%
+% You should have received a copy of the GNU Lesser General Public License
+% along with ElasticMatrix. If not, see <http://www.gnu.org/licenses/>.
+
+
 
 
 

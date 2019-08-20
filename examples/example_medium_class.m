@@ -1,101 +1,108 @@
-%% example_medium_class
-%
-% Author    :   Danny Ramasawmy
-%               rmapdrr@ucl.ac.uk
-%               dannyramasawmy@gmail.com
-% Date      :   2019-01-25  -   created
-%
-%   This script will run through the different functionalities of the
-%   Medium class. A Medium object contains the geometry information for the
-%   multi-layered structure as well as the material properties.
-%
-% =========================================================================
-%   INTIALISE THE MEDIUM
-% =========================================================================
-% The medium class provides the geometry for the ElasticMAtrix class. 
-cls;
+%% Example: Medium Class
+% The Medium class is used to define the material properties and
+% thickness of each layer. 
 
-% firstly, a list of predefined available materials can be seen by ...
+%% Initialize a Medium Object
+% The class is initialized by calling the class constructor with input
+% arguments of the material name followed by its thickness. However, the
+% thickness of the first and last layers are semi-infinite and their values
+% should be set with the Inf keyword.
+
+% To initialize a 4-layered geometry:
+my_medium = Medium('water',Inf, 'blank',0.001, ...
+    'PVDF',0.001, 'air', Inf);
+
+% To display the object:
+my_medium.disp; 
+
+% Here, myMedium is an object array and every index in the object array
+% corresponds to a different layer in the medium. In the current example
+% myMedium(3) will return a object with the material properties and
+% thickness associated with PVDF.
+
+my_medium(3).disp;
+
+% The `blank' argument can used for a material which is not predefined. The
+% material properties and names can be set using their respective set
+% functions described in the following section.
+
+%% Defining New Materials
+% A list of predefined materials can be printed to screen using the static
+% function:
+
 Medium.availableMaterials;
 
-% To add new materials, type <edit materialList.m > and follow the format
-% that is given there. 
-% Taking some of the materials from the printed list, the Medium class can
-% now be initialized with the class constructor. This
-% takes input arguments of the material, followed by its thickness in [m].
+% A new material can be added to the script materialList.m, if it has not
+% been predefined.
 
-% initialize a 4 - layered medium
-myMediumObject = Medium('water',Inf, 'glass',0.001, 'aluminium',0.001, 'air', Inf);
-% print the medium to the command window
-printLineBreaks
-disp('The Medium object has been initialised')
-myMediumObject.disp;
-
-% note the printed table gives an index for the order of the material
-% layers, the name, the thickness, the density and its state. Additionally
-% the 4 - key stiffness matrix parameters are printed.
-
-printLineBreaks;
-% Note, the length(myMediumObject) is 4 ...
-disp(['myMediumObject has a length of : ',num2str(length(myMediumObject))])
-% ... The object can be indexed, where each index corresponds to the order
-% of the layers when initialized. An individual layer can be viewed by
-% choosing the appropriate index, for example to display the second layer..
-disp('The properties of the second layer, >> myMediumObject(2)  ')
-myMediumObject(2).disp;
-
-
-% =========================================================================
-%   SETTING DENSITY, THICKESS AND THE NAME OF INDIVIDUAL LAYERS
-% =========================================================================
-
+%% Setting Material Properties
 % The properties of a layer can be changed using the appropriate set
 % function, this takes input arguments of the layer index followed by the
-% property being altered. Some examples...
+% property being altered.
 
-% change the density [kg/m^3] of the second layer
-myMediumObject.setDensity( 2, 2400 );
+% Change the density [kg/m^3] of the second layer:
+my_medium.setDensity( 2, 2400 );
 
-% change the thickness [m] of the third layer
-myMediumObject.setThickness( 3, 0.0015 );
+% Change the thickness [m] of the third layer:
+my_medium.setThickness( 3, 0.0015 );
 
-% change the name of the first layer
-myMediumObject.setName(1 , 'newWater');
+% Change the name of the first layer:
+my_medium.setName(1 , 'newName');
 
-% view the changes
-printLineBreaks;
-disp('View altered properties')
-myMediumObject.disp;
+% Print the new properties:
+my_medium.disp;
 
-% =========================================================================
-%   CHANGING THE STIFFNESS MATRIX OF THE MEDIUM
-% =========================================================================
-
+%% Setting the Stiffness Matrix
 % The stiffness coefficients of each layer are directly related to its
 % sound-speed (isotropic case). The Medium class uses the stiffness matrix
 % for its calculations. However, for an isotropic case usually only
 % sound-speeds or Lame constants are known. The Medium class provides two
 % static functions to generate the related stiffness matrix.
 
-% if only the compressional sound speed, shear speed and density are known
+% If the compressional sound speed, shear speed and density are known:
 density = 2500;
-compressionalSpeed = 5600;
-shearSpeed = 3400;
-% get the stiffness coefficient matrix
-materialStiffnessMatrix = Medium.soundSpeedDensityConversion(...
-    compressionalSpeed, shearSpeed, density);
+compressional_speed = 5600;
+shear_speed = 3400;
 
-% alternatively if only the Lame constants are known
+% The stiffness matrix:
+stiffness_matrix = Medium.soundSpeedDensityConversion(...
+    compressional_speed, shear_speed, density);
+
+% If only the Lame constants are known:
 lambda = 2.0600e+10;
 mu = 2.8900e+10;
-% get the stiffness coefficient matrix
-materialStiffnessMatrix = myMediumObject.lameConversion(lambda, mu);
 
-% The coefficients can then be used to update one of the material layers, for
-% example to update the stiffness coefficients of layer 2
-myMediumObject.setStiffnessMatrix(2, materialStiffnessMatrix);
-% remember to update the density 
-myMediumObject.setDensity(2, density);
+% The stiffness matrix:
+stiffness_matrix = my_medium.lameConversion(lambda, mu);
+
+% Update the stiffness matrix of one of the layers:
+my_medium.setStiffnessMatrix(2, stiffness_matrix);
+
+% Remember to update the density too:
+my_medium.setDensity(2, density);
+
+%% About
+%
+%   author          - Danny Ramasawmy
+%   contact         - dannyramasawmy+elasticmatrix@gmail.com
+%   date            - 19 - August   - 2019
+%   last update     - 19 - August   - 2019
+%
+% This file is part of the ElasticMatrix toolbox.
+% Copyright (c) 2019 Danny Ramasawmy.
+%
+% This file is part of ElasticMatrix. ElasticMatrix is free software: you
+% can redistribute it and/or modify it under the terms of the GNU Lesser
+% General Public License as published by the Free Software Foundation,
+% either version 3 of the License, or (at your option) any later version.
+%
+% ElasticMatrix is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+% General Public License for more details.
+%
+% You should have received a copy of the GNU Lesser General Public License
+% along with ElasticMatrix. If not, see <http://www.gnu.org/licenses/>.
 
 
 

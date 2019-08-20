@@ -1,27 +1,15 @@
-%% example_fabry_perot_frequency_response
-%
-% Author        :   Danny Ramasawmy
-%                   rmapdrr@ucl.ac.uk
-%                   dannyramasawmy@gmail.com
-%
-% Date          :   2016-06-13 - created
-%                   2016-11-04 - added all examples from paper
-%
-% Description
-%   This script test the model by running the model for all 6 graphs in
-%   Paul Beards - Transduction Mechanisms of the Fabry-Perot polymer film
-%   sensing concept for wide-band ultrasound detection. This case is the
-%   normal scenario of each of the models.
+%% Example: Fabry-Perot Frequency Response
+% This example plots the frequency response of the Fabry-Perot sensor for 6
+% different sensor types, repoducing the results found in [1].
 %
 % Reference:
 %   [1] Transduction mechanisms of the Fabry-Perot polymer film sensing
 %   concept for wideband ultrasound detection, Paul Beard, 1999, IEEE
 %   Transactions on Ultrasonics, Ferroelectrics and Frequency Control
 %
-% =========================================================================
-%   SET PROPERTIES
-% =========================================================================
-cls;
+
+%% Setting Parameters
+
 % Define range of frequencies
 freqs = linspace(0.1e6,30e6,100);
 % Define range of angle (must start from 0)
@@ -112,5 +100,30 @@ end
 
 % set figure position
 set(mainFigHand,'Position',[340 67 572 863]);
+
+%% About
+%
+%   author          - Danny Ramasawmy
+%   contact         - dannyramasawmy+elasticmatrix@gmail.com
+%   date            - 19 - August   - 2019
+%   last update     - 19 - August   - 2019
+%
+% This file is part of the ElasticMatrix toolbox.
+% Copyright (c) 2019 Danny Ramasawmy.
+%
+% This file is part of ElasticMatrix. ElasticMatrix is free software: you
+% can redistribute it and/or modify it under the terms of the GNU Lesser
+% General Public License as published by the Free Software Foundation,
+% either version 3 of the License, or (at your option) any later version.
+%
+% ElasticMatrix is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+% General Public License for more details.
+%
+% You should have received a copy of the GNU Lesser General Public License
+% along with ElasticMatrix. If not, see <http://www.gnu.org/licenses/>.
+
+
 
 
