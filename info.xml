@@ -1,0 +1,15 @@
+<productinfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="optional">
+    <?xml-stylesheet type="text/xsl"href="optional"?>
+         <!-- info.xml file for the ElasticMatrix Toolbox -->
+    <!-- Version 1 -->
+    <!-- Copyright (2019) (Danny Ramasawmy).-->
+
+
+    <matlabrelease>R2019b</matlabrelease>
+    <name>ElasticMatrix</name>
+    <type>toolbox</type>
+    <icon></icon>
+    <help_location>documentation/html</help_location>
+  
+</productinfo>
