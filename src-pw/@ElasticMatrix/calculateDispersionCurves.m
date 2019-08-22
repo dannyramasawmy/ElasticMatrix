@@ -5,7 +5,7 @@ function obj = calculateDispersionCurves(obj)
     %   CALCULATEDISPERSIONCURVES calculates the dispersion curves of the
     %   layered structure using the method described in [1]. Firstly, one
     %   parameter, for example frequency, is fixed and the determinant of
-    %   the global-matrix is found over a range of wavenumbers. Close to
+    %   the global-matrix is found over a range of wave-numbers. Close to
     %   dispersive solutions the determinant of the global-matrix tends to
     %   zero. Using these as starting points and taking a small limit
     %   either side, the exact frequency and wavenumber of the dispersive
@@ -15,7 +15,7 @@ function obj = calculateDispersionCurves(obj)
     %   the fixed value of frequency is increased and the search is
     %   performed again. The algorithm then switches to using a linear
     %   interpolation scheme to estimate the location of the third and
-    %   fourth points on the dispersion curve, similarly using a bisection
+    %   fourth points on the dispersion curve, similarly, using a bisection
     %   algorithm to find the exact frequency-wavenumber pairs. After five
     %   points have been found, a higher-order polynomial interpolation
     %   scheme is used to more accurately predict points on the dispersion
@@ -41,10 +41,8 @@ function obj = calculateDispersionCurves(obj)
     %   obj.calculateDispersionCurves;
     %
     % INPUTS
-    %   obj.phasespeed  - The range of phasespeeds (only the first and last
-    %                     values are taken into account).   [m/s] 
     %   obj.frequency   - The range of frequencies (only the first and last
-    %                     values are taken into account).   [m/s]
+    %                     values are used).   [m/s]
     %
     % OPTIONAL INPUTS
     %   []              - There are no optional inputs. []
@@ -66,7 +64,7 @@ function obj = calculateDispersionCurves(obj)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 14 - August   - 2019
+    %   last update     - 22 - August   - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -86,30 +84,29 @@ function obj = calculateDispersionCurves(obj)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    % the matrix will become singular at dispersion solutions
     warning off
     
     % =====================================================================
-    %   FIND THE SOUND SPEEDS OF DIFFERENT MATERIALS
+    %   FIND THE SOUND-SPEEDS OF EACH MATERIAL
     % =====================================================================
-    % check the state
+    % initialize
     lowest_cph = [];
-    comp_speeds = [];
-    shear_speeds = [];
     
     % material sorting
     for mat_idx = 1:length(obj.medium)
         
         % material state
-        mat_state = obj.medium(mat_idx).state;
+        material_state = obj.medium(mat_idx).state;
         % identify state
         switch 1
-            case strcmp(mat_state,'Vacuum')
+            case strcmp(material_state,'Vacuum')
                 stiff_coeff = NaN;
                 
-            case strcmp(mat_state,'Liquid')
+            case strcmp(material_state,'Liquid')
                 stiff_coeff = [1,1];
                 
-            case strcmp(mat_state,'Isotropic')
+            case strcmp(material_state,'Isotropic')
                 stiff_coeff = [5,5];
                 
             otherwise
@@ -120,40 +117,28 @@ function obj = calculateDispersionCurves(obj)
         if isnan(stiff_coeff)
             continue
         end
-        
-        % get sound speed
-        tmp_cmp = sqrt(...
-            obj.medium(mat_idx).stiffness_matrix(1, 1) / ...
-            obj.medium(mat_idx).density);
-        % get sound speed
-        tmp_shr = sqrt(...
-            obj.medium(mat_idx).stiffness_matrix(5, 5) / ...
-            obj.medium(mat_idx).density);
-        % assign bulk wave speeds
-        comp_speeds = [comp_speeds, tmp_cmp];   %#ok<AGROW>
-        shear_speeds = [shear_speeds, tmp_shr]; %#ok<AGROW>
-        
+                
         if mat_idx > 1
             % get sound speed
             tmp_v = sqrt(...
-                obj.medium(mat_idx).stiffness_matrix(stiff_coeff(1), stiff_coeff(2)) / ...
+                obj.medium(mat_idx).stiffness_matrix(...
+                stiff_coeff(1), stiff_coeff(2)) / ...
                 obj.medium(mat_idx).density);
-            % to prevent small speeds being stored (i.e, shear of liquid)
+            
+            % fluids are modeled with a small shear speed, these are
+            % ignored
             if tmp_v > 100
-                % store the lowest phase velocities (generally the shear speeds)
-                lowest_cph = [lowest_cph, tmp_v]; %#ok<AGROW>
+                % store the lowest phase velocities 
+                lowest_cph = [lowest_cph, tmp_v];       %#ok<AGROW>
             end
         end
     end
     
-    % remove small values
-    shear_speeds = shear_speeds(shear_speeds > 100);
-    
     % =====================================================================
-    %   GET A PLATE THICKNESS ESTIMATE
+    %   PLATE THICKNESS ESTIMATE (SANDWICHED LAYERS)
     % =====================================================================
     total_thickness = length(obj.medium(2:end-1));
-    % not interested in the first and last layers
+    % only consider the middle layers
     for mat_dx = 2:length(obj.medium)-1
         total_thickness(mat_dx-1) = obj.medium(mat_dx).thickness;
     end
@@ -165,27 +150,23 @@ function obj = calculateDispersionCurves(obj)
     
     % define ranges of frequency
     f_min = min(obj.frequency);
-    f_int = 5 / total_thickness; % 5 in coarse method
-    f_max = max(obj.frequency);
+    f_int = 5 / total_thickness;                    % 5 is arbitrary 
+    f_max = max(obj.frequency);                     % [1/s]
     
     % define kx ranges
     kx_min = 0.1; % [1/m]
-    kx_max = (2*pi*f_max / (min(lowest_cph)*0.9) ); % rayleigh v ~0.9
+    kx_max = (2*pi*f_max / (min(lowest_cph)*0.9) ); % Rayleigh v ~0.9
     % arbitrary scaling
-    kx_int = 0.01 / total_thickness; % [1/m] 
-    % define cph ranges
-    
-    
-    % create a wavenumber and frequency vector  - up-sampled
+    kx_int = 0.01 / total_thickness;                % [1/m] 
+
+    % create a wavenumber and frequency vector 
     freq_range = f_min:f_int:f_max;
     kx_range   = kx_min:kx_int:kx_max;
     
     % create a function handle to calculate global matrix determinant
     h = @(freqs, wavenumber) ElasticMatrix.calculateMatrixModelKf(...
         obj.medium, freqs, wavenumber, 0);
-    
-    
-               
+              
     % =====================================================================
     %   PLOT DETERMINANT MAP
     % =====================================================================
@@ -231,7 +212,7 @@ function obj = calculateDispersionCurves(obj)
     
     % differentiate to find the gradient turning points
     d_kx_sweep  = diff( log10(abs(kx_sweep))); 
-    d_f_sweep   = diff(   log10(abs(f_sweep))); 
+    d_f_sweep   = diff( log10(abs(f_sweep))); 
         
     % find crossing points
     kx_starting_idxs    = findZeroCrossing(d_kx_sweep);
@@ -256,7 +237,7 @@ function obj = calculateDispersionCurves(obj)
             mode_struct(mode_dx).startingPointsFs = Fs(mode_dx);
         end
         
-        % phasespeed starting points
+        % phase-speed starting points
         if mode_dx > NFs
             mode_struct(mode_dx).startingPointsKXs = KXs(mode_dx-length(Fs));
         end
@@ -277,7 +258,7 @@ function obj = calculateDispersionCurves(obj)
     % dispersion curve points.
     
     % increment in the k-wavenumber
-    k_inc = kx_range(1):kx_int:kx_range(end); % DEBUG FINDME - do you want smaller intervals
+    k_inc = kx_range(1):kx_int:kx_range(end);
     
     % plot the curves at certain points
     plot_counter = round(linspace(1,length(k_inc),100));
@@ -396,13 +377,12 @@ function obj = calculateDispersionCurves(obj)
         end
         
     end
-    
-    
+  
     % =====================================================================
     %   CONVERT TO PHASESPEED AND ASSIGN OBJECT PROPERTY
     % =====================================================================
     
-    % convert fK to phasespeed
+    % convert f-kx to phase-speed
     for idx = 1:length(mode_struct)
         mode_struct(idx).c = (mode_struct(idx).f*2*pi) ./...
             mode_struct(idx).k;
@@ -411,6 +391,7 @@ function obj = calculateDispersionCurves(obj)
     % assign object property
     obj.dispersion_curves = mode_struct;
     
+    % turn warnings back on
     warning on
    
 end
