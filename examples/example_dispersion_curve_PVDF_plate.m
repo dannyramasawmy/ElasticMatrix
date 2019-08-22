@@ -39,14 +39,14 @@ plate_medium = Medium('vacuum',0,'PVDF',0.001,'vacuum',1);
 model = ElasticMatrix(plate_medium);
 
 %% Setting Model Parameters
-% Calculate the range of parameters to calculate the dispersion curves.
-% These are generally a range of phase-speeds and frequencies. Only the
-% first and last values are used.
+% Set a range of frequencies to calculate the dispersion curves. The
+% dispersion curves are calculated in terms of frequency-wavenumber, the
+% range of wave-numbers is automatically calculated based on the lowest
+% sound-speed within the medium. Only the first and last frequency are
+% used.
 
-% Set a range of frequency:
+% Set a range of frequencies:
 model.setFrequency(linspace(0.1e6, 2.5e6, 2));
-% Set a range of phasespeeds:
-model.setPhasespeed(linspace(47, 10000, 2)); 
 
 %% Calculating Dispersion Curves
 % The dispersion curves are calculated using the .calculateDispersionCurve
@@ -71,7 +71,7 @@ model.calculateDispersionCurves;
 %   author          - Danny Ramasawmy
 %   contact         - dannyramasawmy+elasticmatrix@gmail.com
 %   date            - 19 - August   - 2019
-%   last update     - 19 - August   - 2019
+%   last update     - 22 - August   - 2019
 %
 % This file is part of the ElasticMatrix toolbox.
 % Copyright (c) 2019 Danny Ramasawmy.

@@ -97,6 +97,46 @@ sfg;
 % For example to get the directivity normalized between 0 and 1:
 directivity_normalised = sensor.getDirectivity('normalise');
 
+%% Calculate Dispersion Curves
+% Here the dispersion curves are calculated for a glass plate in a vacuum
+% which is a good approximation for this sensor. The points for each mode
+% are converted from phase-speed to an angle using the bulk wave-speed of
+% the first layer in the sensor geometry (water) and plotted on a map of
+% directivity.
+
+% Geometry of the glass plate:
+model_geometry = Medium('vacuum',Inf, 'glass',175.9e-6, 'vacuum',Inf);
+model = FabryPerotSensor(model_geometry);
+
+% Set properties
+model.setFrequency( linspace(0.1e6, 50e6, 150) );
+
+% Calculate dispersion curves:
+model.calculateDispersionCurves;
+
+
+% Plot the directional reponse:
+[figure_handle_dispersion] = sensor.plotDirectivity('normalise');
+colormap parula
+hold on
+
+% Loop over each guided mode curve:
+for idx = 1:length(model.dispersion_curves)
+    
+    % Retrieve dispersion curve points:
+    cph_points  = model.dispersion_curves(idx).c;
+    f_points    = model.dispersion_curves(idx).f;
+    
+    % Convert phase-speed to angle using the sound-speed in the first layer
+    % (water):
+    angle_points = real(asin(1480 ./ cph_points)) * 180/pi;
+    
+    % Plot dispersion points over a directivity map:
+    plot(angle_points, f_points/1e6, 'k.')
+
+end
+xlim([0 45])
+
 %% About
 %
 %   author          - Danny Ramasawmy
