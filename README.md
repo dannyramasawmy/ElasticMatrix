@@ -56,7 +56,7 @@ Reference list:
 ### Update log:
 2019-08-20
 - html documentation added for most example scripts.
-- All Functions have been refactored (however, new bug in calcualteDispersionCurveCoarse).
+- All Functions have been refactored.
 
 2019-07-31
 - Some functions in src-pw have been made static methods.
