@@ -60,6 +60,8 @@ function obj = calculateSlowness(obj)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    disp('... calculating slowness profiles ...')
+
     % loop over each material
     for idx = 1:length(obj)
         
@@ -86,6 +88,7 @@ function obj = calculateSlowness(obj)
         
     end
     
+    disp('... finished calculating slowness profiles ...')
 end
 
 function [slowness] = calculateSlownessLiquid( material )

@@ -180,6 +180,8 @@ function obj = calculateDispersionCurvesCoarse(obj)
     %   FIND DISPERSION POINTS
     % =====================================================================
     
+    disp('... calculating dispersion curves - coarse method ...')
+
     % loop over the frequency index
     for k_idx = 1:length(kx_range)
         
@@ -271,6 +273,8 @@ function obj = calculateDispersionCurvesCoarse(obj)
     ylabel('Wavenumber [m^-^1]')
     xlabel('Frequency [MHz]')
     title('Determinant map - with dispersion curve points')
+        
+    disp('... finished calculating dispersion curves ...')
         
     % turn warnings back on
     warning on

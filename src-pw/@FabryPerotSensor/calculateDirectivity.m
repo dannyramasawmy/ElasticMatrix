@@ -67,7 +67,7 @@ function [obj] = calculateDirectivity(obj)
     % <http://www.gnu.org/licenses/>.
     
     % this function calculates the directivity
-    disp('... Calculating directivity ...')
+    disp('... calculating directivity ...')
     
     % calculate the mirror displacements
     obj.calculate;
@@ -132,7 +132,7 @@ function [obj] = calculateDirectivity(obj)
     % assign to temporary variable for fast plotting
     obj.directivity = directivity;
     
-    disp('... Finished calculating ...')
+    disp('... finished calculating directivity ...')
     
 end
 

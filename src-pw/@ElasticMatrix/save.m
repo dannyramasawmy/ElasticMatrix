@@ -46,6 +46,8 @@ function obj = save(obj, varargin)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    disp('... saving object ...')
+
     % copy object
     elastic_matrix_object = obj;
     

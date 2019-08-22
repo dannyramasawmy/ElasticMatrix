@@ -52,6 +52,8 @@ function figure_handle = plotDirectivity(obj, varargin)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    disp('... plotting directivity ...')
+
     % valid plot inputs
     plot_types = {'normal', 'normalise', 'linear', 'decibel', 'phase'};
     

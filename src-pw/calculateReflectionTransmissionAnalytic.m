@@ -57,6 +57,8 @@ function [RL, RS, TL, TS] = calculateReflectionTransmissionAnalytic(...
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    disp('... calculating reflection and transmission coefficients ...')
+
     % check inputs
     inputCheck(angle_range, medium_object);
     

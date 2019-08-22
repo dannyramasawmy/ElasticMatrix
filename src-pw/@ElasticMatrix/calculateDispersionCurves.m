@@ -266,7 +266,7 @@ function obj = calculateDispersionCurves(obj)
     % initialize 
     current_mode = zeros(length(mode_struct),1);
             
-    disp('...calculating dispersion curves...')
+    disp('... calculating dispersion curves ...')
     % for each k
     for counter_idx = 1:length(k_inc)-1
         
@@ -391,6 +391,8 @@ function obj = calculateDispersionCurves(obj)
     % assign object property
     obj.dispersion_curves = mode_struct;
     
+    disp('... finished calculating dispersion curves ...')
+
     % turn warnings back on
     warning on
    

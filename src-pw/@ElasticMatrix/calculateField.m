@@ -370,6 +370,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
         
     end % time loop
     
+    disp('... finished calculating displacement and stress fields ...')
 end
 
 function inputCheck(obj, frequency_choice, angle_choice, varargin)

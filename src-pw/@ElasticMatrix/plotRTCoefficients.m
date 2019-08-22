@@ -81,6 +81,8 @@ function [figure_handle, obj] = plotRTCoefficients(obj)
     %   PLOTTING
     % =====================================================================
     
+    disp('... plotting reflection and transmission coefficients ...')
+
     % open figure
     figure_handle = figure;
     

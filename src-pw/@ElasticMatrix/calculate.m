@@ -188,7 +188,7 @@ function obj = calculate(obj)
     obj.unnormalised_amplitudes = unnorm_amplitudes;
     
     % exit message
-    disp('... done ... ')
+    disp('... finished calculating matrix method ... ')
     
     warning on
     
