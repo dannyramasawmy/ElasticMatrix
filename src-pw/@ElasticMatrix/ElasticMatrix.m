@@ -382,21 +382,20 @@ classdef ElasticMatrix < handle
         end
         
         % set properties
-        obj = setFilename(     obj, filename          );
-        obj = setFrequency(    obj, frequency_range    );
-        obj = setAngle(        obj, angle_range        );
-        obj = setWavenumber(   obj, wavenumber_range   );
-        obj = setPhasespeed(   obj, phasespeed_range   );
-        obj = setMedium(       obj, medium            );
+        obj = setFilename(     obj, filename            );
+        obj = setFrequency(    obj, frequency_range     );
+        obj = setAngle(        obj, angle_range         );
+        obj = setWavenumber(   obj, wavenumber_range    );
+        obj = setPhasespeed(   obj, phasespeed_range    );
+        obj = setMedium(       obj, medium              );
         
         % run model
         obj = calculate(obj);
         
         % calculate dispersion curves
         obj = calculateDispersionCurvesCoarse(obj);
-        % obj = calculateDispersionCurvesR(obj); % from |R|
         obj = calculateDispersionCurves(obj);
-        
+       
         % plot / calculate displacement field
         [field, obj] = calculateField(obj, ...
             angle_choice, frequency_choice, varargin);

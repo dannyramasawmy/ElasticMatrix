@@ -27,10 +27,8 @@ function obj = calculateDispersionCurvesCoarse(obj)
     %   obj.calculateDispersionCurvesCoarse;
     %
     % INPUTS
-    %   obj.phasespeed  - The range of phasespeeds (only the first and last
-    %                     values are taken into account).   [m/s] 
     %   obj.frequency   - The range of frequencies (only the first and last
-    %                     values are taken into account).   [m/s]
+    %                     values are taken used).   [m/s]
     %
     % OPTIONAL INPUTS
     %   []              - There are no optional inputs. []
@@ -69,27 +67,105 @@ function obj = calculateDispersionCurvesCoarse(obj)
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
-    % the matrix will become singular
+     % the matrix will become singular
     warning off
     
     % =====================================================================
-    %   FIND PHASESPEED AND FREQUENCY RANGES
+    %   FIND THE SOUND SPEEDS OF DIFFERENT MATERIALS
+    % =====================================================================
+    % check the state
+    lowest_cph = [];
+    comp_speeds = [];
+    shear_speeds = [];
+    
+    % material sorting
+    for mat_idx = 1:length(obj.medium)
+        
+        % material state
+        mat_state = obj.medium(mat_idx).state;
+        % identify state
+        switch 1
+            case strcmp(mat_state,'Vacuum')
+                stiff_coeff = NaN;
+                
+            case strcmp(mat_state,'Liquid')
+                stiff_coeff = [1,1];
+                
+            case strcmp(mat_state,'Isotropic')
+                stiff_coeff = [5,5];
+                
+            otherwise
+                stiff_coeff = [5,5];
+        end
+        
+        % if it is a NaN then skip
+        if isnan(stiff_coeff)
+            continue
+        end
+        
+        % get sound speed
+        tmp_cmp = sqrt(...
+            obj.medium(mat_idx).stiffness_matrix(1, 1) / ...
+            obj.medium(mat_idx).density);
+        % get sound speed
+        tmp_shr = sqrt(...
+            obj.medium(mat_idx).stiffness_matrix(5, 5) / ...
+            obj.medium(mat_idx).density);
+        % assign bulk wave speeds
+        comp_speeds = [comp_speeds, tmp_cmp];   %#ok<AGROW>
+        shear_speeds = [shear_speeds, tmp_shr]; %#ok<AGROW>
+        
+        if mat_idx > 1
+            % get sound speed
+            tmp_v = sqrt(...
+                obj.medium(mat_idx).stiffness_matrix(stiff_coeff(1), stiff_coeff(2)) / ...
+                obj.medium(mat_idx).density);
+            % to prevent small speeds being stored (i.e, shear of liquid)
+            if tmp_v > 100
+                % store the lowest phase velocities (generally the shear speeds)
+                lowest_cph = [lowest_cph, tmp_v]; %#ok<AGROW>
+            end
+        end
+    end
+    
+    % remove small values
+    shear_speeds = shear_speeds(shear_speeds > 100);
+    
+    % =====================================================================
+    %   GET A PLATE THICKNESS ESTIMATE
+    % =====================================================================
+    total_thickness = length(obj.medium(2:end-1));
+    % not interested in the first and last layers
+    for mat_dx = 2:length(obj.medium)-1
+        total_thickness(mat_dx-1) = obj.medium(mat_dx).thickness;
+    end
+    total_thickness = sum(total_thickness);
+    
+    % =====================================================================
+    %   SET PARAMETERS
     % =====================================================================
     
-    % find maximum and minimum frequency and phasespeed
-    [min_cph, max_cph] = deal(min(obj.phasespeed), max(obj.phasespeed));
-    [min_f, max_f]     = deal(min(obj.frequency), max(obj.frequency));
+    % define ranges of frequency
+    f_min = min(obj.frequency);
+    f_int = 5 / total_thickness; % 25 is an arbitrary value
+    f_max = max(obj.frequency);
     
-    % convert phasespeed to wavenumber
-    kx_min = (2 * pi * min_f) ./ max_cph ;   
-    kx_max = (2 * pi * min_f) ./ min_cph ;
+    % define kx ranges
+    kx_min = 0.1; % [1/m]
+    kx_max = (2*pi*f_max / (min(lowest_cph)*0.9) ); % rayleigh v ~0.9
+    kx_int = 0.1 / total_thickness; % [1/m] 
+    % define cph ranges
+    
     
     % create a wavenumber and frequency vector  - up-sampled
-    samples = 500;
-    freq_range = linspace(min_f, max_f, samples);
-    kx_range   = linspace(kx_min, kx_max, samples);
+    freq_range = f_min:f_int:f_max;
+    kx_range   = kx_min:kx_int:kx_max;
     
-
+    % =====================================================================
+    %   RETURN ARGUMENTS
+    % =====================================================================
+    
+    
     % create a function handle to calculate global matrix determinant
     h = @(freqs, wavenumber) ElasticMatrix.calculateMatrixModelKf(...
         obj.medium, freqs, wavenumber, 0);
@@ -105,39 +181,68 @@ function obj = calculateDispersionCurvesCoarse(obj)
     % =====================================================================
     
     % loop over the frequency index
-    for f_idx = 1:10:length(freq_range)
+    for k_idx = 1:length(kx_range)
+        
+        % this can be updated
+        freq_range = f_min:f_int:f_max;
+        
         % get an array of frequencies to calculate over
-        f_loop = freq_range(f_idx) * ones(1,length(kx_range));
+        k_loop = kx_range(k_idx) * ones(1,length(freq_range));
         
         % metric
-        score = h(f_loop, kx_range);
+        score = h(freq_range, k_loop);
         
         % get the peaks
         [~, found_peaks] = findpeaks(-log10(abs(score)));
         
         % if there are peaks (dispersion solutions)
-        if ~isempty(found_peaks)            
+        if ~isempty(found_peaks)
             % loop over the found indices
             for idx = 1:length(found_peaks)
                 % limits to minimize over
-                lim1 = kx_range(found_peaks(idx))-1;
-                lim2 = kx_range(found_peaks(idx))+1;
+                lim1 = freq_range(found_peaks(idx))-1;
+                lim2 = freq_range(found_peaks(idx))+1;
                 
                 % new handle
-                h2 = @(wavenumber) h(freq_range(f_idx), wavenumber);
+                h2 = @(frequency) h(frequency, kx_range(k_idx));
                 
                 % assign the outputs
+                opts = optimset('Display','off');
                 output_struct.k = ...
-                    [output_struct.k, fminbnd(h2, lim1, lim2)];
+                    [output_struct.k, kx_range(k_idx)];
                 output_struct.f = ...
-                    [output_struct.f, freq_range(f_idx)];          
+                    [output_struct.f, fminbnd(h2, lim1, lim2, opts)];
             end
         end
         
-        det_fK(f_idx, :) = score;
+        det_fK(:, k_idx) = score;
     end
     
-
+    % =====================================================================
+    %   PLOT DETERMINANT MAP
+    % =====================================================================
+    
+    
+    % plot determinant map
+    figure;
+    imagesc(freq_range/1e6, kx_range/1000, log10(abs(det_fK))')
+    hold on
+    for idx = 1:length(comp_speeds)
+        plot(freq_range/1e6, 2*pi*(freq_range)/comp_speeds(idx)/1000, 'r')
+    end
+    
+    for idx = 1:length(shear_speeds)
+        plot(freq_range/1e6, 2*pi*(freq_range)/shear_speeds(idx)/1000, 'r')
+    end
+    
+    plot(output_struct.f/1e6, output_struct.k/1000, 'g.')
+    % labels
+    axis xy
+    ylabel('Wavenumber [m^-^1]')
+    xlabel('Frequency [MHz]')
+    title('Determinant map - with dispersion curve traces')
+    
+    
     % =====================================================================
     %   CONVERT TO PHASESPEED AND ASSIGN OBJECT PROPERTY
     % =====================================================================
@@ -146,8 +251,38 @@ function obj = calculateDispersionCurvesCoarse(obj)
     output_struct.c = (output_struct.f*2*pi) ./...
         output_struct.k;
     
+    % filter bulk wave speeds from dispersion points
+    filter_vels = [comp_speeds, shear_speeds];
+    
+    for idx = 1:length(filter_vels)
+        % comparison velocity (bulk wave speeds)
+        comp_v = filter_vels(idx);
+        % error
+        error = 10;
+        % boolean
+        tmp = ( abs(output_struct.c - comp_v) < error);
+        % reduce output
+        output_struct.c = output_struct.c(~tmp);
+        output_struct.f = output_struct.f(~tmp);
+        output_struct.k = output_struct.k(~tmp);
+        
+    end
+    
+    if ~strcmp(obj.medium(1).state,'Vacuum')
+        % filter for lowest phase velocity
+        tmp = output_struct.c < min(filter_vels)+5;
+        output_struct.c = output_struct.c(~tmp);
+        output_struct.f = output_struct.f(~tmp);
+        output_struct.k = output_struct.k(~tmp);
+    end
+    
+    plot(output_struct.f/1e6, output_struct.k/1000, 'r.')
+
+  
+    
     % assign object property
     obj.dispersion_curves = output_struct;
+    
     
     % turn warnings back on
     warning on
