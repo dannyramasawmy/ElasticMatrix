@@ -29,7 +29,7 @@ freq_a = 4.425e6;
 
 % Calculate the angle and frequency:
 model.setFrequency([freq_s, freq_a]);
-model.setAngle([angle_a, anlge_S]);
+model.setAngle([angle_a, angle_s]);
 
 % Run model:
 model.calculate;
