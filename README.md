@@ -53,37 +53,3 @@ Reference list:
     IEEE transactions on ultrasonics, ferroelectrics, and frequency 
     control, (2007).
 
-### Update log:
-2019-08-20
-- html documentation added for most example scripts.
-- All Functions have been refactored.
-
-2019-07-31
-- Some functions in src-pw have been made static methods.
-- Header documentation for every function.
-- All functions in src-pw (Except calculateDispersionCurves) have been refactored to the BUG coding standard.
-
-2019-07-18
-- Reorder folders, delete some data and papers from documentation (replaced with a reference list).
-
-2019-07-16
-- Sorting of calculation parameters when calling .calculate needs 2 of 4, frequency + angle/phase-speed/wavenumber.
-- Examples updated.
-
-2019-07-12
-- Dispersion curve algorithm is much faster.
-- Examples folder is almost complete.
-
-2019-07-04
-- Dispersion curve tracing still needs updating.
-- Automatic sorting of calculation parameters (angles, frequencies, wave-numbers, phase-speed) needs updating.
-- Examples folder is still being populated.
-
-2019-06-26: 
-- All methods are implemented.
-- Dispersion curve tracing needs to be made more robust, use the coarse method for now.
-- Examples folder is being populated.
-
-2019-05-11:
-- Initial commit, there are a few bugs in the dispersion curve functionality.
-- The examples folder needs to be updated, there are a few class method implementations which are missing.              
