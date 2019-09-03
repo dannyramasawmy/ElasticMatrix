@@ -6,13 +6,13 @@ The ElasticMatrix Toolbox implements the partial-wave method [1,3,4] to model el
 To add the ElasticMatrix Toolbox source-code and all the examples:
 
 ```	matlab
-addpath(genpath('./.../ElasticMatrix')) 
+addpath(genpath('<folderpath>/ElasticMatrix')) 
 ```
 
 To add the ElasticMatrix Toolbox source-code without examples:
 
 ``` matlab
-addpath('./.../ElasticMatrix/src-pw')
+addpath('<folderpath>/ElasticMatrix/src-pw')
 ```
 
 ## Documentation
@@ -80,8 +80,7 @@ Tree compiled: 2019-09-03
 │   ├── example_plot_field_parameters_movie.m
 │   ├── example_reflection_and_transmission.m
 │   ├── example_slowness_profiles.m
-│   ├── example_summing_displacement_stress_fields.m
-│   └── myElasticMatrixObject.mat
+│   └──  example_summing_displacement_stress_fields.m
 |
 ├── examples_mlx
 │   ├── ElasticMatrix.mlx
