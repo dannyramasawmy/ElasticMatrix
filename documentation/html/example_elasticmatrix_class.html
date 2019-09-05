@@ -33,8 +33,7 @@
 .S11 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px; padding: 0px 45px 4px 13px; line-height: 17.2339992523193px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 14px;  }
 .S12 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px; padding: 6px 45px 4px 13px; line-height: 17.2339992523193px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 14px;  }
 .S13 { margin: 10px 0px 20px; padding-left: 0px; font-family: Helvetica, Arial, sans-serif; font-size: 14px;  }
-.S14 { margin-left: 56px; line-height: 21px; min-height: 0px; text-align: left; white-space: pre-wrap;  }
-.S15 { border-left: 0px none rgb(0, 0, 0); border-right: 0px none rgb(0, 0, 0); border-top: 0px none rgb(0, 0, 0); border-bottom: 0px none rgb(0, 0, 0); border-radius: 0px; padding: 0px; line-height: 16px; min-height: 0px; white-space: pre; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 12px;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Example: ElasticMatrix Class</span></h1><div  class = 'S1'><span>The </span><span style=' font-weight: bold; font-family: monospace;'>Medium</span><span> class is used to initialize the </span><span style=' font-weight: bold; font-family: monospace;'>ElasticMatrix</span><span> class which solves the partial-wave method over a range of frequencies, wave-numbers, phase-speeds and angles. Additionally, this class contains methods for calculating dispersion curves, plotting field parameters and reflection and transmission coefficients.</span></div><h2  class = 'S2'><span>Initialize a Medium and ElasticMatrix Object</span></h2><div  class = 'S1'><span>Firstly a </span><span style=' font-weight: bold; font-family: monospace;'>Medium</span><span> object needs to be created. For more details see the </span><span style=' font-weight: bold; font-family: monospace;'>Medium</span><span> Class help page.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Initialize the medium:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium = Medium(</span><span style="color: rgb(255, 0, 255);">'water'</span><span>,Inf,</span><span style="color: rgb(255, 0, 255);">'aluminium'</span><span>,0.001,</span><span style="color: rgb(255, 0, 255);">'water'</span><span>,Inf);</span></span></div></div></div><div  class = 'S5'><span style=' font-weight: bold; font-family: monospace;'>ElasticMatrix</span><span> can now be initialized, the </span><span style=' font-weight: bold; font-family: monospace;'>ElasticMatrix</span><span> class takes the </span><span style=' font-weight: bold; font-family: monospace;'>Medium</span><span> object as an input argument.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>my_model = ElasticMatrix( my_medium );</span></span></div></div></div><div  class = 'S5'><span>The </span><span style=' font-weight: bold; font-family: monospace;'>.disp</span><span> method prints the class to the command window. Note: the medium geometry is printed below the attributes of the class.</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S7'><span style="white-space: pre;"><span>my_model.disp;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="0EF3CF56" data-scroll-top="288" data-scroll-left="0" data-testid="output_0" data-width="873" data-height="549" data-hashorizontaloverflow="false" style="width: 903px; max-height: 261px;"><div class="textElement">===============================================================
+.S14 { margin-left: 56px; line-height: 21px; min-height: 0px; text-align: left; white-space: pre-wrap;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Example: ElasticMatrix Class</span></h1><div  class = 'S1'><span>A </span><span style=' font-family: monospace;'>Medium</span><span> object is used to initialize an </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> object which solves the partial-wave method over a range of frequencies, wavenumbers, phasespeeds and angles. Additionally, this class contains methods for calculating dispersion curves, plotting field parameters and reflection and transmission coefficients.</span></div><h2  class = 'S2'><span>Initialize an </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> Object</span></h2><div  class = 'S1'><span>Initialize an </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> object with a </span><span style=' font-family: monospace;'>Medium</span><span> object. For more details about the Medium class see: Example - Medium Class.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Initialize the medium:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium = Medium(</span><span style="color: rgb(191, 0, 191);">'water'</span><span>, Inf, </span><span style="color: rgb(191, 0, 191);">'aluminium'</span><span>, 0.001, </span><span style="color: rgb(191, 0, 191);">'water'</span><span>, Inf);</span></span></div></div></div><div  class = 'S5'><span>An </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> object can now be initialized, the </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> class takes a </span><span style=' font-family: monospace;'>Medium</span><span> object as an input argument.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>my_model = ElasticMatrix(my_medium);</span></span></div></div></div><div  class = 'S5'><span>The </span><span style=' font-family: monospace;'>.disp</span><span> method prints the class to the command window, note the medium geometry is printed below the attributes of the class. Additionally, just typing </span><span style=' font-family: monospace;'>my_model</span><span> into the command window will call the </span><span style=' font-family: monospace;'>.disp</span><span> method by default.</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S7'><span style="white-space: pre;"><span>my_model.disp;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="E7D9B35A" data-testid="output_0" data-width="1098" data-height="549" data-hashorizontaloverflow="false" data-scroll-top="63" data-scroll-left="0" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
    ElasticMatrix  
 ===============================================================
     Filename:   
@@ -72,7 +71,7 @@
     <strong>_____</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>
       1      2.1904    2.1904    2.1904     1e-12
       2      110.59    58.698    110.59    25.947
-      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div><div  class = 'S5'><span>Alternatively, the default constructor can be used, and the medium geometry set using the </span><span style=' font-weight: bold; font-family: monospace;'>.setMedium</span><span> function:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>my_model = ElasticMatrix;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_model.setMedium( my_medium );</span></span></div></div></div><h2  class = 'S9'><span>Setting Calculation Parameters</span></h2><div  class = 'S1'><span>The parameters to calculate over are the frequency, angle, wavenumber and phase-speed. Only two need to be set, if more than two are set the code will calculate over only two in the order frequency -&gt; angle -&gt; phase-speed -&gt; wavenumber .</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Set a range of angles in [deg]:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setAngle( linspace(0,45,100) );</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Set a range of frequencies in [Hz]:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setFrequency( linspace(0.1e6, 5e6, 100) );</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Set a range of wave-numbers in [1/m]:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setWavenumber( linspace(1, 10000, 101) );</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Set phase-speeds:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S11'><span style="white-space: pre;"><span>my_model.setPhasespeed( linspace(50, 1000, 101) )</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsVariableStringElement scrollableOutput" uid="9B58EC61" data-testid="output_1" data-width="873" data-height="566" data-hashorizontaloverflow="false" data-scroll-top="305" data-scroll-left="0" style="width: 903px; max-height: 261px;"><div class="textElement"><div><span class="variableNameElement">ans = </span></div><div>===============================================================
+      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div><div  class = 'S5'><span>An alternative way to initialize an </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> object is to use the default constructor and set the medium geometry using the </span><span style=' font-family: monospace;'>.setMedium</span><span> method.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>my_model = ElasticMatrix;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_model.setMedium(my_medium);</span></span></div></div></div><h2  class = 'S9'><span>Setting Calculation Parameters</span></h2><div  class = 'S1'><span>The parameters to calculate over are the frequency, angle, wavenumber and phase-speed. Firstly a range of frequencies must be defined using </span><span style=' font-family: monospace;'>.setFrequency</span><span>. Then at least one of angle, wavenumber or phasespeed must be defined using their respective </span><span style=' font-family: monospace;'>set</span><span> functions. If more than two of these properties are defined, </span><span style=' font-family: monospace;'>.calculate</span><span> will sort the inputs and use frequency, plus one other property in the order of preference from first to last: (1) angle - (2) phase-speed - (3) wavenumber. To clear the one of the object properties, call the respective </span><span style=' font-family: monospace;'>set</span><span> function with empty brackets, for example, </span><span style=' font-family: monospace;'>my_model.setAngle([]);</span><span>. If more than two of the properties are set, the redundant properties are not used.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Set a range of angles:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setAngle(linspace(0, 45, 100));            </span><span style="color: rgb(0, 127, 0);">% [degrees]</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Set a range of frequencies:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setFrequency(linspace(0.1e6, 5e6, 100));   </span><span style="color: rgb(0, 127, 0);">% [Hz]</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Set a range of wave-numbers:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setWavenumber(linspace(1, 10000, 101));    </span><span style="color: rgb(0, 127, 0);">% [1/m]</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Set a range of phasespeeds:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S11'><span style="white-space: pre;"><span>my_model.setPhasespeed(linspace(50, 1000, 101))     </span><span style="color: rgb(0, 127, 0);">% [m/s]</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsVariableStringElement scrollableOutput" uid="0BD072F7" data-testid="output_1" data-width="1098" data-height="566" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement"><div><span class="variableNameElement">ans = </span></div><div>===============================================================
    ElasticMatrix  
 ===============================================================
     Filename:   
@@ -110,9 +109,9 @@
     <strong>_____</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>
       1      2.1904    2.1904    2.1904     1e-12
       2      110.59    58.698    110.59    25.947
-      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div></div><h2  class = 'S9'><span>Running the Model</span></h2><div  class = 'S1'><span>To run the partial-wave method for the case of an incident compressional wave in the first layer use .calculate, as mentioned previously, this will first sort the inputs and calculate using the first two parameters in the order frequency -&gt; angle -&gt; phase-speed -&gt; wavenumber</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S7'><span style="white-space: pre;"><span>my_model.calculate;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="9328A4E3" data-scroll-top="null" data-scroll-left="null" data-testid="output_2" data-width="873" data-height="45" data-hashorizontaloverflow="false" style="width: 903px; max-height: 261px;"><div class="textElement">... calculating matrix method ... 
+      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div></div><h2  class = 'S9'><span>Running the Model</span></h2><div  class = 'S1'><span>To run the partial-wave method for the case of a downward-traveling compressional wave in the first layer use </span><span style=' font-family: monospace;'>.calculate</span><span>.</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S7'><span style="white-space: pre;"><span>my_model.calculate;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="F08EB1CA" data-scroll-top="null" data-scroll-left="null" data-testid="output_2" data-width="1098" data-height="45" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">... calculating matrix method ... 
 ... frequency-angle calculation ...
-... done ... </div></div></div></div><div class="inlineWrapper outputs"><div  class = 'S12'><span style="white-space: pre;"><span>my_model.disp;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="88F1A96F" data-testid="output_3" data-width="873" data-height="549" data-hashorizontaloverflow="false" data-scroll-top="288" data-scroll-left="0" style="width: 903px; max-height: 261px;"><div class="textElement">===============================================================
+... finished calculating matrix method ... </div></div></div></div><div class="inlineWrapper outputs"><div  class = 'S12'><span style="white-space: pre;"><span>disp(my_model)</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="465B819A" data-testid="output_3" data-width="1098" data-height="549" data-hashorizontaloverflow="false" data-scroll-top="0" data-scroll-left="0" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
    ElasticMatrix  
 ===============================================================
     Filename:   
@@ -150,112 +149,134 @@
     <strong>_____</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>
       1      2.1904    2.1904    2.1904     1e-12
       2      110.59    58.698    110.59    25.947
-      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div><h2  class = 'S9'><span>Additional Methods</span></h2><div  class = 'S1'><span>Additional methods are ilsted below and are discussed in other help files.</span></div><div  class = 'S1'><span>For estimating dispersion curves:</span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.calculateDispersionCurves </span></li><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.calculateDispersionCurvesCoarse </span></li><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.plotDispersionCurves </span></li></ul><div  class = 'S1'><span>Plotting the displacement and stress fields: </span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.calculateField </span></li><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.plotField </span></li><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.plotInterfaceParameters </span></li></ul><div  class = 'S1'><span>Plotting reflection coefficients:</span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-weight: bold; font-family: monospace;'>.plotRCoefficients </span></li></ul><h2  class = 'S2'><span>Saving the ElasticMatrix Object</span></h2><div  class = 'S1'><span>After performing the analysis the object can be saved to disk. </span></div><div  class = 'S1'><span>Firstly set a filename for the object:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>my_model.setFilename( </span><span style="color: rgb(255, 0, 255);">'myElasticMatrixObject' </span><span>);</span></span></div></div></div><div  class = 'S5'><span>The object can then be saved using the </span><span style=' font-weight: bold; font-family: monospace;'>.save</span><span> method:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>my_model.save;</span></span></div></div></div><h2  class = 'S9'><span>About</span></h2><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S15'><span style="white-space: pre;"><span>author          - Danny Ramasawmy</span></span></div><div  class = 'S15'><span style="white-space: pre;"><span>contact         - dannyramasawmy+elasticmatrix@gmail.com</span></span></div><div  class = 'S15'><span style="white-space: pre;"><span>date            - 19 - August   - 2019</span></span></div><div  class = 'S15'><span style="white-space: pre;"><span>last </span><span style="color: rgb(255, 0, 255);">update</span><span>     </span><span style="color: rgb(255, 0, 255);">- 19 - August</span><span>   </span><span style="color: rgb(255, 0, 255);">- 2019</span></span></div></div><div  class = 'S1'><span>This file is part of the ElasticMatrix toolbox. Copyright (c) 2019 Danny Ramasawmy.</span></div><div  class = 'S1'><span>This file is part of ElasticMatrix. ElasticMatrix is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</span></div><div  class = 'S1'><span>ElasticMatrix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</span></div><div  class = 'S1'><span>You should have received a copy of the GNU Lesser General Public License along with ElasticMatrix. If not, see</span><span> </span><a href = "http://www.gnu.org/licenses/"><span>http://www.gnu.org/licenses/</span></a><span>.</span></div></div>
+      3      2.1904    2.1904    2.1904     1e-12</div></div><div class="inlineElement eoOutputWrapper embeddedOutputsVariableStringElement scrollableOutput" uid="9AFDD7BF" data-testid="output_4" data-width="1098" data-height="566" data-hashorizontaloverflow="false" data-scroll-top="5" data-scroll-left="0" style="width: 1128px; max-height: 261px;"><div class="textElement"><div><span class="variableNameElement">ans = </span></div><div>===============================================================
+   ElasticMatrix  
+===============================================================
+    Filename:   
+  
+ 
+    Properties to set:
+ 
+      <strong>property</strong>      <strong>miniumum</strong>    <strong>maximum</strong>    <strong>length</strong>      <strong>units</strong>   
+    <strong>____________</strong>    <strong>________</strong>    <strong>_______</strong>    <strong>______</strong>    <strong>__________</strong>
+    'frequency'        0.1           5      100      '[MHz]'   
+    'angle'           0.01          45      100      '[degree]'
+    'phasespeed'        50        1000      101      '[m/s]'   
+    'wavenumber'         1       10000      101      '[1/m]'   
+ 
+    Properties to calculate:
+ 
+            <strong>property</strong>             <strong>calculated</strong>
+    <strong>_________________________</strong>    <strong>__________</strong>
+    'partial_wave_amplitudes'      true    
+    'x_displacement'               true    
+    'z_displacement'               true    
+    'sigma_zz'                     true    
+    'sigma_xz'                     true    
+    'dispersion_curves'            false   
+===============================================================
+    Medium
+===============================================================
+    <strong>index</strong>       <strong>name</strong>        <strong>thickness</strong>    <strong>density</strong>       <strong>state</strong>   
+    <strong>_____</strong>    <strong>___________</strong>    <strong>_________</strong>    <strong>_______</strong>    <strong>___________</strong>
+      1      'water'            Inf       1000      'Liquid'   
+      2      'aluminium'      0.001       2700      'Isotropic'
+      3      'water'            Inf       1000      'Liquid'   
+ Stiffness coefficients given in GPa
+    <strong>index</strong>     <strong>C11</strong>       <strong>C13</strong>       <strong>C33</strong>       <strong>C55</strong>  
+    <strong>_____</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>
+      1      2.1904    2.1904    2.1904     1e-12
+      2      110.59    58.698    110.59    25.947
+      3      2.1904    2.1904    2.1904     1e-12</div></div></div></div></div></div><h2  class = 'S9'><span>Additional Methods</span></h2><div  class = 'S1'><span>There are other methods that are available and discussed in other example scripts. </span></div><div  class = 'S1'><span>For estimating dispersion curves: </span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-family: monospace;'>.calculateDispersionCurves </span></li><li  class = 'S14'><span style=' font-family: monospace;'>.calculateDispersionCurvesCoarse </span></li><li  class = 'S14'><span style=' font-family: monospace;'>.plotDispersionCurves </span></li></ul><div  class = 'S1'><span>Plotting the displacement and stress fields: </span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-family: monospace;'>.calculateField </span></li><li  class = 'S14'><span style=' font-family: monospace;'>.plotField </span></li><li  class = 'S14'><span style=' font-family: monospace;'>.plotInterfaceParameters </span></li></ul><div  class = 'S1'><span>Plotting reflection coefficients </span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-family: monospace;'>.plotRCoefficients </span></li></ul><div  class = 'S1'><span>To return the partial-wave amplitudes: </span></div><ul  class = 'S13'><li  class = 'S14'><span style=' font-family: monospace;'>.getPartialWaveAmplitudes </span></li></ul><h2  class = 'S2'><span>Saving the </span><span style=' font-family: monospace;'>ElasticMatrix</span><span> Object</span></h2><div  class = 'S1'><span>After performing the analysis the object can be saved. </span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Firstly set a filename for the object:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_model.setFilename(</span><span style="color: rgb(191, 0, 191);">'my_elastic_matrix_object'</span><span>);</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% The object can then be saved using the save method:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S11'><span style="white-space: pre;"><span>my_model.save;</span></span></div><div  class = 'S8'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="FB760232" data-testid="output_5" data-width="1098" data-height="18" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">... saving object ...</div></div></div></div></div></div>
 <br>
 <!-- 
 ##### SOURCE BEGIN #####
 %% Example: ElasticMatrix Class
-% The |*Medium*| class is used to initialize the |*ElasticMatrix*| class which 
-% solves the partial-wave method over a range of frequencies, wave-numbers, phase-speeds 
+% A |Medium| object is used to initialize an |ElasticMatrix| object which solves 
+% the partial-wave method over a range of frequencies, wavenumbers, phasespeeds 
 % and angles. Additionally, this class contains methods for calculating dispersion 
 % curves, plotting field parameters and reflection and transmission coefficients.
-%% Initialize a Medium and ElasticMatrix Object
-% Firstly a |*Medium*| object needs to be created. For more details see the 
-% |*Medium*| Class help page.
+%% Initialize an |ElasticMatrix| Object
+% Initialize an |ElasticMatrix| object with a |Medium| object. For more details 
+% about the Medium class see: Example - Medium Class.
 
 % Initialize the medium:
-my_medium = Medium('water',Inf,'aluminium',0.001,'water',Inf);
+my_medium = Medium('water', Inf, 'aluminium', 0.001, 'water', Inf);
 %% 
-% |*ElasticMatrix*| can now be initialized, the |*ElasticMatrix*| class takes 
-% the |*Medium*| object as an input argument.
+% An |ElasticMatrix| object can now be initialized, the |ElasticMatrix| class 
+% takes a |Medium| object as an input argument.
 
-my_model = ElasticMatrix( my_medium );
+my_model = ElasticMatrix(my_medium);
 %% 
-% The |*.disp*| method prints the class to the command window. Note: the medium 
-% geometry is printed below the attributes of the class.
+% The |.disp| method prints the class to the command window, note the medium 
+% geometry is printed below the attributes of the class. Additionally, just typing 
+% |my_model| into the command window will call the |.disp| method by default.
 
 my_model.disp;
 %% 
-% Alternatively, the default constructor can be used, and the medium geometry 
-% set using the |*.setMedium*| function:
+% An alternative way to initialize an |ElasticMatrix| object is to use the default 
+% constructor and set the medium geometry using the |.setMedium| method.
 
 my_model = ElasticMatrix;
-my_model.setMedium( my_medium );
+my_model.setMedium(my_medium);
 %% Setting Calculation Parameters
 % The parameters to calculate over are the frequency, angle, wavenumber and 
-% phase-speed. Only two need to be set, if more than two are set the code will 
-% calculate over only two in the order frequency -> angle -> phase-speed -> wavenumber 
-% .
+% phase-speed. Firstly a range of frequencies must be defined using |.setFrequency|. 
+% Then at least one of angle, wavenumber or phasespeed must be defined using their 
+% respective |set| functions. If more than two of these properties are defined, 
+% |.calculate| will sort the inputs and use frequency, plus one other property 
+% in the order of preference from first to last: (1) angle - (2) phase-speed - 
+% (3) wavenumber. To clear the one of the object properties, call the respective 
+% |set| function with empty brackets, for example, |my_model.setAngle([]);|. If 
+% more than two of the properties are set, the redundant properties are not used.
 
-% Set a range of angles in [deg]:
-my_model.setAngle( linspace(0,45,100) );
+% Set a range of angles:
+my_model.setAngle(linspace(0, 45, 100));            % [degrees]
 
-% Set a range of frequencies in [Hz]:
-my_model.setFrequency( linspace(0.1e6, 5e6, 100) );
+% Set a range of frequencies:
+my_model.setFrequency(linspace(0.1e6, 5e6, 100));   % [Hz]
 
-% Set a range of wave-numbers in [1/m]:
-my_model.setWavenumber( linspace(1, 10000, 101) );
+% Set a range of wave-numbers:
+my_model.setWavenumber(linspace(1, 10000, 101));    % [1/m]
 
-% Set phase-speeds:
-my_model.setPhasespeed( linspace(50, 1000, 101) )
+% Set a range of phasespeeds:
+my_model.setPhasespeed(linspace(50, 1000, 101))     % [m/s]
 %% Running the Model
-% To run the partial-wave method for the case of an incident compressional wave 
-% in the first layer use .calculate, as mentioned previously, this will first 
-% sort the inputs and calculate using the first two parameters in the order frequency 
-% -> angle -> phase-speed -> wavenumber
+% To run the partial-wave method for the case of a downward-traveling compressional 
+% wave in the first layer use |.calculate|.
 
 my_model.calculate;
-my_model.disp;
+disp(my_model)
 %% Additional Methods
-% Additional methods are ilsted below and are discussed in other help files.
+% There are other methods that are available and discussed in other example 
+% scripts. 
 % 
-% For estimating dispersion curves:
+% For estimating dispersion curves: 
 %% 
-% * |*.calculateDispersionCurves *|
-% * |*.calculateDispersionCurvesCoarse *|
-% * |*.plotDispersionCurves *|
+% * |.calculateDispersionCurves |
+% * |.calculateDispersionCurvesCoarse |
+% * |.plotDispersionCurves |
 %% 
 % Plotting the displacement and stress fields: 
 %% 
-% * |*.calculateField *|
-% * |*.plotField *|
-% * |*.plotInterfaceParameters *|
+% * |.calculateField |
+% * |.plotField |
+% * |.plotInterfaceParameters |
 %% 
-% Plotting reflection coefficients:
+% Plotting reflection coefficients 
 %% 
-% * |*.plotRCoefficients *|
-%% Saving the ElasticMatrix Object
-% After performing the analysis the object can be saved to disk. 
-% 
+% * |.plotRCoefficients |
+%% 
+% To return the partial-wave amplitudes: 
+%% 
+% * |.getPartialWaveAmplitudes |
+%% Saving the |ElasticMatrix| Object
+% After performing the analysis the object can be saved. 
+
 % Firstly set a filename for the object:
+my_model.setFilename('my_elastic_matrix_object');
 
-my_model.setFilename( 'myElasticMatrixObject' );
-%% 
-% The object can then be saved using the |*.save*| method:
-
+% The object can then be saved using the save method:
 my_model.save;
-%% About
-%%
-% 
-%   author          - Danny Ramasawmy
-%   contact         - dannyramasawmy+elasticmatrix@gmail.com
-%   date            - 19 - August   - 2019
-%   last update     - 19 - August   - 2019
-%
-%% 
-% This file is part of the ElasticMatrix toolbox. Copyright (c) 2019 Danny Ramasawmy.
-% 
-% This file is part of ElasticMatrix. ElasticMatrix is free software: you can 
-% redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-% License as published by the Free Software Foundation, either version 3 of the 
-% License, or (at your option) any later version.
-% 
-% ElasticMatrix is distributed in the hope that it will be useful, but WITHOUT 
-% ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-% FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
-% details.
-% 
-% You should have received a copy of the GNU Lesser General Public License along 
-% with ElasticMatrix. If not, see <http://www.gnu.org/licenses/ http://www.gnu.org/licenses/>.
 ##### SOURCE END #####
 --></body></html>

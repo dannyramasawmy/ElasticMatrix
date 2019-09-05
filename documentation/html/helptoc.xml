@@ -8,50 +8,50 @@
     <tocitem target="ElasticMatrix.html">ElasticMatrix Toolbox
         <!-- Medium Class -->
         <tocitem target="example_medium_class.html">
-            Medium Class
+            Example: Medium Class
         </tocitem>
         <!-- Slowness Profiles -->
         <tocitem target="example_slowness_profiles.html">
-            Slowness Profiles
+            Example: Slowness Profiles
         </tocitem>
         <!-- ElasticMatrix class -->
         <tocitem target="example_elasticmatrix_class.html">
-            ElasticMatrix Class
+            Example: ElasticMatrix Class
         </tocitem>
         <!-- Reflection and Transmission Coefficients -->
         <tocitem target="example_reflection_and_transmission.html">
-            Reflection and Transmission Coefficients
+            Example: Reflection and Transmission Coefficients
         </tocitem>
         <!-- Dispersion curves -->
         <tocitem target="example_dispersion_curve_titanium_plate.html">
-            Dispersion Curves - Titanium Plate
+            Example: Dispersion Curves - Titanium Plate
         </tocitem>
           <!-- Dispersion curves -->
         <tocitem target="example_dispersion_curve_PVDF_plate.html">
-            Dispersion Curves - PVDF Plate
+            Example: Dispersion Curves - PVDF Plate
         </tocitem>
         <!-- Plotting interface parameters-->
         <tocitem target="example_interface_parameters.html">
-            Interface Parameters
+            Example: Interface Parameters
         </tocitem>
         <!-- Plotting field parameters-->
         <tocitem target="example_plot_field_parameters.html">
-            Plot Displacement and Stress Fields
+            Example: Plot Field Parameters
         </tocitem>        
         <!-- Plotting field parameters - movie -->
         <tocitem target="example_plot_field_parameters_movie.html">
-            Plot Displacement and Stress Fields - Movie
+            Example: Plot Field Parameters - Movie
         </tocitem>       
         <!-- Fabry-Perot Directivity -->
         <tocitem target="example_fabry_perot_directivity.html">
-            Fabry-Perot Directional Response
+            Example: Fabry-Perot Directivity
         </tocitem>       
         <!-- Fabry-Perot Normal Incidence Response -->
 
 
         <!-- Additionional Functions-->
         <tocitem target="example_extra_functions.html">
-            Extra Functions
+            Example: Extra Functions
         </tocitem>
     </tocitem>
 </toc>

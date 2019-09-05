@@ -29,14 +29,13 @@
 .S7 { margin: 10px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: normal; text-align: left;  }
 .S8 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px 4px 0px 0px; padding: 6px 45px 4px 13px; line-height: 17.2339992523193px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 14px;  }
 .S9 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: bold; text-align: left;  }
-.S10 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px 0px 4px 4px; padding: 0px 45px 4px 13px; line-height: 17.2339992523193px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 14px;  }
-.S11 { border-left: 0px none rgb(0, 0, 0); border-right: 0px none rgb(0, 0, 0); border-top: 0px none rgb(0, 0, 0); border-bottom: 0px none rgb(0, 0, 0); border-radius: 0px; padding: 0px; line-height: 16px; min-height: 0px; white-space: pre; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 12px;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Example: Medium Class</span></h1><div  class = 'S1'><span>The Medium class is used to define the material properties and thickness of each layer. </span></div><h2  class = 'S2'><span>Initialize a Medium Object</span></h2><div  class = 'S1'><span>The class is initialized by calling the class constructor with input arguments of the material name followed by its thickness. However, the thickness of the first and last layers are semi-infinite and their values should be set with the Inf keyword.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% To initialize a 4-layered geometry:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium = Medium(</span><span style="color: rgb(255, 0, 255);">'water'</span><span>,Inf, </span><span style="color: rgb(255, 0, 255);">'blank'</span><span>,0.001, </span><span style="color: rgb(0, 255, 255);">...</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>    </span><span style="color: rgb(255, 0, 255);">'PVDF'</span><span>,0.001, </span><span style="color: rgb(255, 0, 255);">'air'</span><span>, Inf);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% To display the object:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S5'><span style="white-space: pre;"><span>my_medium.disp; </span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="20A464BB" data-scroll-top="null" data-scroll-left="null" data-width="721" data-height="227" data-hashorizontaloverflow="false" data-testid="output_0" style="max-height: 261px; width: 751px; opacity: 1;"><div class="textElement">===============================================================
+.S10 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px 0px 4px 4px; padding: 0px 45px 4px 13px; line-height: 17.2339992523193px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, 'Courier New', monospace; font-size: 14px;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Example: Medium Class</span></h1><div  class = 'S1'><span>The </span><span style=' font-family: monospace;'>Medium</span><span> class is used to define the material properties and thickness of each layer. </span></div><h2  class = 'S2'><span>Initialize a </span><span style=' font-family: monospace;'>Medium</span><span> Object</span></h2><div  class = 'S1'><span>A </span><span style=' font-family: monospace;'>Medium</span><span> object is initialized by calling the class constructor with input arguments of the material name followed by its thickness. The thickness of the first and last layers are semi-infinite and their values should be set with the </span><span style=' font-family: monospace;'>Inf</span><span> keyword (This will be set automatically if </span><span style=' font-family: monospace;'>Inf</span><span> is not used).</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% To initialize a 4-layered geometry:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium = Medium(</span><span style="color: rgb(191, 0, 191);">'water'</span><span>, Inf, </span><span style="color: rgb(191, 0, 191);">'blank'</span><span>, 0.001, </span><span style="color: rgb(0, 0, 255);">...</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>    </span><span style="color: rgb(191, 0, 191);">'PVDF'</span><span>, 0.001, </span><span style="color: rgb(191, 0, 191);">'air'</span><span>, Inf);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% To display the object:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S5'><span style="white-space: pre;"><span>my_medium.disp; </span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="FDF38BF4" data-testid="output_0" data-width="1098" data-height="227" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
     Medium
 ===============================================================
     <strong>index</strong>     <strong>name</strong>      <strong>thickness</strong>    <strong>density</strong>       <strong>state</strong>   
     <strong>_____</strong>    <strong>_______</strong>    <strong>_________</strong>    <strong>_______</strong>    <strong>___________</strong>
       1      'water'        Inf       1000      'Liquid'   
-      2      'blank'      0.001          1      'Unknown'  
+      2      'blank'      0.001          1      'Gas'      
       3      'PVDF'       0.001       1780      'Isotropic'
       4      'air'          Inf          1      'Gas'      
  Stiffness coefficients given in GPa
@@ -45,7 +44,7 @@
       1         2.1904       2.1904       2.1904     1e-12
       2          4e-09        2e-09        4e-09     1e-09
       3         9.0113       1.9336       9.0113    3.5388
-      4      0.0001089    0.0001089    0.0001089     1e-15</div></div></div></div></div><div  class = 'S7'><span>Here, myMedium is an object array and every index in the object array corresponds to a different layer in the medium. In the current example myMedium(3) will return a object with the material properties and thickness associated with PVDF.</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S8'><span style="white-space: pre;"><span>my_medium(3).disp;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="645E8C06" data-scroll-top="null" data-scroll-left="null" data-width="721" data-height="143" data-hashorizontaloverflow="false" data-testid="output_1" style="max-height: 261px; width: 751px; opacity: 1;"><div class="textElement">===============================================================
+      4      0.0001089    0.0001089    0.0001089     1e-15</div></div></div></div></div><div  class = 'S7'><span>Here, </span><span style=' font-family: monospace;'>my_medium</span><span> is an object array and every index in the object array corresponds to a different layer in the medium. In the current example </span><span style=' font-family: monospace;'>my_medium(3)</span><span> will return an object with the material properties and thickness associated with PVDF.</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S8'><span style="white-space: pre;"><span>my_medium(3).disp;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="4FBD72D1" data-testid="output_1" data-width="1098" data-height="143" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
     Medium
 ===============================================================
     <strong>index</strong>    <strong>name</strong>    <strong>thickness</strong>    <strong>density</strong>      <strong>state</strong>  
@@ -54,7 +53,7 @@
  Stiffness coefficients given in GPa
     <strong>index</strong>     <strong>C11</strong>       <strong>C13</strong>       <strong>C33</strong>       <strong>C55</strong>  
     <strong>_____</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>    <strong>______</strong>
-      1      9.0113    1.9336    9.0113    3.5388</div></div></div></div></div><div  class = 'S7'><span>The `blank' argument can used for a material which is not predefined. The material properties and names can be set using their respective set functions described in the following section.</span></div><h2  class = 'S9'><span>Defining New Materials</span></h2><div  class = 'S1'><span>A list of predefined materials can be printed to screen using the static function:</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S8'><span style="white-space: pre;"><span>Medium.availableMaterials;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="D4547436" data-scroll-top="75" data-scroll-left="0" data-width="721" data-height="675" data-hashorizontaloverflow="false" data-testid="output_2" style="max-height: 261px; width: 751px; opacity: 1;"><div class="textElement">===============================================================
+      1      9.0113    1.9336    9.0113    3.5388</div></div></div></div></div><div  class = 'S7'><span>The </span><span style=' font-family: monospace;'>`blank'</span><span> argument can used for a material which is not predefined. The material properties and names can be set using their respective set functions. This is described in the following section.</span></div><h2  class = 'S9'><span>Defining New Materials</span></h2><div  class = 'S1'><span>A list of predefined materials can be printed to screen using the static function:</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S8'><span style="white-space: pre;"><span>Medium.availableMaterials;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement scrollableOutput" uid="6F2F7529" data-testid="output_2" data-width="1098" data-height="675" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
             <strong>materials</strong>         
     <strong>__________________________</strong>
     'CubicInAs0'              
@@ -101,79 +100,80 @@
     'vacuum'                  
     'water'                   
     'zinc'                    
-===============================================================</div></div></div></div></div><div  class = 'S7'><span>A new material can be added to the script materialList.m, if it has not been predefined.</span></div><h2  class = 'S9'><span>Setting Material Properties</span></h2><div  class = 'S1'><span>The properties of a layer can be changed using the appropriate set function, this takes input arguments of the layer index followed by the property being altered.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Change the density [kg/m^3] of the second layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setDensity( 2, 2400 );</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Change the thickness [m] of the third layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setThickness( 3, 0.0015 );</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Change the name of the first layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setName(1 , </span><span style="color: rgb(255, 0, 255);">'newName'</span><span>);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Print the new properties:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S5'><span style="white-space: pre;"><span>my_medium.disp;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="AD69F386" data-scroll-top="null" data-scroll-left="null" data-width="721" data-height="227" data-hashorizontaloverflow="false" data-testid="output_3" style="max-height: 261px; width: 751px;"><div class="textElement">===============================================================
+===============================================================</div></div></div></div></div><div  class = 'S7'><span>A new material can be added to the script </span><span style=' font-family: monospace;'>materialList.m</span><span>, if it has not been predefined.</span></div><h2  class = 'S9'><span>Setting Material Properties</span></h2><div  class = 'S1'><span>The properties of a layer can be changed using the appropriate </span><span style=' font-family: monospace;'>set</span><span> function, this takes input arguments of the layer index followed by the property being altered.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Change the density [kg/m^3] of the second layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setDensity(2, 2400);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Change the thickness [m] of the third layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setThickness(3, 0.0015);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Change the name of the first layer:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setName(1, </span><span style="color: rgb(191, 0, 191);">'new_name'</span><span>);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Print the new properties:</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S5'><span style="white-space: pre;"><span>my_medium.disp;</span></span></div><div  class = 'S6'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="79138D3B" data-testid="output_3" data-width="1098" data-height="227" data-hashorizontaloverflow="false" style="width: 1128px; max-height: 261px;"><div class="textElement">===============================================================
     Medium
 ===============================================================
-    <strong>index</strong>      <strong>name</strong>       <strong>thickness</strong>    <strong>density</strong>       <strong>state</strong>   
-    <strong>_____</strong>    <strong>_________</strong>    <strong>_________</strong>    <strong>_______</strong>    <strong>___________</strong>
-      1      'newName'        Inf       1000      'Liquid'   
-      2      'blank'        0.001       2400      'Unknown'  
-      3      'PVDF'        0.0015       1780      'Isotropic'
-      4      'air'            Inf          1      'Gas'      
+    <strong>index</strong>       <strong>name</strong>       <strong>thickness</strong>    <strong>density</strong>       <strong>state</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>_________</strong>    <strong>_______</strong>    <strong>___________</strong>
+      1      'new_name'        Inf       1000      'Liquid'   
+      2      'blank'         0.001       2400      'Liquid'   
+      3      'PVDF'         0.0015       1780      'Isotropic'
+      4      'air'             Inf          1      'Gas'      
  Stiffness coefficients given in GPa
     <strong>index</strong>       <strong>C11</strong>          <strong>C13</strong>          <strong>C33</strong>        <strong>C55</strong>  
     <strong>_____</strong>    <strong>_________</strong>    <strong>_________</strong>    <strong>_________</strong>    <strong>______</strong>
       1         2.1904       2.1904       2.1904     1e-12
       2          4e-09        2e-09        4e-09     1e-09
       3         9.0113       1.9336       9.0113    3.5388
-      4      0.0001089    0.0001089    0.0001089     1e-15</div></div></div></div></div><h2  class = 'S9'><span>Setting the Stiffness Matrix</span></h2><div  class = 'S1'><span>The stiffness coefficients of each layer are directly related to its sound-speed (isotropic case). The Medium class uses the stiffness matrix for its calculations. However, for an isotropic case usually only sound-speeds or Lame constants are known. The Medium class provides two static functions to generate the related stiffness matrix.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% If the compressional sound speed, shear speed and density are known:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>density = 2500;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>compressional_speed = 5600;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>shear_speed = 3400;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% The stiffness matrix:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span class="warning_squiggle_rte">stiffness_matrix</span><span> = Medium.soundSpeedDensityConversion(</span><span style="color: rgb(0, 255, 255);">...</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>    compressional_speed, shear_speed, density);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% If only the Lame constants are known:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>lambda = 2.0600e+10;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>mu = 2.8900e+10;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% The stiffness matrix:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>stiffness_matrix = my_medium.lameConversion(lambda, mu);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Update the stiffness matrix of one of the layers:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setStiffnessMatrix(2, stiffness_matrix);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 255, 0);">% Remember to update the density too:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_medium.setDensity(2, density);</span></span></div></div></div><h2  class = 'S9'><span>About</span></h2><div class = 'preformatted-matlab' style = 'margin: 10px 3px 10px 55px; padding: 10px 10px 10px 5px; '><div  class = 'S11'><span style="white-space: pre;"><span>author          - Danny Ramasawmy</span></span></div><div  class = 'S11'><span style="white-space: pre;"><span>contact         - dannyramasawmy+elasticmatrix@gmail.com</span></span></div><div  class = 'S11'><span style="white-space: pre;"><span>date            - 19 - August   - 2019</span></span></div><div  class = 'S11'><span style="white-space: pre;"><span>last </span><span style="color: rgb(255, 0, 255);">update</span><span>     </span><span style="color: rgb(255, 0, 255);">- 19 - August</span><span>   </span><span style="color: rgb(255, 0, 255);">- 2019</span></span></div></div><div  class = 'S1'><span>This file is part of the ElasticMatrix toolbox. Copyright (c) 2019 Danny Ramasawmy.</span></div><div  class = 'S1'><span>This file is part of ElasticMatrix. ElasticMatrix is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</span></div><div  class = 'S1'><span>ElasticMatrix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</span></div><div  class = 'S1'><span>You should have received a copy of the GNU Lesser General Public License along with ElasticMatrix. If not, see</span><span> </span><a href = "http://www.gnu.org/licenses/"><span>http://www.gnu.org/licenses/</span></a><span>.</span></div></div>
+      4      0.0001089    0.0001089    0.0001089     1e-15</div></div></div></div></div><h2  class = 'S9'><span>Setting the Stiffness Matrix</span></h2><div  class = 'S1'><span>The stiffness coefficients of a material are directly related to the bulk wave phase speed. The Medium class uses the stiffness matrix for its calculations, this allows transverse-isotropic materials to be defined. Usually for an isotropic material only sound-speeds or Lame constants are known. The </span><span style=' font-family: monospace;'>Medium</span><span> class provides two static functions to generate the related stiffness matrix.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% If the compressional sound speed, shear speed and density are known:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>density = 2500;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>compressional_speed = 5600;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>shear_speed = 3400;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% The stiffness matrix:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>stiffness_matrix_1 = Medium.soundSpeedDensityConversion(</span><span style="color: rgb(0, 0, 255);">...</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>    compressional_speed, shear_speed, density);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% If only the Lame constants are known:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>lambda = 2.0600e+10;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>mu = 2.8900e+10;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% The stiffness matrix:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>stiffness_matrix_2 = Medium.lameConversion(lambda, mu);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Update the stiffness matrix of one of the layers:</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>my_medium.setStiffnessMatrix(2, stiffness_matrix_2);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span style="color: rgb(0, 127, 0);">% Remember to update the density too:</span></span></div></div><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>my_medium.setDensity(2, density);</span></span></div></div></div></div>
 <br>
 <!-- 
 ##### SOURCE BEGIN #####
 %% Example: Medium Class
-% The Medium class is used to define the material properties and thickness of 
-% each layer. 
-%% Initialize a Medium Object
-% The class is initialized by calling the class constructor with input arguments 
-% of the material name followed by its thickness. However, the thickness of the 
+% The |Medium| class is used to define the material properties and thickness 
+% of each layer. 
+%% Initialize a |Medium| Object
+% A |Medium| object is initialized by calling the class constructor with input 
+% arguments of the material name followed by its thickness. The thickness of the 
 % first and last layers are semi-infinite and their values should be set with 
-% the Inf keyword.
+% the |Inf| keyword (This will be set automatically if |Inf| is not used).
 
 % To initialize a 4-layered geometry:
-my_medium = Medium('water',Inf, 'blank',0.001, ...
-    'PVDF',0.001, 'air', Inf);
+my_medium = Medium('water', Inf, 'blank', 0.001, ...
+    'PVDF', 0.001, 'air', Inf);
 
 % To display the object:
 my_medium.disp; 
 %% 
-% Here, myMedium is an object array and every index in the object array corresponds 
-% to a different layer in the medium. In the current example myMedium(3) will 
-% return a object with the material properties and thickness associated with PVDF.
+% Here, |my_medium| is an object array and every index in the object array corresponds 
+% to a different layer in the medium. In the current example |my_medium(3)| will 
+% return an object with the material properties and thickness associated with 
+% PVDF.
 
 my_medium(3).disp;
 %% 
-% The `blank' argument can used for a material which is not predefined. The 
-% material properties and names can be set using their respective set functions 
-% described in the following section.
+% The |`blank'| argument can used for a material which is not predefined. The 
+% material properties and names can be set using their respective set functions. 
+% This is described in the following section.
 %% Defining New Materials
 % A list of predefined materials can be printed to screen using the static function:
 
 Medium.availableMaterials;
 %% 
-% A new material can be added to the script materialList.m, if it has not been 
-% predefined.
+% A new material can be added to the script |materialList.m|, if it has not 
+% been predefined.
 %% Setting Material Properties
-% The properties of a layer can be changed using the appropriate set function, 
+% The properties of a layer can be changed using the appropriate |set| function, 
 % this takes input arguments of the layer index followed by the property being 
 % altered.
 
 % Change the density [kg/m^3] of the second layer:
-my_medium.setDensity( 2, 2400 );
+my_medium.setDensity(2, 2400);
 
 % Change the thickness [m] of the third layer:
-my_medium.setThickness( 3, 0.0015 );
+my_medium.setThickness(3, 0.0015);
 
 % Change the name of the first layer:
-my_medium.setName(1 , 'newName');
+my_medium.setName(1, 'new_name');
 
 % Print the new properties:
 my_medium.disp;
 %% Setting the Stiffness Matrix
-% The stiffness coefficients of each layer are directly related to its sound-speed 
-% (isotropic case). The Medium class uses the stiffness matrix for its calculations. 
-% However, for an isotropic case usually only sound-speeds or Lame constants are 
-% known. The Medium class provides two static functions to generate the related 
-% stiffness matrix.
+% The stiffness coefficients of a material are directly related to the bulk 
+% wave phase speed. The Medium class uses the stiffness matrix for its calculations, 
+% this allows transverse-isotropic materials to be defined. Usually for an isotropic 
+% material only sound-speeds or Lame constants are known. The |Medium| class provides 
+% two static functions to generate the related stiffness matrix.
 
 % If the compressional sound speed, shear speed and density are known:
 density = 2500;
@@ -181,7 +181,7 @@ compressional_speed = 5600;
 shear_speed = 3400;
 
 % The stiffness matrix:
-stiffness_matrix = Medium.soundSpeedDensityConversion(...
+stiffness_matrix_1 = Medium.soundSpeedDensityConversion(...
     compressional_speed, shear_speed, density);
 
 % If only the Lame constants are known:
@@ -189,35 +189,12 @@ lambda = 2.0600e+10;
 mu = 2.8900e+10;
 
 % The stiffness matrix:
-stiffness_matrix = my_medium.lameConversion(lambda, mu);
+stiffness_matrix_2 = Medium.lameConversion(lambda, mu);
 
 % Update the stiffness matrix of one of the layers:
-my_medium.setStiffnessMatrix(2, stiffness_matrix);
+my_medium.setStiffnessMatrix(2, stiffness_matrix_2);
 
 % Remember to update the density too:
 my_medium.setDensity(2, density);
-%% About
-%%
-% 
-%   author          - Danny Ramasawmy
-%   contact         - dannyramasawmy+elasticmatrix@gmail.com
-%   date            - 19 - August   - 2019
-%   last update     - 19 - August   - 2019
-%
-%% 
-% This file is part of the ElasticMatrix toolbox. Copyright (c) 2019 Danny Ramasawmy.
-% 
-% This file is part of ElasticMatrix. ElasticMatrix is free software: you can 
-% redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-% License as published by the Free Software Foundation, either version 3 of the 
-% License, or (at your option) any later version.
-% 
-% ElasticMatrix is distributed in the hope that it will be useful, but WITHOUT 
-% ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-% FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
-% details.
-% 
-% You should have received a copy of the GNU Lesser General Public License along 
-% with ElasticMatrix. If not, see <http://www.gnu.org/licenses/ http://www.gnu.org/licenses/>.
 ##### SOURCE END #####
 --></body></html>
