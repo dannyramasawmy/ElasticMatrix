@@ -29,11 +29,14 @@ function obj = calculate(obj)
     %   defined using their respective set functions. If more than two of
     %   these properties are defined, .calculate sort the inputs and use
     %   frequency, plus one other property in the order of preference from
-    %   first to last: (1) angle - (2) phase-speed - (3) wavenumber.
-    %   .calculate will call the .calculateMatrixModel static method and
-    %   assign the outputs to the appropriate properties. These are the
-    %   stresses and displacements at the interfaces of the layers and the
-    %   partial wave amplitudes.
+    %   first to last: (1) angle - (2) phase-speed - (3) wavenumber. To
+    %   clear the one of the properties, call the respective set function
+    %   with empty brackets, for example, my_model.setAngle([]);. If more
+    %   than two of the properties are set, the redundant properties are
+    %   not used. .calculate will call the .calculateMatrixModel static
+    %   method and assign the outputs to the appropriate properties. These
+    %   are the stresses and displacements at the interfaces of the layers
+    %   and the partial wave amplitudes.
     %
     %   References:
     %   [1] Ramasawmy, Danny R., et al. "ElasticMatrix: A MATLAB Toolbox
@@ -70,14 +73,14 @@ function obj = calculate(obj)
     %   obj.partial_wave_amplitudes    - See below.
     %
     %   The partial wave amplitudes are of size [n_freqs X n_other X
-    %   amplitude], where n_other is the number of angles, frequencies or
+    %   amplitude], where n_other is the number of angles, phase-speeds or
     %   wave-numbers. Amplitudes is of length 4*(N-1) where N is the number
     %   of layers.
     %   The partial wave amplitude order:
     %       - amplitudes(1)     - Upwards qSV in 1st layer (reflected).
     %       - amplitudes(2)     - Upward qL in 1st layer (reflected).
-    %       - amplitudes(end)   - Downward qSV in last layer (transmitted).
-    %       - amplitudes(end-1) - Downward qL in last layer (transmitted).
+    %       - amplitudes(end-1) - Downward qSV in last layer (transmitted).
+    %       - amplitudes(end)   - Downward qL in last layer (transmitted).
     %
     %   ... for layer n = {2,...end-1}
     %       - amplitudes(4(n - 2) + 3) - Upwards qSV.

@@ -152,6 +152,21 @@ classdef ElasticMatrix < handle
     %       - .z_displacement
     %       - .sigma_zz
     %       - .sigma_xz
+    %   
+    %   [pwa_struct, obj] = obj.getPartialWaveAmplitudes(layer_index);
+    %       Sorts the matrix stored in the .partial_wave_amplitudes
+    %       property and returns a structure containing the amplitudes.
+    %       - layer_index               - The index of the layer. 
+    %       - pwa_struct
+    %           - pwa_struct.layer_index    - The index of the layer.
+    %           - pwa_struct.qL_up          - Upward traveling
+    %                                         (quasi-)longitudinal waves.
+    %           - pwa_struct.qL_dw          - Downward traveling
+    %                                         (quasi-)longitudinal waves.
+    %           - pwa_struct.qS_up          - Upward traveling
+    %                                         (quasi-)shear waves.
+    %           - pwa_struct.qS_dw          - Downward traveling
+    %                                         (quasi-)shear waves.
     %
     %   obj = obj.calculateDispersionCurvesCoarse;
     %       Calculates the dispersion curves using the coarse method.
@@ -391,6 +406,8 @@ classdef ElasticMatrix < handle
         
         % run model
         obj = calculate(obj);
+        % get partial wave amplitudes
+        obj = getPartialWaveAmplitudes(obj, layer_index);
         
         % calculate dispersion curves
         obj = calculateDispersionCurvesCoarse(obj);

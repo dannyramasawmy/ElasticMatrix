@@ -71,7 +71,6 @@ classdef Medium < handle
     % PROPERTIES
     % (GetAccess = public, SetAccess = private)
     %   .name               - The material name.
-    %   .state              - The material state, (liquid/isotropic...).
     %   .thickness          - The thickness of the material.    [m]
     %   .density            - The density of the material.      [kg/m^3]
     %   .stiffness_matrix   - The stiffness matrix of the material. [Pa]
@@ -110,6 +109,12 @@ classdef Medium < handle
     %       Sets the .stiffness_matrix property.
     %       - layer_index       - The index of the layer.
     %       - stiffness_matrix  - Stiffness matrix, [6 X 6]. [Pa]
+    %
+    %   material_state  = obj.state;  
+    %       Returns a string of the material state. This might be a cell of
+    %       strings, or a single string of: Vacuum,Gas,Liquid,Isotropic,
+    %       Anisotropic.
+    %       - material_state    - (Liquid/Isotropic/...).
     %
     %   obj = obj.calculateSlowness;
     %       Calculates the slowness profiles for each material.
@@ -181,8 +186,8 @@ classdef Medium < handle
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 31 - July     - 2019
+    %   date            - 15 - January      - 2019
+    %   last update     - 03 - September    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -206,7 +211,6 @@ classdef Medium < handle
     % properties
     properties (GetAccess = public, SetAccess = private)
         name
-        state
         thickness
         density
         stiffness_matrix
@@ -253,7 +257,6 @@ classdef Medium < handle
                 obj.setThickness(1, 1);
                 obj.setDensity(1, 1);
                 obj.setStiffnessMatrix(1, zeros(6));
-                obj.state     = 'Unknown';
             end
             
         end
@@ -267,12 +270,14 @@ classdef Medium < handle
         % set the Density
         obj = setDensity(obj, layer_index, layer_density);
         % set the stiffness matrix
-        obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix);
+        obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix);               
+        % state
+        state = state(obj);
         
         % calculate and plot slowness profiles
         obj = calculateSlowness( obj );
         [ figure_handle, obj] = plotSlowness( obj );
-        
+
     end
     
     

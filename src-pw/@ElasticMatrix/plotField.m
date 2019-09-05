@@ -12,6 +12,8 @@ function [figure_handle, obj] = plotField(obj, fields, varargin)
     %
     % USEAGE
     %   [figure_handle] = plotField(field_struct, plot_style);
+    %   [figure_handle] = plotField(field_struct, plot_style_1, ...
+    %       plot_style_2, ..., plot_style_n);
     %   [figure_handle] = plotField(field_struct, figure_handle);
     %
     % INPUTS
@@ -60,8 +62,8 @@ function [figure_handle, obj] = plotField(obj, fields, varargin)
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   date            - 15 - January      - 2019
+    %   last update     - 04 - September    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -124,9 +126,9 @@ function [figure_handle, obj] = plotField(obj, fields, varargin)
         % loop and compare
         for figure_idx = 1:length(plot_names)
             % copy over the plotting list
-            plotting_list{figure_idx} = ...
+            plotting_list{figure_idx} = ...  
                 all_figure_types{...
-                strcmp(figure_handle_list, plot_names{figure_idx}) };
+                strcmp(figure_handle_list, plot_names{figure_idx}) }; %#ok<AGROW>
             % copy over the handle
             figure_handle = varargin{1};
             flag_handle = 1;
@@ -199,7 +201,7 @@ function [figure_handle, obj] = plotField(obj, fields, varargin)
     end
     
     % just incase no variables matched
-    if ~exist('figure_handle')
+    if ~exist('figure_handle','var')
         warning('Incorrect plot type, use help(''plotField'') to find correct inputs')
         figure_handle = 0;
         return;
@@ -280,13 +282,14 @@ function [figure_handle] = addInterfaces(figure_handle, x_vector, medium)
     
     
     % for each interface
-    interface_locations = [0];
+    interface_locations = 0;
     
     if length(medium) > 2
         % interface locations
         for layer_idx = 2:(length(medium)-1)
             interface_locations(layer_idx) = ...
-                interface_locations(layer_idx-1) - medium(layer_idx).thickness;
+                interface_locations(layer_idx-1) ...
+                - medium(layer_idx).thickness; %#ok<AGROW>
         end
     end
     
@@ -484,7 +487,7 @@ function [figure_handle] = plot1DDisplacement(field_values, figure_handle, ...
     ylabel('Normalised Displacement');
     ylim([-1 1])
     xlim([field_values.z_vector(1) field_values.z_vector(end)])
-    legend('u_z','u_x')
+    legend('u_z','u_x','AutoUpdate','off')
     
 end
 
@@ -532,7 +535,7 @@ function [figure_handle] = plot1DStress(field_values, figure_handle, ...
     ylabel('Normalised Stress');
     ylim([-1 1])
     xlim([field_values.z_vector(1) field_values.z_vector(end)])
-    legend('\sigma_z_z','\sigma_x_z')
+    legend('\sigma_z_z','\sigma_x_z','AutoUpdate','off')
     
     
 end

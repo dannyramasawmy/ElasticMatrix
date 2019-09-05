@@ -48,8 +48,8 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   date            - 15 - January      - 2019
+    %   last update     - 04 - September    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -78,11 +78,12 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     
     disp('... calculating displacement and stress fields ...')
     
-    % FIND ME DEBUG
-    % obj.setFrequency(frequency_choice);
-    % obj.setAngle(angle_choice);
-    % obj.calculate;
+    % set the properties and calculate the partial-wave amplitudes
+    obj.setFrequency(frequency_choice);
+    obj.setAngle(angle_choice);
+    obj.calculate;
     
+    % future updates will include multiple frequency/angle calculations    
     % find the closest amplitudes
     [~, aidx] = findClosest(obj.angle, angle_choice);
     [~, fidx] = findClosest(obj.frequency, frequency_choice);
@@ -400,15 +401,9 @@ function inputCheck(obj, frequency_choice, angle_choice, varargin)
     if strcmp(obj.medium(1).state,'Gas')
         error('The first layer cannot currently be a gas.')
     end
-    
-    % empty properties
-    if isempty(obj.frequency) || isempty(obj.angle)
-        error(['Please set an angle and frequency using .setAngle, .setFrequency.',...
-            'then call .calculate.'])
-    end
-    
+       
     % define attributes
-    attributes = {'real','positive'};
+    attributes = {'real'};
     
     % validate the attributes for input 1
     validateattributes(frequency_choice,   {'numeric'},attributes,...

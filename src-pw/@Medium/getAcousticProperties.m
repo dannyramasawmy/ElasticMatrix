@@ -17,7 +17,6 @@ function [ medium_layer ] = getAcousticProperties( material )
     %
     % OUTPUTS
     %   obj.name                - Name of the material.
-    %   obj.state               - State of the material (Gas/Isotropic,...).
     %   obj.thickness           - Thickness of the layer.    [m]
     %   obj.density             - Density.                  [kg/m^3]
     %   obj.stiffness_matrix    - 6 X 6 stiffness matrix.   [Pa]
@@ -29,8 +28,8 @@ function [ medium_layer ] = getAcousticProperties( material )
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 20 - July     - 2019
+    %   date            - 15 - January      - 2019
+    %   last update     - 03 - September    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -70,22 +69,6 @@ function [ medium_layer ] = getAcousticProperties( material )
     
     % assign the input name to the object
     medium_layer.setName(1, material);
-    
-    % assign the material state
-    try
-        % check the state is in the all_materials structure
-        switch all_materials.(material).state
-            case {'Unknown','Vacuum','Gas','Liquid','Isotropic','Anisotropic'}
-                medium_layer.state = all_materials.(material).state;
-            otherwise
-                error('Layer state is not valid / defined.');
-        end
-        
-    catch
-        % if the material is not defined
-        warning(['Check material state : ',material,'.'])
-        medium_layer.state = 'Unknown';
-    end
     
     % assign density
     try

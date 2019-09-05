@@ -25,8 +25,8 @@ function [figure_handle, obj] = plotRTCoefficients(obj)
     %    
     %   - amplitudes(1)     - Upwards qSV in 1st layer (reflected). 
     %   - amplitudes(2)     - Upward qL in 1st layer (reflected). 
-    %   - amplitudes(end)   - Downward qSV in last layer (transmitted). 
-    %   - amplitudes(end-1) - Downward qL in last layer (transmitted).
+    %   - amplitudes(end-1)   - Downward qSV in last layer (transmitted). 
+    %   - amplitudes(end) - Downward qL in last layer (transmitted).
     %
     %
     % USEAGE

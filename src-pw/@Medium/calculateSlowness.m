@@ -33,14 +33,19 @@ function obj = calculateSlowness(obj)
     %   obj.slowness.kz_qSV2    - (quasi-)SV vertical component +ve.
     %   obj.slowness.kz_qSH     - (quasi-)SH vertical component +ve.
     %
+    %   For materials which are Gas/Liquid the values of .kz_qSV1, .kz_qSV2
+    %   and .kz_qSH will be 0 as these materials cannot support shear.
+    %   For materials which are Unknown/Vacuum, obj.slowness = NaN, as
+    %   these materials cannot support an elastic wave.
+    %
     % DEPENDENCIES
     %   calculateAlphaCoefficients(...) - Christoffel equation.
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   date            - 15 - January      - 2019
+    %   last update     - 03 - September    - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
