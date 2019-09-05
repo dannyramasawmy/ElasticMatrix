@@ -1,26 +1,30 @@
-function [outputs] = functionTemplate(input, anotherInput, varargin)
-    % FUNCTIONTEMPLATE - one line description
+function [outputs] = functionTemplateFile(input, another_input, varargin)
+    %FUNCTIONTEMPLATE - one line description
     %
     % DESCRIPTION
-    %   A short description of the functionTemplate goes here
+    %   A short description of the functionTemplate goes here.
     %
-    % USE
-    %   outputs = functionTemplate(input, anotherInput)
-    %   outputs = functionTemplate(input, anotherInput, optionalInput)
+    % USEAGE
+    %   outputs = functionTemplate(input, another_input)
+    %   outputs = functionTemplate(input, another_input, optional_input)
     %
     % INPUTS
-    %   input           - the first input   [units]
-    %   anotherInput    - the second input  [units]
-    %   varargin        - optional inuts    [units]
+    %   input           - The first input.   [units]
+    %
+    % OPTIONAL INPUTS
+    %   []              - There are no optional inputs. []
     %
     % OUTPUTS
-    %   outputs         - the outputs       [units]
+    %   outputs         - The outputs.       [units]
+    %
+    % DEPENDENCIES
+    %   []              - There are no dependencies.     []
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - DD - month - YYYY
-    %   last update     - DD - month - YYYY
+    %   date            - 15 - January  - 2019
+    %   last update     - 31 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
