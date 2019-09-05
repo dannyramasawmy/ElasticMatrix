@@ -44,10 +44,10 @@ end
 %   TEST 2 : ELASTICMATRIX
 % =========================================================================
 % This section will test the methods in ElasticMatrix.
-
-disp('Test: model = ElasticMatrix(mediumObject)')
+my_medium =  Medium('water', 0, 'aluminium', 1e-3, 'water', Inf);
+disp('Test: model = ElasticMatrix(medium_object)')
 try
-    model = ElasticMatrix(myMedium);
+    model = ElasticMatrix(my_medium);
     disp('pass')
     total_pass = total_pass + 1;
 catch
@@ -56,10 +56,10 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-myMedium =  Medium('water',0,'aluminium',1e-3,'water',Inf);
-disp('Test: ElasticMatrix.setMedium(mediumObject)')
+
+disp('Test: ElasticMatrix.setMedium(medium_object)')
 try
-    model.setMedium(myMedium);
+    model.setMedium(my_medium);
     disp('pass')
     total_pass = total_pass + 1;
 catch
@@ -102,7 +102,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: ElasticMatrix.setPhasespeed(phasespeedRange) ')
+disp('Test: ElasticMatrix.setPhasespeed(phasespeed_range) ')
 try
     model.setPhasespeed(linspace(100,500,sample_density));
     disp('pass')
@@ -113,7 +113,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: ElasticMatrix.setWavenumber(wavenumberRange) ')
+disp('Test: ElasticMatrix.setWavenumber(wavenumber_range) ')
 try
     model.setWavenumber(linspace(100,500,sample_density));
     disp('pass')
@@ -138,6 +138,18 @@ total_counter = total_counter + 1;
 disp('Test: ElasticMatrix.calculate')
 try
     model.calculate;
+    disp('pass')
+    total_pass = total_pass + 1;
+catch
+    disp('fail')
+    total_fail = total_fail + 1;
+end
+total_counter = total_counter + 1;
+
+%% ========================================================================
+disp('Test: ElasticMatrix.getPartialWaveAmplitudes(layer_index)')
+try
+    model.getPartialWaveAmplitudes(3);
     disp('pass')
     total_pass = total_pass + 1;
 catch
@@ -173,7 +185,7 @@ total_counter = total_counter + 1;
 disp('Test: [fieldStructure] = ElasticMatrix.calculateField(angle, frequency, {Zvector, Xvector}) ')
 try
     plotVector = linspace(-1.5,0.5,128)*1e-3;
-    field = model.calculateField(50e6, 15, {plotVector, plotVector});
+    field = model.calculateField(50e5, 15, {plotVector, plotVector});
     disp('pass')
     total_pass = total_pass + 1;
 catch
@@ -182,7 +194,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: [figHand = plotField(fieldStructure)] ')
+disp('Test: [figHand = plotField(field_structure)] ')
 try
     figHand = model.plotField(field);
     disp('pass')
@@ -193,7 +205,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: [figHand = plotField(fieldStructure, figureHandleStructure)] ')
+disp('Test: [figHand = plotField(field_structure, figure_handle_structure)] ')
 try
     figHand = model.plotField(field, figHand);
     disp('pass')
@@ -204,7 +216,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: [figHand = plotField(fieldStructure, plotType)] ')
+disp('Test: [figHand = plotField(field_structure, plot_type)] ')
 try
     figHand = model.plotField(field, 'mesh','vector');
     close all;
@@ -218,6 +230,7 @@ total_counter = total_counter + 1;
 %% ========================================================================
 disp('Test: ElastixMatix.calculateDispersonCurvesCoarse')
 try
+    model.setFrequency(linspace(0.1e6,50e5,sample_density));
     model.calculateDispersionCurvesCoarse;
     disp('pass')
     total_pass = total_pass + 1;

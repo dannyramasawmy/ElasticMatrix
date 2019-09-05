@@ -9,8 +9,8 @@
 % ABOUT
 %   author          - Danny Ramasawmy
 %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-%   date            - 15 - January  - 2019
-%   last update     - 22 - August   - 2019
+%   date            - 15 - January      - 2019
+%   last update     - 04 - September    - 2019
 %
 % This file is part of the ElasticMatrix toolbox.
 % Copyright (c) 2019 Danny Ramasawmy.
@@ -33,15 +33,21 @@
 % =========================================================================
 addpath('../src-pw/');
 addpath('../examples')
+addpath('../data')
 
 % =========================================================================
 %   RUN ALL SCRIPTS
 % =========================================================================
 
-if exist('../testingData/','dir')
+if exist('../testing_data/','dir')
     % compatibility (MATLAB version)
     test_main_functions;
     pause(2);
+    cls;
+    
+    % check getPartialWaveAmplitudes gives the right output
+    test_partial_wave_amplitudes;
+    pause(2)
     cls;
     
     % comparison script

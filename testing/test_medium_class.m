@@ -112,7 +112,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: Medium.setStiffnessMatrix(layerIndex, stiffnessMatrix)')
+disp('Test: Medium.setStiffnessMatrix(layer_index, stiffness_matrix)')
 try
     my_medium.setStiffnessMatrix(3, stiffness_matrix);
     disp('pass')
@@ -123,7 +123,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: Medium.setDensity(layerIndex, rho) ')
+disp('Test: Medium.setDensity(layer_index, rho) ')
 try
     my_medium.setDensity(3, 2400);
     disp('pass')
@@ -134,7 +134,7 @@ catch
 end
 total_counter = total_counter + 1;
 %% ========================================================================
-disp('Test: Medium.setThickness(layerIndex, thickness)')
+disp('Test: Medium.setThickness(layer_index, thickness)')
 try
     my_medium.setThickness(2, 50e-6);
     disp('pass')
@@ -160,6 +160,7 @@ catch
     total_fail = total_fail + 1;
 end
 total_counter = total_counter + 1;
+
 %% ========================================================================
 disp('Test: Medium.calculateSlowness')
 try

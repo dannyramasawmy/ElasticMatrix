@@ -52,10 +52,10 @@ titles = {...
 
 
 % Figure 1 handle
-mainFigHand = figure;
+main_fig_hand = figure;
 
 % import data
-load('../testingData/Beard1999FrequencyResponseFabryPerotData.mat');
+load('../testing_data/Beard1999FrequencyResponseFabryPerotData.mat');
 
 % different cases to plot
 for idx = 1:6
@@ -63,44 +63,44 @@ for idx = 1:6
     switch idx
         case 1
             % 'Water Backed 50um PET'
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'water',1);
-            measurementData = waterBacked50umPET;
+            measurement_data = waterBacked50umPET;
         case 2
             % 'Glass Backed 50um PET'
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'glass',1);
-            measurementData = glassBacked50umPET;
+            measurement_data = glassBacked50umPET;
         case 3
             % 'PMMA Backed 50um PET',...
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',50 * 10^(-6),...
                 'PMMA',1);
-            measurementData = pmmaBacked50umPET;
+            measurement_data = pmmaBacked50umPET;
         case 4
             % 'Water Backed 23um PET',...
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'water',1);
-            measurementData = waterBacked23umPET;
+            measurement_data = waterBacked23umPET;
         case 5
             % 'Glass Backed 23um PET',...
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'glass',1);
-            measurementData = glassBacked23umPET;
+            measurement_data = glassBacked23umPET;
         case 6
             % 'PMMA Backed 23 PET',};
-            myMedium = Medium('water',0,...
+            my_medium = Medium('water',0,...
                 'PET',23 * 10^(-6),...
                 'PMMA',1);
-            measurementData = pmmaBacked23umPET;
+            measurement_data = pmmaBacked23umPET;
     end
     
     % initialize FabryPerot class    
-    temp = FabryPerotSensor(myMedium);
+    temp = FabryPerotSensor(my_medium);
     
     % set the properties
     temp.setFrequency(freqs); 
@@ -111,10 +111,10 @@ for idx = 1:6
     % calculate the frequency response
     temp.calculateDirectivity;
     % get the normal incidence frequency response
-    modelData = temp.getDirectivity('normal');
+    model_data = temp.getDirectivity('normal');
     
     % plotting 
-    figure(mainFigHand)
+    figure(main_fig_hand)
     
     % get handle for subplot
     subplot(3,2,idx);
@@ -122,9 +122,9 @@ for idx = 1:6
     % copy into main figure
     hold on
     % plot the model data
-    plot(temp.frequency /1e6 , modelData ./ modelData(1), 'k')
+    plot(temp.frequency /1e6 , model_data ./ model_data(1), 'k')
     % plot the measurement data
-    plot(measurementData(:,1), (measurementData(:,2)),'k.')
+    plot(measurement_data(:,1), (measurement_data(:,2)),'k.')
     hold off
     
     % labels
@@ -140,6 +140,6 @@ for idx = 1:6
 end
 
 % set figure position
-set(mainFigHand,'Position',[340 67 572 863]);
+set(main_fig_hand,'Position',[340 67 572 863]);
 
 

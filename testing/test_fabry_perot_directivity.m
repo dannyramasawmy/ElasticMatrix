@@ -33,10 +33,10 @@
 % =========================================================================
 cls;
 % Firstly the geometry of the Fabry-Perot sensor needs to be defined 
-mySensorGeometry = Medium('water',Inf, 'glass',175.9e-6, 'air',Inf);
+my_sensor_geometry = Medium('water',Inf, 'glass',175.9e-6, 'air',Inf);
 
 % the sensor geometry can be used to initialize the Fabry-perot class
-sensor = FabryPerotSensor( mySensorGeometry );
+sensor = FabryPerotSensor( my_sensor_geometry );
 
 % =========================================================================
 %   SET PARAMETERS
@@ -107,13 +107,13 @@ sfg;
     
 
 % to get the data normalized between 0 and 1
-myDirData = sensor.getDirectivity('normalise');
+my_dir_data = sensor.getDirectivity('normalise');
 
 % =========================================================================
 %   PLOTTING THE DIRECTIVITY
 % =========================================================================
 
-load('../testingData/glassEtalonFabryPerotDirectivityData.mat')
+load('../testing_data/glassEtalonFabryPerotDirectivityData.mat')
 
 h = figure;
 % subplot(1,2,1)

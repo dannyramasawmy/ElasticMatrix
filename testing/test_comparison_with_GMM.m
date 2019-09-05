@@ -157,7 +157,7 @@ end
 % been included with the ElasticMatrix software. This will be in a future
 % release. Here the data from the equivalent model is loaded and sorted
 
-load('../testingData/gmmIsotropicModelData.mat')
+load('../testing_data/gmmIsotropicModelData.mat')
 % displacement
 XDisplacements_1 = gmmIsotropicModelData.XDisplacements_1 ;
 ZDisplacements_1 = gmmIsotropicModelData.ZDisplacements_1 ;
