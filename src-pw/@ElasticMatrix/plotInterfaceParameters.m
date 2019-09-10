@@ -104,14 +104,14 @@ function [figure_handle, obj] = plotInterfaceParameters( obj )
             plot(frequency_range, abs(uz_up), 'k')
             % labels
             xlabel('Frequency [MHz]')
-            ylabel('Displacement [Pa]')
+            ylabel('Displacement [m]')
             title('Displacement - z')
             
             % plot uz
             subplot(2,2,2)
             plot(frequency_range, abs(ux_up), 'k')
             xlabel('Frequency [MHz]')
-            ylabel('Displacement [Pa]')
+            ylabel('Displacement [m]')
             title('Displacement - x')
             
             % plot sigma zz
@@ -135,14 +135,14 @@ function [figure_handle, obj] = plotInterfaceParameters( obj )
             plot(angle_range, abs(uz_up), 'k')
             % labels
             xlabel('Angle [\circ]')
-            ylabel('Displacement [Pa]')
+            ylabel('Displacement [m]')
             title('Displacement - z')
             
             % plot uz
             subplot(2,2,2)
             plot(angle_range, abs(ux_up), 'k')
             xlabel('Angle [\circ]')
-            ylabel('Displacement [Pa]')
+            ylabel('Displacement [m]')
             title('Displacement - x')
             
             % plot sigma zz
