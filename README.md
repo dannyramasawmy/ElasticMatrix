@@ -15,7 +15,7 @@ To add the ElasticMatrix Toolbox source-code without examples:
 addpath('<folderpath>/ElasticMatrix/src-pw')
 ```
 
-The source is found in the ```src-pw``` folder.
+The source code is found in the ```src-pw``` folder.
 
 ## Requirements
 
