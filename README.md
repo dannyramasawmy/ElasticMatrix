@@ -1,6 +1,10 @@
 # ElasticMatrix Toolbox
 The ElasticMatrix Toolbox implements the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
+## Contact
+Danny Ramasawmy
+rmapdrr@ucl.ac.uk
+
 ## Installation
 
 To add the ElasticMatrix Toolbox source-code and all the examples:
