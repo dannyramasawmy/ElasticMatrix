@@ -76,7 +76,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     %   CHOOSE APPROPRIATE FREQUENCY / ANGLE
     % =====================================================================
     
-    disp('... calculating displacement and stress fields ...')
+    %disp('... calculating displacement and stress fields ...')
     
     % set the properties and calculate the partial-wave amplitudes
     obj.setFrequency(frequency_choice);
@@ -255,6 +255,8 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
             if mat_prop(layer_idx).stiffness_matrix(5,5) < 5
                 %                 disp('Corrected fluid')
                 fluid_correction = 0; % remove shear components
+                disp('Fluid correction')
+                disp(obj.medium(layer_idx))
             end
             
             % factor needed to scale each stress correctly
@@ -327,7 +329,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
                     e4 = exp(1i * k * mat_prop(layer_idx).alpha(4) * dz) * wave_amplitudes(amp_idx + 4);
                     
                     % x-displacement
-                    ux = Psy .* (e1 + e2 + e3 + e4) ;
+                    ux = Psy .* ( fluid_correction .*e1 +  fluid_correction .* e2 + e3 + e4) ;
                     % y-displacement
                     uz = Psy .* (...
                         e1 * mat_prop(layer_idx).p_vec(1) + ...
@@ -371,7 +373,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
         
     end % time loop
     
-    disp('... finished calculating displacement and stress fields ...')
+    %disp('... finished calculating displacement and stress fields ...')
 end
 
 function inputCheck(obj, frequency_choice, angle_choice, varargin)
