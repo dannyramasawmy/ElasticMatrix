@@ -49,7 +49,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January      - 2019
-    %   last update     - 04 - September    - 2019
+    %   last update     - 02 - November     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -253,10 +253,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
             % fluid correction in first layer 
             fluid_correction = 1;
             if mat_prop(layer_idx).stiffness_matrix(5,5) < 5
-                %                 disp('Corrected fluid')
                 fluid_correction = 0; % remove shear components
-                disp('Fluid correction')
-                disp(obj.medium(layer_idx))
             end
             
             % factor needed to scale each stress correctly
