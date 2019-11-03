@@ -1,5 +1,5 @@
 classdef ElasticMatrix < handle
-    %ELASTICMATRIC Class definition for ElasticMatrix.
+    %ELASTICMATRIX Class definition for ElasticMatrix.
     %
     % DESCRIPTION
     %   ELASTICMATRIX uses the partial wave method to solve the problem of
