@@ -120,6 +120,12 @@ all_materials.PVDF.c                        =   2250     ;
 all_materials.PVDF.cs                       =   1410     ;
 all_materials.PVDF.rho                      =   1780     ;
 
+% Teflon ==================================================================
+% From Disperse.
+all_materials.teflon.c                      =   1350     ;
+all_materials.teflon.cs                     =   550      ;
+all_materials.teflon.rho                    =   2200     ;
+
 % PVDF2 ===================================================================
 % this is from Rose, Ultrasonic guided waves in solid media
 all_materials.PVDF2.c                       =   2670     ;
