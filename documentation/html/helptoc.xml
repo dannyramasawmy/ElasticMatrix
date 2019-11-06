@@ -26,7 +26,11 @@
         <tocitem target="example_dispersion_curve_titanium_plate.html">
             Example: Dispersion Curves - Titanium Plate
         </tocitem>
-          <!-- Dispersion curves -->
+        <!-- Dispersion curves -->
+        <tocitem target="example_dispersion_curve_teflon_plate.html">
+            Example: Dispersion Curves - Teflon Plate
+        </tocitem>
+        <!-- Dispersion curves -->
         <tocitem target="example_dispersion_curve_PVDF_plate.html">
             Example: Dispersion Curves - PVDF Plate
         </tocitem>
