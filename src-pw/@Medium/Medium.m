@@ -115,6 +115,23 @@ classdef Medium < handle
     %       strings, or a single string of: Vacuum,Gas,Liquid,Isotropic,
     %       Anisotropic.
     %       - material_state    - (Liquid/Isotropic/...).
+    %              
+    %   obj = plus(medium_1, medium_2);
+    %       Adds two Medium objects.
+    %       - medium_1          - Medium object.
+    %       - medium_2          -  Medium object.
+    %
+    %   obj = times(value, medium_1);
+    %       Repeats medium_1 the number of times of value. Useful for
+    %       periodic structures.
+    %       - value             - Number of repetitions.
+    %       - medium_1          - medium object,
+    %
+    %   obj = mtimes(value, medium_1);
+    %       Repeats medium_1 the number of times of value. Useful for
+    %       periodic structures.
+    %       - value             - Number of repetitions.
+    %       - medium_1          - medium object,
     %
     %   obj = obj.calculateSlowness;
     %       Calculates the slowness profiles for each material.
@@ -187,7 +204,7 @@ classdef Medium < handle
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January      - 2019
-    %   last update     - 03 - September    - 2019
+    %   last update     - 11 - November     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -239,6 +256,7 @@ classdef Medium < handle
                     obj((idx+1)/2).thickness = varargin{idx + 1};
                 end
                 
+                %{ 
                 % auto set 1st layer thickness to Inf
                 if obj(1).thickness ~= Inf
                     obj.setThickness(1, Inf);
@@ -249,6 +267,7 @@ classdef Medium < handle
                 if obj(number_layers).thickness ~= Inf
                     obj.setThickness(number_layers, Inf);
                 end
+                %}
                 
             else
                 % if there are no input arguments
@@ -273,7 +292,15 @@ classdef Medium < handle
         obj = setStiffnessMatrix(obj, layer_index, stiffness_matrix);               
         % state
         state = state(obj);
-        
+                
+        % overloaded functions
+        % add two Medium objects
+        obj = plus(obj1, obj2);
+        % for periodic structures
+        obj = times(value, obj2);
+        % for periodic structures
+        obj = mtimes(value,obj2)
+             
         % calculate and plot slowness profiles
         obj = calculateSlowness( obj );
         [ figure_handle, obj] = plotSlowness( obj );
@@ -293,6 +320,8 @@ classdef Medium < handle
         % convert sound speeds and density into a stiffness matrix
         stiffness_matrix = soundSpeedDensityConversion(...
             compressional_speed, shear_speed, density);
+        
+
     end
     
     % hidden static methods
