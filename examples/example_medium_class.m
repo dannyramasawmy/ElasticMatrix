@@ -6,8 +6,7 @@
 % A Medium object is initialized by calling the class constructor with
 % input arguments of the material name followed by its thickness. The
 % thickness of the first and last layers are semi-infinite and their values
-% should be set with the Inf keyword (This will be done automatically if
-% Inf is not used).
+% should be set with the Inf keyword.
 
 % To initialize a 4-layered geometry:
 my_medium = Medium('water', Inf, 'blank', 0.001, ...
