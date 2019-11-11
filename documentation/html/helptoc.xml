@@ -10,6 +10,10 @@
         <tocitem target="example_medium_class.html">
             Example: Medium Class
         </tocitem>
+        <!-- Medium Class - Periodic -->
+        <tocitem target="example_periodic_media.html">
+            Example: Periodic Media
+        </tocitem>
         <!-- Slowness Profiles -->
         <tocitem target="example_slowness_profiles.html">
             Example: Slowness Profiles
