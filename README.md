@@ -1,23 +1,6 @@
 # ElasticMatrix Toolbox
 The ElasticMatrix Toolbox uses the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
-## Contact
-Danny Ramasawmy
-
-rmapdrr@ucl.ac.uk
-
-dannyramasawmy+elasticmatrix@gmail.com 
-
-or
-
-Bradley Treeby
-
-b.treeby@ucl.ac.uk
-
-Ben Cox
-
-b.cox@ucl.ac.uk
-
 ## Installation
 
 To add the ElasticMatrix Toolbox source-code and all the examples:
@@ -54,6 +37,23 @@ Some of the code functionality includes:
 - Calculating the dispersion curves for simple plate structures.
 - Plotting the, displacement and stress fields.
 - Calculating the directivity of Fabry-Perot ultrasound sensors, see [1].
+
+## Contact
+Danny Ramasawmy
+
+rmapdrr@ucl.ac.uk
+
+dannyramasawmy+elasticmatrix@gmail.com 
+
+or
+
+Bradley Treeby
+
+b.treeby@ucl.ac.uk
+
+Ben Cox
+
+b.cox@ucl.ac.uk
 
 ## File Tree
 
