@@ -3,15 +3,19 @@ The ElasticMatrix Toolbox uses the partial-wave method [1,3,4] to model elastic 
 
 ## Contact
 Danny Ramasawmy
+
 rmapdrr@ucl.ac.uk
+
 dannyramasawmy+elasticmatrix@gmail.com 
 
 or
 
 Bradley Treeby
+
 b.treeby@ucl.ac.uk
 
 Ben Cox
+
 b.cox@ucl.ac.uk
 
 ## Installation
