@@ -1,9 +1,18 @@
 # ElasticMatrix Toolbox
-The ElasticMatrix Toolbox implements the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
+The ElasticMatrix Toolbox uses the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
 ## Contact
 Danny Ramasawmy
 rmapdrr@ucl.ac.uk
+dannyramasawmy+elasticmatrix@gmail.com 
+
+or
+
+Bradley Treeby
+b.treeby@ucl.ac.uk
+
+Ben Cox
+b.cox@ucl.ac.uk
 
 ## Installation
 
@@ -46,12 +55,13 @@ Some of the code functionality includes:
 
 The file tree for the ElasticMatrix Toolbox is shown below. Files/folders marked with an asterisk (*) are not included when using download in git and are only included if the repository is cloned. Files marked with  a double asterisk are not pushed to the public repository, please contact the author if these are required.
 
-Tree compiled: 2019-09-04
+Tree compiled: 2019-11-11
 
 ``` bash
 .
 ├── data
 │   └── disperseTitaniumPlateData.txt
+│   ├── disperseTeflonPlateData.txt
 │
 ├── documentation
 │   ├── 2019-07-19-BUG_coding_standard.md*
@@ -59,13 +69,15 @@ Tree compiled: 2019-09-04
 │   ├── functionTemplateFile.m*
 │   ├── html
 │   │   ├── ElasticMatrix.html
-│   │   ├── example_dispersion_curve_PVDF_plate.html
+|   │   ├── example_dispersion_curve_PVDF_plate.html
+│   │   ├── example_dispersion_curve_teflon_plate.html
 │   │   ├── example_dispersion_curve_titanium_plate.html
 │   │   ├── example_elasticmatrix_class.html
 │   │   ├── example_extra_functions.html
 │   │   ├── example_fabry_perot_directivity.html
 │   │   ├── example_interface_parameters.html
 │   │   ├── example_medium_class.html
+│   │   ├── example_periodic_media.html
 │   │   ├── example_plot_field_parameters.html
 │   │   ├── example_plot_field_parameters_movie.html
 │   │   ├── example_reflection_and_transmission.html
@@ -79,6 +91,8 @@ Tree compiled: 2019-09-04
 │
 ├── examples
 │   ├── example_dispersion_curve_PVDF_plate.m
+│   ├── example_dispersion_curve_teflon_plate.m
+│   ├── example_dispersion_curve_tissue_plate.m
 │   ├── example_dispersion_curve_titanium_plate.m
 │   ├── example_elasticmatrix_class.m
 │   ├── example_extra_functions.m
@@ -86,21 +100,22 @@ Tree compiled: 2019-09-04
 │   ├── example_fabry_perot_frequency_response.m
 │   ├── example_interface_parameters.m
 │   ├── example_medium_class.m
+│   ├── example_periodic_media.m
 │   ├── example_plot_field_parameters.m
 │   ├── example_plot_field_parameters_movie.m
 │   ├── example_reflection_and_transmission.m
-│   ├── example_slowness_profiles.asv
 │   └── example_slowness_profiles.m
 │
 ├── examples_mlx
-│   ├── ElasticMatrix.mlx
-│   ├── example_dispersion_curve_PVDF_plate.mlx
+|   ├── example_dispersion_curve_PVDF_plate.mlx
+│   ├── example_dispersion_curve_teflon_plate.mlx
 │   ├── example_dispersion_curve_titanium_plate.mlx
 │   ├── example_elasticmatrix_class.mlx
 │   ├── example_extra_functions.mlx
 │   ├── example_fabry_perot_directivity.mlx
 │   ├── example_interface_parameters.mlx
 │   ├── example_medium_class.mlx
+│   ├── example_periodic_media.mlx
 │   ├── example_plot_field_parameters.mlx
 │   ├── example_plot_field_parameters_movie.mlx
 │   ├── example_reflection_and_transmission.mlx
@@ -145,20 +160,23 @@ Tree compiled: 2019-09-04
 │   ├── findZeroCrossing.m
 │   ├── materialList.m
 │   ├── @Medium
-│   │   ├── availableMaterials.m
+|   │   ├── availableMaterials.m
 │   │   ├── calculateAlphaCoefficients.m
 │   │   ├── calculateSlowness.m
 │   │   ├── disp.m
 │   │   ├── getAcousticProperties.m
 │   │   ├── lameConversion.m
 │   │   ├── Medium.m
+│   │   ├── mtimes.m
 │   │   ├── plotSlowness.m
+│   │   ├── plus.m
 │   │   ├── setDensity.m
 │   │   ├── setName.m
 │   │   ├── setStiffnessMatrix.m
 │   │   ├── setThickness.m
 │   │   ├── soundSpeedDensityConversion.m
-│   │   └── state.m
+│   │   ├── state.m
+│   │   └── times.m
 │   ├── normMe.m
 │   ├── printLineBreaks.m
 │   └── sfg.m
