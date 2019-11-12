@@ -40,7 +40,7 @@ function all_materials = materialList()
 %   author          - Danny Ramasawmy
 %   contact         - dannyramasawmy+elasticmatrix@gmail.com
 %   date            - 01 - January      - 2019
-%   last update     - 03 - September    - 2019
+%   last update     - 12 - November     - 2019
 %
 % This file is part of the ElasticMatrix toolbox.
 % Copyright (c) 2019 Danny Ramasawmy.
@@ -82,6 +82,11 @@ all_materials.blank.rho                     =   1       ;
 all_materials.vacuum.c                      = 0.02      ;
 all_materials.vacuum.cs                     = 0.01      ;
 all_materials.vacuum.rho                    = 0.01      ;
+
+% Free Boundary ===========================================================
+all_materials.free.c                      = 0.02      ;
+all_materials.free.cs                     = 0.01      ;
+all_materials.free.rho                    = 0.01      ;
 
 % Air =====================================================================
 all_materials.air.c                         =   330     ;
