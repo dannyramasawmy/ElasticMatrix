@@ -46,7 +46,7 @@ function [obj] = calculateDirectivity(obj)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 05 - May      - 2019
-    %   last update     - 28 - July     - 2019
+    %   last update     - 12 - November - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -92,7 +92,9 @@ function [obj] = calculateDirectivity(obj)
     cp = phase_velocity ./ sin(theta);
     
     % kx wavenumber
-    k_x = transpose(omega) ./ cp ;
+    %     k_x = transpose(omega) ./ cp ;            % future releases
+    k_x = (transpose(omega) * ones(1,length(cp))) ./ ...
+        (ones(length(omega),1) * cp);               
     
     % spot radius
     beam_radius = obj.spot_diameter / 2;
