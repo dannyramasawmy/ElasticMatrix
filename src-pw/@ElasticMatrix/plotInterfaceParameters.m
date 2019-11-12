@@ -205,8 +205,12 @@ function [figure_handle, obj] = plotInterfaceParameters( obj )
             colorbar
         end
         
-        % over title
-        sgtitle(['Interface ',num2str(idx)])
+        % not in every version of MATLAB
+        try 
+            % over title
+            sgtitle(['Interface ',num2str(idx)])
+        catch
+        end
     end
 end
 
