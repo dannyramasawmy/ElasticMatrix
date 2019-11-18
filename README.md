@@ -34,8 +34,8 @@ ElasticMatrix has been tested with MATLAB2016a and above and should run on most 
 Some of the code functionality includes:
 - Plotting slowness profiles.
 - Plotting reflection and transmission coefficients.
-- Calculating the dispersion curves for simple plate structures.
-- Plotting the, displacement and stress fields.
+- Calculating dispersion curves for simple plate structures.
+- Plotting displacement and stress fields.
 - Calculating the directivity of Fabry-Perot ultrasound sensors, see [1].
 
 ## Contact
