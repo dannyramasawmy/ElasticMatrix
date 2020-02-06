@@ -10,6 +10,6 @@
     <name>ElasticMatrix</name>
     <type>toolbox</type>
     <icon></icon>
-    <help_location>documentation/html</help_location>
+    <help_location>docs/html</help_location>
   
 </productinfo>
