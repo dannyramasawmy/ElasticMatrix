@@ -2,7 +2,7 @@
 The ElasticMatrix Toolbox uses the partial-wave method [1,3,4] to model elastic wave propagation in multi-layered anisotropic media up to transverse-isotropic symmetry when the wave propagation is along a plane of symmetry.
 
 ## Download
-Download from github, or MATLAB files exchange:
+Download from github, or MATLAB file exchange:
 [![View ElasticMatrix Toolbox on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://uk.mathworks.com/matlabcentral/fileexchange/74245-elasticmatrix-toolbox).
 
 View the documentation online:
