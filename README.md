@@ -45,6 +45,9 @@ Some of the code functionality includes:
 - Plotting displacement and stress fields.
 - Calculating the directivity of Fabry-Perot ultrasound sensors, see [1].
 
+## FAQ
+- Dispersion curves are tracing incorrectly? Please try the "coarse" dispersion curve method.
+  
 ## Contact
 Danny Ramasawmy
 
