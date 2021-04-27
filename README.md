@@ -51,8 +51,6 @@ Some of the code functionality includes:
 ## Contact
 Danny Ramasawmy
 
-rmapdrr@ucl.ac.uk
-
 dannyramasawmy+elasticmatrix@gmail.com 
 
 or
