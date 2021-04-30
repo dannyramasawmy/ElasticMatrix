@@ -37,7 +37,7 @@ vA = VideoWriter('TestAlPlateAmode.mp4', 'MPEG-4');
 open(vA)  
 
 % Create time array:
-t_vec =  linspace(0e-6, 0.5e-6, 200);
+t_vec =  linspace(0e-6, 0.1e-6, 40);
 
 % Loop over time array:
 for tdx = 1:length(t_vec)

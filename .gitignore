@@ -1,3 +1,5 @@
 testing_data/Beard1999FrequencyResponseFabryPerotData.mat
 testing_data/glassEtalonFabryPerotDirectivityData.mat
 testing_data/gmmIsotropicModelData.mat
+testing/*.mp4
+testing/my_elastic_matrix_object.mat
