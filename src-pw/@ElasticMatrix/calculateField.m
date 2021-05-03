@@ -114,6 +114,17 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     omega   = 2* pi * freq_vec;
     k       = omega / cp ;
     
+    %{      
+        % frequency
+        omega = 2* pi * frequency_vec(fK_idx);
+        
+        % wavenumber
+        k = wavenumber_vec(fK_idx) ;
+        
+        % phase velocity
+        cp = omega / k;
+    %}
+    
     % incident wave amplitude set to 1 MPa
     P_0 = 1e6;
     B_1 =  (P_0 * 1i*k) / (obj.medium(1).density*omega^2);
