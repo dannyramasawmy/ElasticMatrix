@@ -93,10 +93,10 @@ for idx = 1:length(k_x)
     % wave field
     field = field + fourier_coeff(idx) ...
         * exp(1i * (k_x(idx).*X + k_z(idx).*Z));    
-   
-%         figure(3), 
-%     imagesc(real(exp(1i * (k_x(idx).*X + k_z(idx).*Z)))),
-%     colorbar
+    
+        figure(3), 
+    imagesc(real(exp(1i * (k_x(idx).*X + k_z(idx).*Z)))),
+    colorbar
 end
 
 % sum and normalise
@@ -127,22 +127,20 @@ output_field = my_model.calculateField( ...
 field_em = zeros(size(output_field.z_displacement));
 for idx = 1:length(k_x) 
     % wave fiel
-    disp(k_x(idx))
+    
     output_field = my_model.calculateField( ...
         frequency, k_x(idx),  {z_range, x_range});
 
     field_em = field_em + fourier_coeff(idx) ...
-        * (output_field.x_displacement./...
-        max(abs(output_field.x_displacement(:)))) ;    
+        * output_field.x_displacement;    
     figure(2), 
     imagesc(real(output_field.x_displacement) ./...
-        max(abs(output_field.x_displacement(:))) ),
+        max(abs(output_field.x_displacement(:)))),
     colorbar
 end
 
 figure(2), 
-imagesc(rot90(real(field_em))),
-axis xy
+imagesc(real(field_em)),
 %==========================================================================
 %   PLOTTING
 %==========================================================================

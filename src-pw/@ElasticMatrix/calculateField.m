@@ -88,6 +88,9 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     % TODO: add a conversion for wavenumber to angle here but always
     % calculate in terms of wavenumber
     
+    % TODO: model needs to handle negative kx correctly it only takes the
+    % positive
+    
     obj.setFrequency(frequency_choice);
     obj.setWavenumber(kx_choice);
     obj.calculate;
