@@ -69,6 +69,10 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    % TODO: Change the input to be in terms of K and F / allow complex
+    % wavenumbers and frequencies. -> this will be needed to allow
+    % absorption and evanescent fields to be calculated.
+    
     % check inputs
     inputCheck(obj, frequency_choice, angle_choice, varargin)
     
