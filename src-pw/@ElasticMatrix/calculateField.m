@@ -1,4 +1,4 @@
-function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, varargin)
+function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, varargin)
     %CALCULATEFIELD Calculates the displacement and stress fields.
     %
     % DESCRIPTION
@@ -13,10 +13,10 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     %   these are described below.
     %
     % USEAGE
-    %   [figure_handle] = calculateField(frequency_choice, angle_choice);
-    %   [figure_handle] = calculateField(frequency_choice, angle_choice,...
+    %   [figure_handle] = calculateField(frequency_choice, kx_choice);
+    %   [figure_handle] = calculateField(frequency_choice, kx_choice,...
     %       {vector-Z, vector-X});
-    %   [figure_handle] = calculateField(frequency_choice, angle_choice,...
+    %   [figure_handle] = calculateField(frequency_choice, kx_choice,...
     %       {vector-Z, vector-X}, time);
     %
     % INPUTS
@@ -49,7 +49,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January      - 2019
-    %   last update     - 02 - November     - 2019
+    %   last update     - 05 - May          - 2020
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -69,12 +69,13 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    
     % TODO: Change the input to be in terms of K and F / allow complex
     % wavenumbers and frequencies. -> this will be needed to allow
     % absorption and evanescent fields to be calculated.
     
-    % check inputs
-    inputCheck(obj, frequency_choice, angle_choice, varargin)
+    % check inputs  TODO: input check needs updating
+    % inputCheck(obj, frequency_choice, angle_choice, varargin)
     
     % ====================================================================
     %   CHOOSE APPROPRIATE FREQUENCY / ANGLE
@@ -83,21 +84,26 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     %disp('... calculating displacement and stress fields ...')
     
     % set the properties and calculate the partial-wave amplitudes
+    
+    % TODO: add a conversion for wavenumber to angle here but always
+    % calculate in terms of wavenumber
+    
     obj.setFrequency(frequency_choice);
-    obj.setAngle(angle_choice);
+    obj.setWavenumber(kx_choice);
     obj.calculate;
     
     % future updates will include multiple frequency/angle calculations    
     % find the closest amplitudes
-    [~, aidx] = findClosest(obj.angle, angle_choice);
+    [~, widx] = findClosest(obj.wavenumber, kx_choice);
     [~, fidx] = findClosest(obj.frequency, frequency_choice);
     
     % assign closest frequency and angle
     freq_vec    = obj.frequency(fidx);
-    angle_vec   = obj.angle(aidx);
+    kx_vec = obj.wavenumber(widx);
+%     angle_vec   = obj.angle(widx);
     
     % output wave amplitudes from calculated model
-    wave_amplitudes = (obj.unnormalised_amplitudes(fidx, aidx,:));
+    wave_amplitudes = (obj.unnormalised_amplitudes(fidx, widx,:));
     
     % =====================================================================
     %   PRECALCULATIONS
@@ -109,14 +115,25 @@ function [fields, obj] = calculateField(obj, frequency_choice, angle_choice, var
     % the number of layers
     num_layers = length(obj.medium);
     
-    % angle and phase velocity
-    angle   = angle_vec;
-    theta   = angle * pi /180;
-    % phase velocities
-    cp      = phase_vel / sin(theta);
+    
     % frequency
-    omega   = 2* pi * freq_vec;
-    k       = omega / cp ;
+    omega = 2* pi * freq_vec;
+    
+    % wavenumber
+    k = kx_vec ;
+    
+    % phase velocity
+    cp = omega / k;
+    
+    
+%     % angle and phase velocity
+%     angle   = angle_vec;
+%     theta   = angle * pi /180;
+%     % phase velocities
+%     cp      = phase_vel / sin(theta);
+%     % frequency
+%     omega   = 2* pi * freq_vec;
+%     k       = omega / cp ;
     
     %{      
         % frequency

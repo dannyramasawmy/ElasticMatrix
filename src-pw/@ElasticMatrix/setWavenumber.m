@@ -26,7 +26,7 @@ function obj = setWavenumber(obj, wavenumber_range)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 30 - July     - 2019
+    %   last update     - 05 - May      - 2021
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -72,10 +72,10 @@ function inputCheck(wavenumber_range)
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 20 - July - 2019
-    %   last update     - 21 - July - 2019
+    %   last update     - 05 - May  - 2021
     
     % define attributes
-    attributes = {'real'};
+    attributes = {};
     
     % validate the attributes for input 1
     validateattributes(wavenumber_range, {'numeric'}, attributes,...
