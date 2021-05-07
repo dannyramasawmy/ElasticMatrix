@@ -34,7 +34,7 @@ sound_speed = 1500;
 
 % grid to sample output field over (i.e -> from ElasticMatrix)
 samples = 256;
-x_range = linspace(-xdim/2+width, xdim/2+width, samples);
+x_range = linspace(-xdim/2, xdim/2, samples);
 z_range = linspace(0, zdim, samples/2);
 [X, Z] = meshgrid(x_range, z_range);
 
@@ -94,7 +94,7 @@ for idx = 1:length(k_x)
     field = field + fourier_coeff(idx) ...
         * exp(1i * (k_x(idx).*X + k_z(idx).*Z));    
    
-%         figure(3), 
+%     figure(3),
 %     imagesc(real(exp(1i * (k_x(idx).*X + k_z(idx).*Z)))),
 %     colorbar
 end
@@ -113,7 +113,7 @@ field_ifft = ifft(ifftshift(prop_field));
 
 % Medium class:
 my_medium = Medium(...
-    'water', Inf, 'water', 0.001, 'water', Inf);
+    'water', Inf, 'glass', 0.001, 'water', Inf);
 
 % Initialize an ElasticMatrix object:
 my_model = ElasticMatrix(my_medium);
@@ -128,20 +128,22 @@ field_em = zeros(size(output_field.z_displacement));
 for idx = 1:length(k_x) 
     % wave fiel
     disp(k_x(idx))
+    
     output_field = my_model.calculateField( ...
         frequency, k_x(idx),  {z_range, x_range});
 
     field_em = field_em + fourier_coeff(idx) ...
-        * (output_field.x_displacement./...
-        max(abs(output_field.x_displacement(:)))) ;    
+        * (output_field.z_displacement./...
+        max(abs(output_field.z_displacement(:)))) ;  
+    
     figure(2), 
-    imagesc(real(output_field.x_displacement) ./...
-        max(abs(output_field.x_displacement(:))) ),
-    colorbar
+    imagesc(real(output_field.z_displacement) ./...
+        max(abs(output_field.z_displacement(:))) ),
+%     colorbar
 end
 
 figure(2), 
-imagesc(rot90(real(field_em))),
+imagesc(abs(rot90((field_em)))),
 axis xy
 %==========================================================================
 %   PLOTTING
@@ -183,7 +185,7 @@ title('Field at z=10')
 xlim([-5 5])
 
 subplot(2,2,4)
-imagesc(x_range-width, z_range, real(field))
+imagesc(x_range-width, z_range, abs(field))
 % caxis([-1 1])
 xlabel('X [m]')
 ylabel('Z [m]')

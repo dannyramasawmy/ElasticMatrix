@@ -112,8 +112,8 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     %   PRECALCULATIONS
     % =====================================================================
     % final phase velocity
-    phase_vel = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
-        obj.medium(1).density);
+%     phase_vel = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
+%         obj.medium(1).density);
     
     % the number of layers
     num_layers = length(obj.medium);
@@ -282,8 +282,11 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
             dx = reshape(dx1,x_samples,(length(dz1)/x_samples));
             
             % common factor
-            
             Psy = exp(1i * k * (dx - cp*tdx)) ;
+            
+%             disp(Psy)
+            disp(['K:', num2str(k)]) % DEBUG
+            disp(['CP:', num2str(cp)]) % DEBUG
             
             % fluid correction in first layer 
             fluid_correction = 1;
@@ -395,14 +398,25 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
             normal_stress(layer(layer_idx).idxs)  = sigma_zz;
             shear_stress(layer(layer_idx).idxs)   = sigma_xz;
             
-        end % fields in each layer
+        end
+        %if kx_vec > 0
+        %fields in each layer
         fields.z_vector     = z_steps;
         fields.x_vector     = x_steps;
         fields.x_displacement    = x_displacement;
         fields.z_displacement    = z_displacement;
         fields.sigma_zz    = normal_stress;
         fields.sigma_xz    = shear_stress;
-        
+        %{
+        else
+              fields.z_vector     = fliplr(z_steps);
+        fields.x_vector     = fliplr(x_steps);
+        fields.x_displacement    = fliplr(x_displacement);
+        fields.z_displacement    = fliplr(z_displacement);
+        fields.sigma_zz    = fliplr(normal_stress);
+        fields.sigma_xz    = fliplr(shear_stress);
+        end
+        %}
     end % time loop
     
     %disp('... finished calculating displacement and stress fields ...')

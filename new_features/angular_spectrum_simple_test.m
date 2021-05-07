@@ -39,9 +39,9 @@ padded_incident_field = [incident_field, zpad];
 fourier_coeff = fftshift(fft(padded_incident_field));
 
 % wavelength/medium properties
-frequency = 2;
+frequency = 1;
 omega = 2*pi*frequency;
-sound_speed = 1;
+sound_speed = 2;
 
 k = omega/sound_speed;
 k_x = 2*pi * spatial_sampling...

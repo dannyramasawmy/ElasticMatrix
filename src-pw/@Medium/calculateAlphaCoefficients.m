@@ -1,4 +1,4 @@
-function [ alpha_coefficients, stiffness_matrix, polarisation, sh_coeffs ] = ...
+ function [ alpha_coefficients, stiffness_matrix, polarisation, sh_coeffs ] = ...
         calculateAlphaCoefficients( stiffness_matrix, phase_velocity, density )
     %CALCULATEALPHACOEFFICIENTS Calculates wave-vectors and polarizations.
     %
@@ -126,17 +126,36 @@ function [ alpha_coefficients, stiffness_matrix, polarisation, sh_coeffs ] = ...
     % =====================================================================
     %   CALCULATE THE ALPHA COEFFICIENTS AND POLARISATION VECTOR
     % =====================================================================
+    % DEBUG
+    % -> check the alpha coefficients
+    
     alpha_coefficients(1) = alpha_mag(2);
     polarisation(1) = -1/alpha_coefficients(1);
     
     alpha_coefficients(2) = -alpha_mag(2);
     polarisation(2) = -1/alpha_coefficients(2);
     
-    alpha_coefficients(3) = alpha_mag(1);
+    alpha_coefficients(3) =  alpha_mag(1);
     polarisation(3) = alpha_coefficients(3);
     
     alpha_coefficients(4) = -alpha_mag(1);
     polarisation(4) = alpha_coefficients(4);
+
+    % DEBUG
+    if cp < 0
+        alpha_coefficients(1) = -alpha_mag(2) ;
+        alpha_coefficients(2) = alpha_mag(2);
+        alpha_coefficients(3) =  -alpha_mag(1);
+        alpha_coefficients(4) = alpha_mag(1);
+        
+        polarisation(1) = -1/alpha_coefficients(1);
+        polarisation(2) = -1/alpha_coefficients(2);
+        polarisation(3) = alpha_coefficients(3);
+        polarisation(4) = alpha_coefficients(4);
+    end
+    
+    % DEBUG
+    % disp(alpha_coefficients)
     
     % =====================================================================
     %   CALCULATE THE SHEAR-HORIZONTAL COEFFICIENTS AND POLARISATION VECTOR
