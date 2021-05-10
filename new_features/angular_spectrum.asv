@@ -28,11 +28,10 @@ clear all
 % G : Gaussian
 % S : Square
 % P : Point
-field_type = 'G';
-steering_angle = -27;       % [deg]
+field_type = 'S';
 
 % Beam width
-source_length = 3e-3;       % [m]
+source_length = 4e-3;       % [m]
 % x, z dimesions
 xdim = 20e-3;               % [m]
 zdim = 20e-3;               % [m]
@@ -69,7 +68,7 @@ k_z = sqrt(k^2 - k_x.^2);
 % =========================================================================
 %   CREATE SOURCE
 % =========================================================================
-% First create source, then pad 
+% First 
 
 source_x = linspace(-xdim, xdim, round(source_length/dx));
 N = length(source_x);
@@ -85,14 +84,12 @@ switch field_type
     case 'P' % point
         incident_field = normpdf(source_x, 0,  dx);
 end
+fac = -3 * pi;
+incident_field = incident_field ...
+    .* exp(1i .* linspace(-fac, fac, length(incident_field)));
 
-% add phase offset
-phase_offeset = 2 * pi * frequency * (0:N-1)*dx * sind(steering_angle) ...
-    / sound_speed;
-incident_field = incident_field .* exp(1i .* phase_offeset);
-
-% pad field
 padded_incident_field = [incident_field, zpad];
+
 
 %==========================================================================
 %   PLOTTING
@@ -126,7 +123,7 @@ field_ifft = ifft(ifftshift(prop_field));
 
 % Medium class:
 my_medium = Medium(...
-    'water', Inf,   'water', 7e-3, 'water', 3e-3, 'glass', Inf);
+    'water', Inf,   'water', 7e-3, 'water', 3e-3, 'water', Inf);
 
 % Initialize an ElasticMatrix object:
 my_model = ElasticMatrix(my_medium);
@@ -220,28 +217,22 @@ title('2D field')
 % caxis([-1 1])
 
 figure(4)
-subplot(1, 3, 1)
-imagesc(100*(abs(field)-abs(flipud(abs_field_em)))./ max(abs(field(:))))
+% subplot(1, 3, 1)
+% imagesc(100*(abs(field)-flipud(abs_field_em))./ max(abs(field(:))))
+% 
+% subplot(1, 3, 2)
+% imagesc(abs(field))
+%}
 
-subplot(1, 3, 2)
-imagesc(abs(field))
-
-subplot(1, 3, 3)
+subplot(1, 2, 1)
 sgtitle('Water-Glass ')
 imagesc(x_range, -z_range, abs(flipud(abs_field_em)))
 axis xy
 title('Mag')
 
-figure(5)
-subplot(1, 2, 1)
-sgtitle('Water-Glass ')
-imagesc(x_range, -z_range, abs(flipud(abs_field_em)))
-axis xy image
-title('Mag')
-
 subplot(1, 2, 2)
 imagesc(x_range, -z_range, real(flipud(abs_field_em)))
-axis xy image
+axis xy
 title('Real')
 
 

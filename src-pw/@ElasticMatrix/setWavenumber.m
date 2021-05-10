@@ -49,8 +49,8 @@ function obj = setWavenumber(obj, wavenumber_range)
     % check inputs
     inputCheck(wavenumber_range);
     
-    % avoid zero errors
-    wavenumber_range(wavenumber_range == 0) = 0.01;
+    % avoid zero errors % DEBUG
+    wavenumber_range(wavenumber_range == 0) = 0.0001;
     
     % set the wavenumber range
     obj.wavenumber = wavenumber_range;

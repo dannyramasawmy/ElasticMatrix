@@ -44,7 +44,7 @@
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 10 - January  - 2019
-    %   last update     - 31 - July     - 2019
+    %   last update     - 10 - May      - 2021
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -126,8 +126,6 @@
     % =====================================================================
     %   CALCULATE THE ALPHA COEFFICIENTS AND POLARISATION VECTOR
     % =====================================================================
-    % DEBUG
-    % -> check the alpha coefficients
     
     alpha_coefficients(1) = alpha_mag(2);
     polarisation(1) = -1/alpha_coefficients(1);
@@ -141,7 +139,7 @@
     alpha_coefficients(4) = -alpha_mag(1);
     polarisation(4) = alpha_coefficients(4);
 
-    % DEBUG
+    % DEBUG: flip the sign for negative kx wavenumbers
     if cp < 0
         alpha_coefficients(1) = -alpha_mag(2) ;
         alpha_coefficients(2) = alpha_mag(2);
@@ -153,9 +151,6 @@
         polarisation(3) = alpha_coefficients(3);
         polarisation(4) = alpha_coefficients(4);
     end
-    
-    % DEBUG
-    % disp(alpha_coefficients)
     
     % =====================================================================
     %   CALCULATE THE SHEAR-HORIZONTAL COEFFICIENTS AND POLARISATION VECTOR

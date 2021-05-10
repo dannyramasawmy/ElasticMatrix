@@ -70,11 +70,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     % <http://www.gnu.org/licenses/>.
     
     
-    % TODO: Change the input to be in terms of K and F / allow complex
-    % wavenumbers and frequencies. -> this will be needed to allow
-    % absorption and evanescent fields to be calculated.
-    
-    % check inputs  TODO: input check needs updating
+    % DEBUG: check inputs
     % inputCheck(obj, frequency_choice, angle_choice, varargin)
     
     % ====================================================================
@@ -84,18 +80,11 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     %disp('... calculating displacement and stress fields ...')
     
     % set the properties and calculate the partial-wave amplitudes
-    
-    % TODO: add a conversion for wavenumber to angle here but always
-    % calculate in terms of wavenumber
-    
-    % TODO: model needs to handle negative kx correctly it only takes the
-    % positive
-    
     obj.setFrequency(frequency_choice);
     obj.setWavenumber(kx_choice);
     obj.calculate;
     
-    % future updates will include multiple frequency/angle calculations    
+    % future updates will include multiple frequency/angle calculations
     % find the closest amplitudes
     [~, widx] = findClosest(obj.wavenumber, kx_choice);
     [~, fidx] = findClosest(obj.frequency, frequency_choice);
@@ -103,7 +92,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     % assign closest frequency and angle
     freq_vec    = obj.frequency(fidx);
     kx_vec = obj.wavenumber(widx);
-%     angle_vec   = obj.angle(widx);
+    %     angle_vec   = obj.angle(widx);
     
     % output wave amplitudes from calculated model
     wave_amplitudes = (obj.unnormalised_amplitudes(fidx, widx,:));
@@ -112,12 +101,11 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     %   PRECALCULATIONS
     % =====================================================================
     % final phase velocity
-%     phase_vel = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
-%         obj.medium(1).density);
+    %     phase_vel = sqrt(obj.medium(1).stiffness_matrix(1,1) /...
+    %         obj.medium(1).density);
     
     % the number of layers
     num_layers = length(obj.medium);
-    
     
     % frequency
     omega = 2* pi * freq_vec;
@@ -129,25 +117,15 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     cp = omega / k;
     
     
-%     % angle and phase velocity
-%     angle   = angle_vec;
-%     theta   = angle * pi /180;
-%     % phase velocities
-%     cp      = phase_vel / sin(theta);
-%     % frequency
-%     omega   = 2* pi * freq_vec;
-%     k       = omega / cp ;
+    %     % angle and phase velocity
+    %     angle   = angle_vec;
+    %     theta   = angle * pi /180;
+    %     % phase velocities
+    %     cp      = phase_vel / sin(theta);
+    %     % frequency
+    %     omega   = 2* pi * freq_vec;
+    %     k       = omega / cp ;
     
-    %{      
-        % frequency
-        omega = 2* pi * frequency_vec(fK_idx);
-        
-        % wavenumber
-        k = wavenumber_vec(fK_idx) ;
-        
-        % phase velocity
-        cp = omega / k;
-    %}
     
     % incident wave amplitude set to 1 MPa
     P_0 = 1e6;
@@ -284,11 +262,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
             % common factor
             Psy = exp(1i * k * (dx - cp*tdx)) ;
             
-%             disp(Psy)
-            disp(['K:', num2str(k)]) % DEBUG
-            disp(['CP:', num2str(cp)]) % DEBUG
-            
-            % fluid correction in first layer 
+            % fluid correction in first layer
             fluid_correction = 1;
             if mat_prop(layer_idx).stiffness_matrix(5,5) < 5
                 fluid_correction = 0; % remove shear components
@@ -386,10 +360,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
                         e2 * (mat_prop(layer_idx).alpha(2) + mat_prop(layer_idx).p_vec(2)) + ...
                         e3 * (mat_prop(layer_idx).alpha(3) + mat_prop(layer_idx).p_vec(3)) + ...
                         e4 * (mat_prop(layer_idx).alpha(4) + mat_prop(layer_idx).p_vec(4))) ;
-                    
-                    
-                    
-                    
+                                  
             end
             
             % assign calculated values
@@ -399,7 +370,6 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
             shear_stress(layer(layer_idx).idxs)   = sigma_xz;
             
         end
-        %if kx_vec > 0
         %fields in each layer
         fields.z_vector     = z_steps;
         fields.x_vector     = x_steps;
@@ -407,16 +377,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
         fields.z_displacement    = z_displacement;
         fields.sigma_zz    = normal_stress;
         fields.sigma_xz    = shear_stress;
-        %{
-        else
-              fields.z_vector     = fliplr(z_steps);
-        fields.x_vector     = fliplr(x_steps);
-        fields.x_displacement    = fliplr(x_displacement);
-        fields.z_displacement    = fliplr(z_displacement);
-        fields.sigma_zz    = fliplr(normal_stress);
-        fields.sigma_xz    = fliplr(shear_stress);
-        end
-        %}
+
     end % time loop
     
     %disp('... finished calculating displacement and stress fields ...')
@@ -444,12 +405,12 @@ function inputCheck(obj, frequency_choice, angle_choice, varargin)
     if strcmp(obj.medium(1).state,'Vacuum')
         error('The first layer cannot currently be a vacuum.')
     end
- 
+    
     % vacuum not allowed
     if strcmp(obj.medium(1).state,'Gas')
         error('The first layer cannot currently be a gas.')
     end
-       
+    
     % define attributes
     attributes = {'real'};
     

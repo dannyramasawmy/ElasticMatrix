@@ -388,7 +388,7 @@ function [figure_handle] = plot2DDisplacement(field_values, figure_handle)
         % labels
         ylabel('Z [m]');
         xlabel('X [m]');
-        axis xy;
+        axis xy image;
         colorbar;
         colormap hot;
         
@@ -436,7 +436,7 @@ function [figure_handle] = plot2DStress(field_values, figure_handle)
         % labels
         ylabel('Z [m]');
         xlabel('X [m]');
-        axis xy;
+        axis xy image;
         colorbar;
         colormap hot;
     end
