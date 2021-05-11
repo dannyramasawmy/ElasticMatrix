@@ -69,6 +69,9 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    if ~exist('verbose_display')
+        verbose_display = true;
+    end
     
     % DEBUG: check inputs
     % inputCheck(obj, frequency_choice, angle_choice, varargin)
@@ -380,7 +383,7 @@ function [fields, obj] = calculateField(obj, frequency_choice, kx_choice, vararg
 
     end % time loop
     
-    %disp('... finished calculating displacement and stress fields ...')
+    disp('... finished calculating displacement and stress fields ...')
 end
 
 function inputCheck(obj, frequency_choice, angle_choice, varargin)
