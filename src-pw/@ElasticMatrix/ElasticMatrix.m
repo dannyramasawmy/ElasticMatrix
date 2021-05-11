@@ -126,17 +126,17 @@ classdef ElasticMatrix < handle
     %   obj = obj.setAngle(angleRange);
     %       Sets the .angle property.
     %       - frequency_range   - A vector of frequencies to calculate the
-    %                             partial wave method over. [Hz]
+    %                             partial wave method over. [deg]
     %
     %   obj = obj.setWavenumber(wavenumber_range);
     %       Sets the .wavenumber property.
     %       - wavenumber_range  - A vector of wave-numbers to calculate the
-    %                             partial wave method over. [Hz]
+    %                             partial wave method over. [rad/m]
     %
     %   obj = obj.setPhasespeed(phasespeed_range);
     %       Sets the .phasespeed property.
     %       - phasespeed_range  - A vector of phase-speeds to calculate the
-    %                             partial wave method over. [Hz]
+    %                             partial wave method over. [m/s]
     %
     %   obj = obj.setMedium(medium);
     %       Sets the .medium property.
@@ -180,7 +180,7 @@ classdef ElasticMatrix < handle
     %       - obj.dispersion_curves
     %
     %   [field, obj] = obj.calculateField(...
-    %       angle_choice, frequency_choice, varargin);
+    %       frequency_choice, angle_choice, varargin);
     %       Calculates the displacement and stress fields within the
     %       multi-layered structure.
     %       - frequency_choice      - Choice of frequency.  [Hz]
@@ -192,6 +192,14 @@ classdef ElasticMatrix < handle
     %           - field.z_displacement  - 2D matrix of z-displacements.[m]
     %           - field.sigma_zz        - 2D matrix of normal stress.  [Pa]
     %           - field.sigma_xz        - 2D matrix of shear stress.   [Pa]
+    %
+    %   [field, obj] = obj.calculateFieldKf(...
+    %       frequency_choice, wavenumber_choice, varargin);
+    %       Calculates the displacement and stress fields within the
+    %       multi-layered structure.
+    %       - frequency_choice      - Choice of frequency.  [Hz]
+    %       - wavenumber_choice     - Choice of wavenumber. [1/m]
+    %       - field                 - Same as above.
     %
     %   [figure_handle, obj] = obj.plotDispersionCurves;
     %       Plots dispersion curves.
@@ -321,7 +329,7 @@ classdef ElasticMatrix < handle
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
     %   date            - 15 - January  - 2019
-    %   last update     - 31 - July     - 2019
+    %   last update     - 11 - May      - 2021
     %
     % This file is part of the ElasticMatrix toolbox.
     % Copyright (c) 2019 Danny Ramasawmy.
@@ -415,7 +423,10 @@ classdef ElasticMatrix < handle
        
         % plot / calculate displacement field
         [field, obj] = calculateField(obj, ...
-            angle_choice, frequency_choice, varargin);
+            frequency_choice, angle_choice, varargin);
+        [field, obj] = calculateFieldKf(obj, ...
+             frequency_choice, wavenumber_choice, varargin);
+        
         
         % plotting
         [figure_handle, obj] = plotDispersionCurves(obj);
@@ -428,6 +439,7 @@ classdef ElasticMatrix < handle
         obj = save(obj, varargin);
         
     end
+    
     
     methods (Static, Access = protected, Hidden = true)
         
@@ -444,7 +456,15 @@ classdef ElasticMatrix < handle
         [metrics, field_vars, partial_wave_amplitudes, unnorm_amplitudes] = ...
             calculateMatrixModelKf(...
             medium, frequency_vec, wavenumber_vec, return_field_var)
+                
+    end
+    
+    
+    methods (Access = protected, Hidden = true)
         
+        % calculate displacement field
+        [fields, obj] = calculateFieldGeneral(obj, calculation_type, ....
+            frequency_choice, second_choice, varargin)
     end
     
     

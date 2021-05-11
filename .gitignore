@@ -3,3 +3,5 @@ testing_data/glassEtalonFabryPerotDirectivityData.mat
 testing_data/gmmIsotropicModelData.mat
 testing/*.mp4
 testing/my_elastic_matrix_object.mat
+src-pw/TestAlPlateAmode.mp4
+src-pw/TestAlPlateSmode.mp4

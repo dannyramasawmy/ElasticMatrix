@@ -26,7 +26,7 @@ clear all
 % =========================================================================
 
 global verbose_display;
-verbose_display = true;
+verbose_display = false;
 
 % Field type
 % G : Gaussian
@@ -148,7 +148,7 @@ my_model = ElasticMatrix(my_medium);
 k = 2*pi*frequency ./ sound_speed;
 kx = k * sin(5 * pi /180) ;
 
-output_field = my_model.calculateField( ...
+output_field = my_model.calculateFieldKf( ...
     frequency, kx, {z_range, x_range});
 
 % initialise fields
@@ -157,9 +157,11 @@ field_em_sig_xz = zeros(size(output_field.sigma_xz));
 field_em_disp_z = zeros(size(output_field.z_displacement));
 field_em_disp_x = zeros(size(output_field.x_displacement));
 
+tic
+disp('Starting ElasticMatrix calculations')
 for idx = 1:length(k_x) 
     % calculate field
-    output_field = my_model.calculateField( ...
+    output_field = my_model.calculateFieldKf( ...
         frequency, k_x(idx),  {-z_range, x_range});
 
     % replace with a function that adds these things together, or create a
@@ -181,6 +183,8 @@ for idx = 1:length(k_x)
         *  tmp_field_zz;  
 
 end
+disp('Finished ElasticMatrix calculations')
+toc
 
 field_em_sig_zz = flipud(rot90((field_em_sig_zz))) / length(k_x);
 

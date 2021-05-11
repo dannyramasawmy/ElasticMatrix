@@ -120,7 +120,7 @@ function obj = calculate(obj)
     % =====================================================================
     %   CHECK INPUTS AND SORT ARGUMENTS (PROPERTIES)
     % =====================================================================
-    disp('... calculating matrix method ... ')
+    dispf('... calculating matrix method ... ')
     
     % sort input arguments
     [input_vector] = checkInputs(obj);
@@ -136,7 +136,7 @@ function obj = calculate(obj)
     
     % calculate over a range of angles and frequencies
     if sum(input_vector == [1 1 0 0]) == 4
-        disp('... frequency-angle calculation ...')
+        dispf('... frequency-angle calculation ...')
         % for calculating the matrix model in terms of angle and frequency
         [~,field_variables, partial_wave_amplitudes, unnorm_amplitudes] ...
             = ElasticMatrix.calculateMatrixModel(...
@@ -145,7 +145,7 @@ function obj = calculate(obj)
     
     % calculate over a range of phase-speeds and frequencies
     if sum(input_vector == [1 0 1 0]) == 4
-        disp('... frequency-phasespeed calculation ...')
+        dispf('... frequency-phasespeed calculation ...')
         % for calculating the matrix model in terms of frequency-phase-speed
         [~,field_variables, partial_wave_amplitudes, unnorm_amplitudes] ...
             = calculateMatrixModelFCphWrapper(...
@@ -154,7 +154,7 @@ function obj = calculate(obj)
     
     % calculate over a range of phase-speeds and frequencies
     if sum(input_vector == [1 0 0 1]) == 4
-        disp('... frequency-wavenumber calculation ...')
+        dispf('... frequency-wavenumber calculation ...')
         % for calculating the model in terms of wavenumber and frequency
         [~,field_variables, partial_wave_amplitudes, unnorm_amplitudes] ...
             = calculateMatrixModelKFWrapper(...
@@ -191,7 +191,7 @@ function obj = calculate(obj)
     obj.unnormalised_amplitudes = unnorm_amplitudes;
     
     % exit message
-    disp('... finished calculating matrix method ... ')
+    dispf('... finished calculating matrix method ... ')
     
     warning on
     

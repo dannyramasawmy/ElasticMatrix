@@ -39,6 +39,11 @@ open(vA)
 % Create time array:
 t_vec =  linspace(0e-6, 0.1e-6, 40);
 
+% Reduce messages printed to the command window by setting the global
+% variable verbose_display = false:
+global verbose_display
+verbose_display = false;
+
 % Loop over time array:
 for tdx = 1:length(t_vec)
     

@@ -21,13 +21,18 @@ X = linspace(-1.5e-3, 2.2e-3, sample_points); % [m]
 
 % choose wavenumber
 k = 2*pi*plot_frequency ./ 1500;
-plot_angle = 0;
+plot_angle = 35;
 kx = k * sin(plot_angle * pi /180) ;
 
+% use global flag to avoid uncessary printing
+global verbose_display
+
+verbose_display = false;
 % get output field
-output_field = my_model.calculateField( ...
+output_field = my_model.calculateFieldKf( ...
     plot_frequency, kx, {Z, X});
+verbose_display = true;
 
 % plot the displacement field
-fig_hand = my_model.plotField(output_field, 'surf');
+fig_hand = my_model.plotField(output_field, 'displacement2D');
 
