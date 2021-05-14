@@ -53,7 +53,7 @@ function [fields, obj] = calculateFieldGeneral(obj, calculation_type, ....
     %   last update     - 05 - May          - 2020
     %
     % This file is part of the ElasticMatrix toolbox.
-    % Copyright (c) 2019 Danny Ramasawmy.
+    % Copyright (c) 2021 Danny Ramasawmy.
     %
     % This file is part of ElasticMatrix. ElasticMatrix is free software:
     % you can redistribute it and/or modify it under the terms of the GNU

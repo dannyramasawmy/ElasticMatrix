@@ -45,7 +45,7 @@ function [figure_handle, obj] = plotSlowness(obj)
     %   last update     - 19 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
-    % Copyright (c) 2019 Danny Ramasawmy.
+    % Copyright (c) 2021 Danny Ramasawmy.
     %
     % This file is part of ElasticMatrix. ElasticMatrix is free software:
     % you can redistribute it and/or modify it under the terms of the GNU
@@ -150,7 +150,7 @@ function [kx, kz] = getRealDataPoints( in_kx, in_kz)
     %   last update     - 21 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
-    % Copyright (c) 2019 Danny Ramasawmy.
+    % Copyright (c) 2021 Danny Ramasawmy.
     
     % find all the indices where the imaginary part is 0
     real_idxs = (imag(in_kz) == 0);

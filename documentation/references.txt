@@ -10,7 +10,7 @@ ABOUT
   last update     - 18 - july 	- 2019
 
 This file is part of the ElasticMatrix toolbox.
-Copyright (c) 2019 Danny Ramasawmy.
+Copyright (c) 2021 Danny Ramasawmy.
 
 This file is part of ElasticMatrix. ElasticMatrix is free software: you
 can redistribute it and/or modify it under the terms of the GNU Lesser
@@ -31,7 +31,7 @@ Reference list:
     Anisotropic Elastic Wave Propagation in Layered Media.", (2019).
 
 [2] Ramasawmy, Danny R., et al. "Analysis of the Directivity of Glass 
-    Etalon Fabry-Pérot Ultrasound Sensors." IEEE transactions on 
+    Etalon Fabry-Pï¿½rot Ultrasound Sensors." IEEE transactions on 
     ultrasonics, ferroelectrics, and frequency control, (2019).
 
 [3] Lowe, Michael JS. "Matrix techniques for modeling ultrasonic waves in 

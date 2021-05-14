@@ -28,7 +28,7 @@ function obj = disp(obj)
     %   last update     - 30 - July     - 2019
     %
     % This file is part of the ElasticMatrix toolbox.
-    % Copyright (c) 2019 Danny Ramasawmy.
+    % Copyright (c) 2021 Danny Ramasawmy.
     %
     % This file is part of ElasticMatrix. ElasticMatrix is free software:
     % you can redistribute it and/or modify it under the terms of the GNU

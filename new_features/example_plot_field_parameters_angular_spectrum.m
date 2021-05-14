@@ -27,6 +27,7 @@ kx = k * sin(plot_angle * pi /180) ;
 % use global flag to avoid uncessary printing
 global verbose_display
 
+
 verbose_display = false;
 % get output field
 output_field = my_model.calculateFieldKf( ...
