@@ -63,7 +63,7 @@ classdef Source < handle
     
     properties (GetAccess = public, SetAccess = private)
         type
-        source_length
+        source_length = 1;
         steering_angle = 0;
         amplitude = 1;
         complex_source

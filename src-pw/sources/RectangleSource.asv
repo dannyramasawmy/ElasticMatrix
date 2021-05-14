@@ -86,10 +86,8 @@ classdef RectangleSource < Source
             % SAMPLESOURCE override the sampleSource method in the
             % superclass.
             %
-            % For sample location x
-            % 0 if x =< 0
-            % 1 if 0 < x =< obj.source_length
-            % 0 if obj.source_length < x
+            % For sample loc
+            % 0 if x 
             
             % set the sampling properties (dx, length, locations)
             obj.setSamplingProperties(sample_locations)
@@ -97,14 +95,16 @@ classdef RectangleSource < Source
             % define source function 
             source = zeros(1, obj.sample_N);
             mask = (obj.sample_locations > 0) & ...
-                (obj.sample_locations <= obj.source_length);
+                (obj.sample_locations < obj.source_length);
             source(mask) = 1;
             
             % set the source magnitude
             obj.setComplexSource(source);
             
-            % apply phase offset for steered beam
             obj.applyPhaseOffset(frequency, sound_speed);
+            
+     
+
         end
         
     end

@@ -1,20 +1,22 @@
-classdef RectangleSource < Source
-    %RECTANGLESOURCE Class definition for RECTANGLESOURCE.
+classdef GaussianSource < Source
+    %GAUSSIANSOURCE Class definition for GAUSSIANSOURCE.
     %
     % DESCRIPTION
-    %   RECTANGLESOURCE overrides the Source.sampleSource() method, see
+    %   GAUSSIANSOURCE overrides the Source.sampleSource() method, see
     %   Source class for more details.
     %
     %
     % USEAGE
-    %   my_source = RectangleSource(varargin);
-    %   my_source = RectangleSource(source_length);
-    %   my_source = RectangleSource(source_length, steering_angle);
-    %   my_source = RectangleSource(source_length, steering_angle, amplitude);
+    %   my_source = GaussianSource(varargin);
+    %   my_source = GaussianSource(source_length);
+    %   my_source = GaussianSource(source_length, steering_angle);
+    %   my_source = GaussianSource(source_length, steering_angle, ...
+    %       amplitude, shape_parameter);
     %
     %
     % INPUTS
     %   See Source definition.
+    %   shape_parameter     - SIGMA parameter of Gaussian (see normpdf).
     %
     %
     % OPTIONAL INPUTS
@@ -22,7 +24,7 @@ classdef RectangleSource < Source
     %
     %
     % OUTPUTS
-    %   RectangleSource object.
+    %   GaussianSource object.
     %
     %
     % PROPERTIES
@@ -33,7 +35,7 @@ classdef RectangleSource < Source
     %   NON-STATIC
     %   obj = obj.sampleSource(sample_locations, frequency, sound_speed)
     %       Source sample overrides the Source.sampleSource method, and
-    %       samples a rectangle. Additionally the frequency and sound_speed
+    %       samples a Gaussian. Additionally the frequency and sound_speed
     %       are used to set the phase for the given steering angle.
     %       - sample_locations     - A vector of sample locations. [m]
     %       - frequency            - The temporal frequency.       [Hz]
@@ -46,12 +48,13 @@ classdef RectangleSource < Source
     % DEPENDENCIES
     %   handle          - Inherits the handle class in MALTAB.
     %   Source          - Inherits the Source class.
+    %   normpdf         - Uses normpdf to create the Gaussian curve.
     %
     %
     % ABOUT
     %   author          - Danny Ramasawmy
     %   contact         - dannyramasawmy+elasticmatrix@gmail.com
-    %   date            - 11 - May          - 2021
+    %   date            - 14 - May          - 2021
     %   last update     - 14 - May          - 2021
     %
     % This file is part of the ElasticMatrix toolbox.
@@ -72,13 +75,28 @@ classdef RectangleSource < Source
     % License along with ElasticMatrix. If not, see
     % <http://www.gnu.org/licenses/>.
     
+    properties
+        shape_parameter
+    end
+    
+    
     methods
-        function obj = RectangleSource(varargin)
+        function obj = GaussianSource(varargin)
+            
+            % sort inputs
+            if nargin == 4; varargin = varargin{1:3}; end
+            
             % call super class constructor
             obj = obj@Source(varargin{:});
-            
+           
             % set the type
-            obj.setSourceType('Rectangle')
+            obj.setSourceType('Gaussian')
+            
+            % set shape parameter
+            shape_parameter = obj.source_length/(2*pi);            
+            if nargin == 4; shape_parameter = varargin{4}; end
+            obj.setShapeParameter();
+
         end
         
         
@@ -95,16 +113,20 @@ classdef RectangleSource < Source
             obj.setSamplingProperties(sample_locations)
             
             % define source function 
-            source = zeros(1, obj.sample_N);
-            mask = (obj.sample_locations > 0) & ...
-                (obj.sample_locations <= obj.source_length);
-            source(mask) = 1;
-            
+%             source = zeros(1, obj.sample_N);
+%             mask = (obj.sample_locations > 0) & ...
+%                 (obj.sample_locations <= obj.source_length);
+%             source(mask) = 1;
+%             
             % set the source magnitude
             obj.setComplexSource(source);
             
             % apply phase offset for steered beam
             obj.applyPhaseOffset(frequency, sound_speed);
+        end
+        
+        function obj = setShapeParameter(obj, shape_parameter)
+            obj.shape_parameter = shape_parameter;
         end
         
     end
